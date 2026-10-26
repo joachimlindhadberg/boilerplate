@@ -1,0 +1,401 @@
+{
+  "Søg gallerier…": {
+    "en": "Search galleries…",
+    "da": "Søg gallerier…",
+    "de": "Galerien suchen…",
+    "sv": "Sök gallerier…",
+    "nb": "Søk i gallerier…"
+  },
+  "Aktivér galleriet for at gøre det tilgængeligt i Page Builder.": {
+    "en": "Activate the gallery to make it available in Page Builder.",
+    "da": "Aktivér galleriet for at gøre det tilgængeligt i Page Builder.",
+    "de": "Aktivieren Sie die Galerie, damit sie im Page Builder verfügbar wird.",
+    "sv": "Aktivera galleriet för att göra det tillgängligt i Page Builder.",
+    "nb": "Aktiver galleriet for å gjøre det tilgjengelig i Page Builder."
+  },
+  "Billeder": {
+    "en": "Images",
+    "da": "Billeder",
+    "de": "Bilder",
+    "sv": "Bilder",
+    "nb": "Bilder"
+  },
+  "Brug på sider": {
+    "en": "Use on pages",
+    "da": "Brug på sider",
+    "de": "Auf Seiten verwenden",
+    "sv": "Använd på sidor",
+    "nb": "Bruk på sider"
+  },
+  "Denne handling kan ikke fortrydes.": {
+    "en": "This action cannot be undone.",
+    "da": "Denne handling kan ikke fortrydes.",
+    "de": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "sv": "Åtgärden kan inte ångras.",
+    "nb": "Denne handlingen kan ikke angres."
+  },
+  "Dynamisk komponent": {
+    "en": "Dynamic component",
+    "da": "Dynamisk komponent",
+    "de": "Dynamische Komponente",
+    "sv": "Dynamisk komponent",
+    "nb": "Dynamisk komponent"
+  },
+  "Galleri": {
+    "en": "Gallery",
+    "da": "Galleri",
+    "de": "Galerie",
+    "sv": "Galleri",
+    "nb": "Galleri"
+  },
+  "Gallerier": {
+    "en": "Galleries",
+    "da": "Gallerier",
+    "de": "Galerien",
+    "sv": "Gallerier",
+    "nb": "Gallerier"
+  },
+  "Galleriet kan kun slettes, hvis det ikke længere bruges på en side. Billederne i Medier bliver ikke slettet.": {
+    "en": "A gallery can only be deleted when it is no longer used on a page. Images in Media are not deleted.",
+    "da": "Galleriet kan kun slettes, hvis det ikke længere bruges på en side. Billederne i Medier bliver ikke slettet.",
+    "de": "Eine Galerie kann nur gelöscht werden, wenn sie auf keiner Seite mehr verwendet wird. Bilder in Medien bleiben erhalten.",
+    "sv": "Ett galleri kan bara tas bort när det inte längre används på en sida. Bilder i Media tas inte bort.",
+    "nb": "Et galleri kan bare slettes når det ikke lenger brukes på en side. Bilder i Medier slettes ikke."
+  },
+  "Gem galleri": {
+    "en": "Save gallery",
+    "da": "Gem galleri",
+    "de": "Galerie speichern",
+    "sv": "Spara galleri",
+    "nb": "Lagre galleri"
+  },
+  "Gem galleriet først. Derefter bliver det tilgængeligt som dynamisk Page Builder-komponent.": {
+    "en": "Save the gallery first. It will then be available as a dynamic Page Builder component.",
+    "da": "Gem galleriet først. Derefter bliver det tilgængeligt som dynamisk Page Builder-komponent.",
+    "de": "Speichern Sie zuerst die Galerie. Danach ist sie als dynamische Page-Builder-Komponente verfügbar.",
+    "sv": "Spara galleriet först. Sedan blir det tillgängligt som dynamisk Page Builder-komponent.",
+    "nb": "Lagre galleriet først. Deretter blir det tilgjengelig som en dynamisk Page Builder-komponent."
+  },
+  "Ingen billeder endnu": {
+    "en": "No images yet",
+    "da": "Ingen billeder endnu",
+    "de": "Noch keine Bilder",
+    "sv": "Inga bilder ännu",
+    "nb": "Ingen bilder ennå"
+  },
+  "Ingen gallerier endnu": {
+    "en": "No galleries yet",
+    "da": "Ingen gallerier endnu",
+    "de": "Noch keine Galerien",
+    "sv": "Inga gallerier ännu",
+    "nb": "Ingen gallerier ennå"
+  },
+  "Kun aktive gallerier kan vælges og vises via Page Builder.": {
+    "en": "Only active galleries can be selected and displayed through Page Builder.",
+    "da": "Kun aktive gallerier kan vælges og vises via Page Builder.",
+    "de": "Nur aktive Galerien können im Page Builder ausgewählt und angezeigt werden.",
+    "sv": "Bara aktiva gallerier kan väljas och visas via Page Builder.",
+    "nb": "Bare aktive gallerier kan velges og vises via Page Builder."
+  },
+  "Kun til intern administration i denne version.": {
+    "en": "For internal administration only in this version.",
+    "da": "Kun til intern administration i denne version.",
+    "de": "In dieser Version nur für die interne Verwaltung.",
+    "sv": "Endast för intern administration i den här versionen.",
+    "nb": "Bare for intern administrasjon i denne versjonen."
+  },
+  "Nyt galleri": {
+    "en": "New gallery",
+    "da": "Nyt galleri",
+    "de": "Neue Galerie",
+    "sv": "Nytt galleri",
+    "nb": "Nytt galleri"
+  },
+  "Opret et galleri, vælg billeder fra Medier og indsæt det derefter via Page Builder.": {
+    "en": "Create a gallery, choose images from Media and insert it via Page Builder.",
+    "da": "Opret et galleri, vælg billeder fra Medier og indsæt det derefter via Page Builder.",
+    "de": "Erstellen Sie eine Galerie, wählen Sie Bilder aus Medien und fügen Sie sie über den Page Builder ein.",
+    "sv": "Skapa ett galleri, välj bilder från Media och lägg in det via Page Builder.",
+    "nb": "Opprett et galleri, velg bilder fra Medier og sett det inn via Page Builder."
+  },
+  "Opret galleri": {
+    "en": "Create gallery",
+    "da": "Opret galleri",
+    "de": "Galerie erstellen",
+    "sv": "Skapa galleri",
+    "nb": "Opprett galleri"
+  },
+  "Opret genbrugelige billedgallerier baseret på billeder fra Medier.": {
+    "en": "Create reusable image galleries using images from Media.",
+    "da": "Opret genbrugelige billedgallerier baseret på billeder fra Medier.",
+    "de": "Erstellen Sie wiederverwendbare Bildergalerien mit Bildern aus Medien.",
+    "sv": "Skapa återanvändbara bildgallerier med bilder från Media.",
+    "nb": "Opprett gjenbrukbare bildegallerier med bilder fra Medier."
+  },
+  "Rediger galleri": {
+    "en": "Edit gallery",
+    "da": "Rediger galleri",
+    "de": "Galerie bearbeiten",
+    "sv": "Redigera galleri",
+    "nb": "Rediger galleri"
+  },
+  "Slet galleri": {
+    "en": "Delete gallery",
+    "da": "Slet galleri",
+    "de": "Galerie löschen",
+    "sv": "Ta bort galleri",
+    "nb": "Slett galleri"
+  },
+  "Slet galleri?": {
+    "en": "Delete gallery?",
+    "da": "Slet galleri?",
+    "de": "Galerie löschen?",
+    "sv": "Ta bort galleri?",
+    "nb": "Slette galleri?"
+  },
+  "Tilføj billeder": {
+    "en": "Add images",
+    "da": "Tilføj billeder",
+    "de": "Bilder hinzufügen",
+    "sv": "Lägg till bilder",
+    "nb": "Legg til bilder"
+  },
+  "Tilføj valgte": {
+    "en": "Add selected",
+    "da": "Tilføj valgte",
+    "de": "Ausgewählte hinzufügen",
+    "sv": "Lägg till valda",
+    "nb": "Legg til valgte"
+  },
+  "Træk billeder for at ændre rækkefølgen.": {
+    "en": "Drag images to reorder them.",
+    "da": "Træk billeder for at ændre rækkefølgen.",
+    "de": "Ziehen Sie Bilder, um sie neu anzuordnen.",
+    "sv": "Dra bilder för att ändra ordningen.",
+    "nb": "Dra bilder for å endre rekkefølgen."
+  },
+  "Vælg billeder fra Medier for at bygge galleriet.": {
+    "en": "Select images from Media to build the gallery.",
+    "da": "Vælg billeder fra Medier for at bygge galleriet.",
+    "de": "Wählen Sie Bilder aus Medien, um die Galerie zu erstellen.",
+    "sv": "Välj bilder från Media för att bygga galleriet.",
+    "nb": "Velg bilder fra Medier for å bygge galleriet."
+  },
+  "Vælg billeder fra Medier, og træk dem i den rækkefølge de skal vises.": {
+    "en": "Choose images from Media and drag to arrange them.",
+    "da": "Vælg billeder fra Medier, og træk dem i den rækkefølge de skal vises.",
+    "de": "Wählen Sie Bilder aus Medien und ziehen Sie sie in die gewünschte Reihenfolge.",
+    "sv": "Välj bilder från Media och dra dem till önskad ordning.",
+    "nb": "Velg bilder fra Medier og dra dem til ønsket rekkefølge."
+  },
+  "Vælg ét eller flere billeder fra Medier.": {
+    "en": "Select one or more images from Media.",
+    "da": "Vælg ét eller flere billeder fra Medier.",
+    "de": "Wählen Sie ein oder mehrere Bilder aus Medien.",
+    "sv": "Välj en eller flera bilder från Media.",
+    "nb": "Velg ett eller flere bilder fra Medier."
+  },
+  "og vælg:": {
+    "en": "and choose:",
+    "da": "og vælg:",
+    "de": "und wählen Sie:",
+    "sv": "och välj:",
+    "nb": "og velg:"
+  },
+  "Åbn en side i Page Builder, tilføj": {
+    "en": "Open a page in Page Builder, add",
+    "da": "Åbn en side i Page Builder, tilføj",
+    "de": "Öffnen Sie eine Seite im Page Builder und fügen Sie hinzu:",
+    "sv": "Öppna en sida i Page Builder och lägg till",
+    "nb": "Åpne en side i Page Builder og legg til"
+  },
+  "← Tilbage til Gallerier": {
+    "en": "← Back to Galleries",
+    "da": "← Tilbage til Gallerier",
+    "de": "← Zurück zu Galerien",
+    "sv": "← Tillbaka till gallerier",
+    "nb": "← Tilbake til gallerier"
+  },
+  "ui.image_already_added": {
+    "en": "This image is already in the gallery",
+    "da": "Billedet er allerede i galleriet",
+    "de": "Dieses Bild ist bereits in der Galerie",
+    "sv": "Bilden finns redan i galleriet",
+    "nb": "Dette bildet finnes allerede i galleriet"
+  },
+  "Tilbage til Gallerier": {
+    "en": "Back to Galleries",
+    "da": "Tilbage til Gallerier",
+    "de": "Zurück zu Galerien",
+    "sv": "Tillbaka till gallerier",
+    "nb": "Tilbake til gallerier"
+  },
+  "gallery_page_builder_component": {
+    "en": "Page Builder component: Gallery",
+    "da": "Page Builder-komponent: Galleri",
+    "de": "Page-Builder-Komponente: Galerie",
+    "sv": "Page Builder-komponent: Galleri",
+    "nb": "Page Builder-komponent: Galleri"
+  },
+  "gallery_move_keyboard": {
+    "da": "Træk for at flytte billedet. Alt + pil op/ned flytter med tastaturet.",
+    "en": "Drag to reorder this image. Alt + up/down arrow moves with the keyboard.",
+    "de": "Ziehen, um das Bild zu verschieben. Alt + Pfeil hoch/runter für Tastatursteuerung.",
+    "sv": "Dra för att flytta bilden. Alt + upp-/nedpil för tangentbordet.",
+    "nb": "Dra for å flytte bildet. Alt + pil opp/ned flytter med tastaturet."
+  },
+  "gallery_remove_image": {
+    "da": "Fjern billede",
+    "en": "Remove image",
+    "de": "Bild entfernen",
+    "sv": "Ta bort bild",
+    "nb": "Fjern bilde"
+  },
+  "gallery_remove_confirm": {
+    "da": "Fjern billedet fra galleriet? Billedet forbliver i Medier.",
+    "en": "Remove this image from the gallery? It will remain in Media.",
+    "de": "Dieses Bild aus der Galerie entfernen? Es bleibt in der Mediathek.",
+    "sv": "Ta bort bilden från galleriet? Den finns kvar i Media.",
+    "nb": "Fjerne bildet fra galleriet? Det blir værende i Medier."
+  },
+  "gallery_moved_feedback": {
+    "da": "Billedrækkefølgen er ændret. Gem galleriet for at beholde ændringen.",
+    "en": "Image order changed. Save the gallery to keep the change.",
+    "de": "Bildreihenfolge geändert. Speichern Sie die Galerie, um die Änderung zu behalten.",
+    "sv": "Bildordningen har ändrats. Spara galleriet för att behålla ändringen.",
+    "nb": "Bilderrekkefølgen er endret. Lagre galleriet for å beholde endringen."
+  },
+  "gallery_removed_feedback": {
+    "da": "Billedet er fjernet fra galleriet. Gem for at beholde ændringen.",
+    "en": "Image removed from gallery. Save to keep the change.",
+    "de": "Bild aus der Galerie entfernt. Speichern Sie die Änderung.",
+    "sv": "Bilden har tagits bort från galleriet. Spara för att behålla ändringen.",
+    "nb": "Bildet er fjernet fra galleriet. Lagre for å beholde endringen."
+  },
+  "Vis billeder i lightbox": {
+    "da": "Vis billeder i lightbox",
+    "en": "Open images in lightbox",
+    "de": "Bilder in Lightbox öffnen",
+    "sv": "Visa bilder i lightbox",
+    "nb": "Vis bilder i lysboks"
+  },
+  "Klik på et billede for at åbne det i en enkel fuldskærmsvisning.": {
+    "da": "Klik på et billede for at åbne det i en enkel fuldskærmsvisning.",
+    "en": "Click an image to open it in a simple full-screen viewer.",
+    "de": "Klicken Sie auf ein Bild, um es in einer einfachen Vollbildansicht zu öffnen.",
+    "sv": "Klicka på en bild för att öppna den i en enkel helskärmsvy.",
+    "nb": "Klikk på et bilde for å åpne det i en enkel fullskjermvisning."
+  },
+  "Åbn billede": {
+    "da": "Åbn billede",
+    "en": "Open image",
+    "de": "Bild öffnen",
+    "sv": "Öppna bild",
+    "nb": "Åpne bilde"
+  },
+  "Luk billedvisning": {
+    "da": "Luk billedvisning",
+    "en": "Close image viewer",
+    "de": "Bildansicht schließen",
+    "sv": "Stäng bildvisning",
+    "nb": "Lukk bildevisning"
+  },
+  "Forrige billede": {
+    "da": "Forrige billede",
+    "en": "Previous image",
+    "de": "Vorheriges Bild",
+    "sv": "Föregående bild",
+    "nb": "Forrige bilde"
+  },
+  "Næste billede": {
+    "da": "Næste billede",
+    "en": "Next image",
+    "de": "Nächstes Bild",
+    "sv": "Nästa bild",
+    "nb": "Neste bilde"
+  },
+  "Billedvisning": {
+    "da": "Billedvisning",
+    "en": "Image viewer",
+    "de": "Bildansicht",
+    "sv": "Bildvisning",
+    "nb": "Bildevisning"
+  },
+  "Display type": {
+    "en": "Display type",
+    "da": "Visningstype",
+    "de": "Anzeigetyp",
+    "sv": "Visningstyp",
+    "nb": "Visningstype"
+  },
+  "Grid + Lightbox": {
+    "en": "Grid + Lightbox",
+    "da": "Grid + Lightbox",
+    "de": "Raster + Lightbox",
+    "sv": "Rutnät + Lightbox",
+    "nb": "Rutenett + Lightbox"
+  },
+  "Slider": {
+    "en": "Slider",
+    "da": "Slider",
+    "de": "Slider",
+    "sv": "Bildspel",
+    "nb": "Bildekarusell"
+  },
+  "Images per row": {
+    "en": "Images per row",
+    "da": "Billeder pr. række",
+    "de": "Bilder pro Zeile",
+    "sv": "Bilder per rad",
+    "nb": "Bilder per rad"
+  },
+  "Fullscreen Lightbox": {
+    "en": "Fullscreen Lightbox",
+    "da": "Fuldskærms-Lightbox",
+    "de": "Vollbild-Lightbox",
+    "sv": "Fullskärms-Lightbox",
+    "nb": "Fullskjerms-Lightbox"
+  },
+  "Autoplay": {
+    "en": "Autoplay",
+    "da": "Automatisk afspilning",
+    "de": "Automatische Wiedergabe",
+    "sv": "Automatisk uppspelning",
+    "nb": "Automatisk avspilling"
+  },
+  "Time per slide (seconds)": {
+    "en": "Time per slide (seconds)",
+    "da": "Tid pr. billede (sekunder)",
+    "de": "Zeit pro Bild (Sekunden)",
+    "sv": "Tid per bild (sekunder)",
+    "nb": "Tid per bilde (sekunder)"
+  },
+  "Pause slideshow": {
+    "en": "Pause slideshow",
+    "da": "Pause billedvisning",
+    "de": "Diashow anhalten",
+    "sv": "Pausa bildspel",
+    "nb": "Pause bildefremvisning"
+  },
+  "Pause": {
+    "en": "Pause",
+    "da": "Pause",
+    "de": "Pause",
+    "sv": "Paus",
+    "nb": "Pause"
+  },
+  "Play": {
+    "en": "Play",
+    "da": "Afspil",
+    "de": "Abspielen",
+    "sv": "Spela",
+    "nb": "Spill"
+  },
+  "Play slideshow": {
+    "en": "Play slideshow",
+    "da": "Afspil billedvisning",
+    "de": "Diashow abspielen",
+    "sv": "Starta bildspel",
+    "nb": "Spill av bildefremvisning"
+  }
+}

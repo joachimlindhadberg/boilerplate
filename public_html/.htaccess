@@ -1,0 +1,87 @@
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+RewriteBase /
+
+# Never expose internal PHP includes, SCSS sources or source maps directly.
+# Never execute server-side scripts from public upload storage.
+RewriteRule ^(?:uploads|assets/uploads)/.*\.(?:php[0-9]*|phps|phtml|phar|cgi|fcgi|pl|py|sh|shtml|asp|aspx|jsp)(?:\.|$) - [F,L,NC]
+
+RewriteRule ^incl(?:/|$) - [F,L,NC]
+RewriteRule ^assets/scss(?:/|$) - [F,L,NC]
+RewriteRule \.map$ - [F,L,NC]
+RewriteRule (^|/)\.(?!well-known(?:/|$)) - [F,L]
+
+# Admin routing. /admin is Dashboard; each CMS module has its own PHP file
+# while the public URL stays extensionless. Query strings are preserved.
+RewriteRule ^admin/(?:incl|views)(?:/|$) - [F,L,NC]
+RewriteRule ^admin/assets/scss(?:/|$) - [F,L,NC]
+
+# Canonicalize direct module PHP requests to the clean CMS URLs.
+RewriteCond %{THE_REQUEST} \s/+admin/media\.php(?:[?\s]) [NC]
+RewriteRule ^admin/media\.php$ /admin/medier [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/pages\.php(?:[?\s]) [NC]
+RewriteRule ^admin/pages\.php$ /admin/sider [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/modules\.php(?:[?\s]) [NC]
+RewriteRule ^admin/modules\.php$ /admin/modules [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/users\.php(?:[?\s]) [NC]
+RewriteRule ^admin/users\.php$ /admin/brugere [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/tools\.php(?:[?\s]) [NC]
+RewriteRule ^admin/tools\.php$ /admin/vaerktoejer [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/settings\.php(?:[?\s]) [NC]
+RewriteRule ^admin/settings\.php$ /admin/indstillinger [R=302,L]
+
+RewriteRule ^admin/?$ admin/index.php [L]
+RewriteRule ^admin/medier/?$ admin/media.php [QSA,L]
+RewriteRule ^admin/sider/?$ admin/pages.php [QSA,L]
+RewriteRule ^admin/modules/?$ admin/modules.php [QSA,L]
+RewriteRule ^admin/brugere/?$ admin/users.php [QSA,L]
+RewriteRule ^admin/vaerktoejer/update/?$ admin/tools.php?mode=update [L]
+RewriteRule ^admin/vaerktoejer/redirects/?$ admin/tools.php?mode=redirects [QSA,L]
+RewriteRule ^admin/vaerktoejer/?$ admin/tools.php [QSA,L]
+RewriteRule ^admin/indstillinger/?$ admin/settings.php [QSA,L]
+
+# Unknown admin paths stay inside the CMS and render an admin 404.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^admin/(.+?)/?$ admin/index.php?legacy_path=$1 [QSA,L]
+
+# Optional frontend JavaScript owned by active modules. Frontend CSS always belongs to the site theme.
+RewriteRule ^assets/modules/([a-z0-9][a-z0-9_-]*)/(.+)$ module-assets.php?module=$1&file=$2 [QSA,L,NC]
+
+# Historical/canonical routes.
+RewriteRule ^forside/?$ / [R=301,L,NC]
+
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always unset X-Powered-By
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  <FilesMatch "\.(?:css|js|png|jpe?g|webp|gif|ico|svg|woff2?)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json application/xml image/svg+xml
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 30 days"
+  ExpiresByType application/javascript "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/gif "access plus 30 days"
+  ExpiresByType image/x-icon "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+</IfModule>

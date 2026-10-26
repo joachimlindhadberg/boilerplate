@@ -1,0 +1,25 @@
+.rich-text {
+  max-width: 760px;
+}
+
+.rich-text > :first-child {
+  margin-top: 0;
+}
+
+.rich-text > :last-child {
+  margin-bottom: 0;
+}
+
+.rich-text h2,
+.rich-text h3,
+.rich-text h4 {
+  margin-top: 1.75em;
+  margin-bottom: 0.65em;
+}
+
+.rich-text blockquote {
+  margin: 1.5rem 0;
+  padding-left: 1.25rem;
+  border-left: 2px solid var(--color-border);
+  color: var(--color-muted);
+}

@@ -1,0 +1,210 @@
+[
+  {
+    "id": "contact",
+    "title": "Kontaktformular",
+    "description": "Fornavn og efternavn side om side, efterfulgt af e-mail og besked.",
+    "rows": [
+      {
+        "layout": "50-50",
+        "fields": [
+          {
+            "field_type": "text",
+            "label": "Fornavn",
+            "is_required": true
+          },
+          {
+            "field_type": "text",
+            "label": "Efternavn",
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "email",
+            "label": "E-mail",
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "textarea",
+            "label": "Besked",
+            "is_required": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "registration",
+    "title": "Tilmeldingsformular",
+    "description": "Indsamler kontaktoplysninger, arrangement og eventuelle bemærkninger.",
+    "rows": [
+      {
+        "layout": "50-50",
+        "fields": [
+          {
+            "field_type": "text",
+            "label": "Fornavn",
+            "is_required": true
+          },
+          {
+            "field_type": "text",
+            "label": "Efternavn",
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "email",
+            "label": "E-mail",
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "tel",
+            "label": "Telefon",
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "text",
+            "label": "Arrangement",
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "textarea",
+            "label": "Bemærkninger",
+            "is_required": false
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "feedback",
+    "title": "Feedbackformular",
+    "description": "Navn, e-mail, vurdering og en længere feedbackbesked.",
+    "rows": [
+      {
+        "layout": "50-50",
+        "fields": [
+          {
+            "field_type": "text",
+            "label": "Navn",
+            "is_required": false
+          },
+          {
+            "field_type": "email",
+            "label": "E-mail",
+            "is_required": false
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "radio",
+            "label": "Din vurdering",
+            "is_required": true,
+            "options": [
+              "Meget tilfreds",
+              "Tilfreds",
+              "Mindre tilfreds"
+            ]
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "textarea",
+            "label": "Din feedback",
+            "is_required": true
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "inquiry",
+    "title": "Forespørgselsformular",
+    "description": "Kontaktoplysninger, type af forespørgsel og beskrivelse.",
+    "rows": [
+      {
+        "layout": "50-50",
+        "fields": [
+          {
+            "field_type": "text",
+            "label": "Fornavn",
+            "is_required": true
+          },
+          {
+            "field_type": "text",
+            "label": "Efternavn",
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "email",
+            "label": "E-mail",
+            "is_required": true
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "select",
+            "label": "Henvendelsestype",
+            "is_required": true,
+            "options": [
+              "Booking",
+              "Samarbejde",
+              "Andet"
+            ]
+          }
+        ]
+      },
+      {
+        "layout": "100",
+        "fields": [
+          {
+            "field_type": "textarea",
+            "label": "Beskrivelse",
+            "is_required": true
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,42 @@
+.block {
+  min-width: 0;
+}
+
+.grid__column > .block + .block {
+  margin-top: 32px;
+}
+
+.block__kicker {
+  margin-bottom: 8px;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.block__title {
+  margin-bottom: 16px;
+}
+
+.block__content > :last-child {
+  margin-bottom: 0;
+}
+
+.block__figure {
+  margin: 0 0 20px;
+}
+
+.block__figure--bottom {
+  margin: 20px 0 0;
+}
+
+.block__caption {
+  margin-top: 8px;
+  color: var(--color-muted);
+  font-size: .875rem;
+}
+
+.block__button {
+  margin-top: 20px;
+}

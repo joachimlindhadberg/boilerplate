@@ -1,0 +1,148 @@
+/* Authenticated Core markup, presented entirely by the frontend theme. */
+.frontend-admin-bar {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1100;
+  width: 100%;
+  height: 40px;
+  background: #19252a;
+  color: #e2e9ec;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+/* Keep in-page anchors visible below the fixed toolbar and sticky header. */
+html:has(> body > .frontend-admin-bar) {
+  scroll-padding-top: 104px;
+}
+
+/* Reserve space only on authenticated pages. The sticky public header
+   remains below the fixed toolbar, with no extra public HTML wrappers. */
+body:has(> .frontend-admin-bar) {
+  padding-top: 40px;
+}
+
+body:has(> .frontend-admin-bar) .site-header {
+  top: 40px;
+}
+
+.frontend-admin-bar__inner {
+  display: flex;
+  min-height: 40px;
+  align-items: stretch;
+  gap: 12px;
+  padding-inline: 16px;
+}
+
+.frontend-admin-bar a,
+.frontend-admin-bar button,
+.frontend-admin-bar summary {
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+}
+
+.frontend-admin-bar__brand,
+.frontend-admin-bar__link,
+.frontend-admin-bar__account > summary {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 8px;
+  white-space: nowrap;
+}
+
+.frontend-admin-bar__brand {
+  font-weight: 600;
+}
+
+.frontend-admin-bar__nav {
+  display: flex;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.frontend-admin-bar__account {
+  position: relative;
+  margin-left: auto;
+}
+
+.frontend-admin-bar__account > summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+.frontend-admin-bar__account > summary::-webkit-details-marker { display: none; }
+
+.frontend-admin-bar__icon {
+  width: 15px;
+  height: 15px;
+  flex: none;
+}
+
+.frontend-admin-bar__brand:hover,
+.frontend-admin-bar__link:hover,
+.frontend-admin-bar__account > summary:hover,
+.frontend-admin-bar__account[open] > summary {
+  background: rgba(255, 255, 255, .1);
+  color: #fff;
+}
+
+.frontend-admin-bar :focus-visible {
+  outline: 2px solid #c3e6df;
+  outline-offset: -3px;
+}
+
+.frontend-admin-bar__menu {
+  position: absolute;
+  z-index: 1200;
+  top: 100%;
+  right: 0;
+  min-width: 180px;
+  padding: 6px;
+  border: 1px solid #43535a;
+  background: #19252a;
+  box-shadow: 0 8px 20px rgba(0,0,0,.18);
+}
+
+.frontend-admin-bar__username {
+  display: block;
+  padding: 8px 10px;
+  border-bottom: 1px solid #43535a;
+  color: #cad5d9;
+}
+
+.frontend-admin-bar__menu a,
+.frontend-admin-bar__menu button {
+  display: block;
+  width: 100%;
+  padding: 9px 10px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.frontend-admin-bar__menu a:hover,
+.frontend-admin-bar__menu button:hover {
+  background: rgba(255,255,255,.1);
+  color: #fff;
+}
+
+@media (max-width: 767.98px) {
+  /* The mobile fullscreen navigation starts below both fixed topbar (40px)
+     and the sticky public header (64px), not underneath either. */
+  body:has(> .frontend-admin-bar) .site-header .site-navigation {
+    inset: 104px 0 0;
+  }
+}
+
+@media (max-width: 620px) {
+  .frontend-admin-bar__inner { gap: 2px; padding-inline: 6px; }
+  .frontend-admin-bar__brand,
+  .frontend-admin-bar__link,
+  .frontend-admin-bar__account > summary { padding-inline: 8px; }
+  .frontend-admin-bar__label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+}

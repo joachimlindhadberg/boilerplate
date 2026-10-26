@@ -1,0 +1,35 @@
+DirectoryIndex index.php
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(?:incl|views)(?:/|$) - [F,L,NC]
+RewriteRule ^assets/scss(?:/|$) - [F,L,NC]
+RewriteCond %{THE_REQUEST} \s/+admin/media\.php(?:[?\s]) [NC]
+RewriteRule ^media\.php$ /admin/medier [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/navigation\.php(?:[?\s]) [NC]
+RewriteRule ^navigation\.php$ /admin/navigation [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/pages\.php(?:[?\s]) [NC]
+RewriteRule ^pages\.php$ /admin/sider [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/modules\.php(?:[?\s]) [NC]
+RewriteRule ^modules\.php$ /admin/modules [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/users\.php(?:[?\s]) [NC]
+RewriteRule ^users\.php$ /admin/brugere [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/tools\.php(?:[?\s]) [NC]
+RewriteRule ^tools\.php$ /admin/vaerktoejer [R=302,L]
+RewriteCond %{THE_REQUEST} \s/+admin/settings\.php(?:[?\s]) [NC]
+RewriteRule ^settings\.php$ /admin/indstillinger [R=302,L]
+RewriteRule ^scheduled-content/?$ scheduled-content.php [QSA,L]
+RewriteRule ^medier/?$ media.php [QSA,L]
+RewriteRule ^sider/?$ pages.php [QSA,L]
+RewriteRule ^navigation/?$ navigation.php [QSA,L]
+RewriteRule ^modules/?$ modules.php [QSA,L]
+RewriteRule ^brugere/?$ users.php [QSA,L]
+# Keep nested Tools routes in sync with the public_html rewrite rules.
+RewriteRule ^vaerktoejer/update/?$ tools.php?mode=update [L]
+RewriteRule ^vaerktoejer/redirects/?$ tools.php?mode=redirects [QSA,L]
+RewriteRule ^vaerktoejer/activity/?$ tools.php?mode=activity [QSA,L]
+RewriteRule ^vaerktoejer/?$ tools.php [QSA,L]
+RewriteRule ^indstillinger/?$ settings.php [QSA,L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+?)/?$ index.php?legacy_path=$1 [QSA,L]
+</IfModule>

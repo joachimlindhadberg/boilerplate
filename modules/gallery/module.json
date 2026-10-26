@@ -1,0 +1,18 @@
+{
+  "name": "Gallery",
+  "slug": "gallery",
+  "version": "1.0.17",
+  "description": "Reusable image galleries from the CMS Media library with Page Builder integration.",
+  "author": "Boilerplate CMS",
+  "requires": "2.2.1",
+  "requires_php": "8.3.0",
+  "entry": "GalleryModule.php",
+  "class": "GalleryModule",
+  "media_references": [
+    {
+      "table": "module_gallery_items",
+      "column": "media_id",
+      "label": "Galleries"
+    }
+  ]
+}

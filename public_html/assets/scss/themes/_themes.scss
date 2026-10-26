@@ -1,0 +1,39 @@
+.theme-light {
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.theme-soft {
+  background: var(--color-surface-soft);
+  color: var(--color-text);
+}
+
+.theme-dark {
+  background: var(--color-surface-dark);
+  color: #fff;
+}
+
+.theme-dark a {
+  color: inherit;
+}
+
+.theme-dark .section__kicker,
+.theme-dark .block__kicker,
+.theme-dark .block__caption,
+.theme-dark .form__help,
+.theme-dark .gallery__caption {
+  color: rgba(255,255,255,.72);
+}
+
+.theme-dark .form input[type="text"],
+.theme-dark .form input[type="email"],
+.theme-dark .form input[type="tel"],
+.theme-dark .form input[type="url"],
+.theme-dark .form input[type="number"],
+.theme-dark .form input[type="date"],
+.theme-dark .form textarea,
+.theme-dark .form select {
+  border-color: rgba(255,255,255,.24);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+}

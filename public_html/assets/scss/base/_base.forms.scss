@@ -1,0 +1,21 @@
+fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+legend {
+  padding: 0;
+}
+
+label {
+  display: inline-block;
+}
+
+input,
+textarea,
+select,
+button {
+  border-radius: var(--radius);
+}

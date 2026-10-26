@@ -1,0 +1,11 @@
+{
+  "name": "Forms",
+  "slug": "forms",
+  "version": "1.3.12",
+  "description": "Reusable forms with row/column builder, Page Builder integration, submissions, notifications, redirects and spam protection.",
+  "author": "Boilerplate CMS",
+  "requires": "2.2.1",
+  "requires_php": "8.3.0",
+  "entry": "FormsModule.php",
+  "class": "FormsModule"
+}

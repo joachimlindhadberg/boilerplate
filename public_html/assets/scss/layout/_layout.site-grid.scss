@@ -1,0 +1,78 @@
+/* Page Builder V2 layout contract — owned entirely by the frontend theme. */
+.block-section {
+  width: 100%;
+  padding-block: var(--section-space);
+}
+
+.block-section[data-theme="light"] { background: var(--color-surface); color: var(--color-text); }
+.block-section[data-theme="soft"] { background: var(--color-surface-soft); color: var(--color-text); }
+.block-section[data-theme="dark"] { background: var(--color-surface-dark); color: #fff; }
+.block-section[data-theme="dark"] a { color: inherit; }
+.block-section[data-theme="dark"] .section__kicker,
+.block-section[data-theme="dark"] .block__kicker,
+.block-section[data-theme="dark"] .block__caption,
+.block-section[data-theme="dark"] .form__help,
+.block-section[data-theme="dark"] .gallery__caption { color: rgba(255,255,255,.72); }
+.block-section[data-theme="dark"] .form input[type="text"],
+.block-section[data-theme="dark"] .form input[type="email"],
+.block-section[data-theme="dark"] .form input[type="tel"],
+.block-section[data-theme="dark"] .form input[type="url"],
+.block-section[data-theme="dark"] .form input[type="number"],
+.block-section[data-theme="dark"] .form input[type="date"],
+.block-section[data-theme="dark"] .form textarea,
+.block-section[data-theme="dark"] .form select {
+  border-color: rgba(255,255,255,.24);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+}
+
+.site-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--grid-gap); }
+.site-grid--item { min-width: 0; }
+.site-grid[data-gap="compact"] { gap: 12px; }
+.site-grid[data-gap="large"] { gap: 40px; }
+.site-grid--item > .block + .block { margin-top: 32px; }
+
+@media (min-width: 768px) {
+  .site-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .site-grid--4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .site-grid--5, .site-grid--6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 992px) {
+  .site-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .site-grid--5, .site-grid--6 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 1200px) {
+  .site-grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .site-grid--5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+  .site-grid--6 { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+
+/* Preserve the existing full-bleed hero treatment with only one outer section. */
+.block-section[data-content="hero"] {
+  position: relative;
+  display: flex;
+  min-height: 520px;
+  align-items: flex-end;
+  overflow: hidden;
+  background: var(--color-surface-dark);
+  color: #fff;
+}
+/* Hero content width follows its section preset; the outer hero remains full-bleed. */
+.block-section[data-content="hero"][data-theme="light"] { background:var(--color-surface); color:var(--color-text); }
+.block-section[data-content="hero"][data-theme="soft"] { background:var(--color-surface-soft); color:var(--color-text); }
+.block-section[data-content="hero"][data-theme="light"] .hero__kicker,
+.block-section[data-content="hero"][data-theme="soft"] .hero__kicker { color:inherit; }
+.block-section[data-content="hero"] .hero__background,
+.block-section[data-content="hero"] .hero__overlay { z-index: 0; }
+.block-section[data-content="hero"] .hero__kicker,
+.block-section[data-content="hero"] .hero__title,
+.block-section[data-content="hero"] .hero__lead,
+.block-section[data-content="hero"] .hero__actions { position: relative; z-index: 1; }
+.block-section[data-content="hero"] .hero__kicker { color: rgba(255,255,255,.78); }
+
+
+/* Per-section width presets: theme owns every physical width and breakpoint. */
+.block-section[data-container-width="narrow"] > .container { max-width: min(100%, 760px); }
+.block-section[data-container-width="wide"] > .container { max-width: min(100%, 1480px); }
+.block-section[data-container-width="full"] > .container { max-width: 100%; width: 100%; }
+/* Standard uses .container from the theme. */

@@ -1,0 +1,106 @@
+.form-wrap {
+  width: 100%;
+  max-width: 760px;
+}
+
+.form {
+  display: grid;
+  gap: 20px;
+}
+
+.form__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+
+.form__column {
+  min-width: 0;
+}
+
+.form__field {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.form__field > label,
+.form__field > legend {
+  font-weight: 600;
+}
+
+.form input[type="text"],
+.form input[type="email"],
+.form input[type="tel"],
+.form input[type="url"],
+.form input[type="number"],
+.form input[type="date"],
+.form textarea,
+.form select {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+
+.form textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+.form__choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+}
+
+.form__choice input {
+  margin-top: 0.35em;
+}
+
+.form__help,
+.form__error {
+  margin: 0;
+  font-size: 0.875rem;
+}
+
+.form__help { color: var(--color-muted); }
+.form__error { color: var(--color-error); }
+
+.form__notice {
+  margin: 0 0 20px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.form__notice--success {
+  border-color: color-mix(in srgb, var(--color-success) 35%, var(--color-border));
+}
+
+.form__notice--error {
+  border-color: color-mix(in srgb, var(--color-error) 40%, var(--color-border));
+}
+
+.form__submit {
+  justify-self: start;
+}
+
+.form__honeypot {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+}
+
+@media (min-width: 641px) {
+  .form__row--50-50 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

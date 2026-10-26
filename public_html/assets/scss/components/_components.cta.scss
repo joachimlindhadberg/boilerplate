@@ -1,0 +1,26 @@
+.cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.cta__content {
+  max-width: 760px;
+}
+
+.cta__body {
+  margin-top: 16px;
+}
+
+.cta__body > :last-child {
+  margin-bottom: 0;
+}
+
+@media (max-width: 767.98px) {
+  .cta {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 24px;
+  }
+}

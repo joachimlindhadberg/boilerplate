@@ -1,0 +1,23 @@
+.media-block {
+  align-items: center;
+}
+
+.media-block__media {
+  min-height: 280px;
+  margin: 0;
+}
+
+.media-block__media img {
+  width: 100%;
+  height: auto;
+}
+
+.media-block__media--empty {
+  min-height: 320px;
+  background: var(--color-surface-soft);
+}
+
+@media (min-width: 768px) {
+  .media-block--image-right .media-block__media { order: 2; }
+  .media-block--image-right .media-block__content { order: 1; }
+}

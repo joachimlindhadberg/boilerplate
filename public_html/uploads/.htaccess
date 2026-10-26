@@ -1,0 +1,22 @@
+# Boilerplate CMS: public media only. Apache 2.4 / AllowOverride Options FileInfo AuthConfig.
+# The webroot-level rewrite is a fallback; this directory layer is intentional.
+Options -Indexes -ExecCGI
+
+# Force the static default handler even when server-wide AddHandler maps from a shared host from running uploaded
+# media (including names with multiple extensions). Plain static serving remains.
+<FilesMatch ".+">
+    SetHandler default-handler
+</FilesMatch>
+
+# Refuse any filename containing a script extension, not only a final extension.
+# Keep this rule even though Core creates safe media filenames: legacy files,
+# FTP restores and future upload modules must not weaken the directory boundary.
+<FilesMatch "(?i)(?:^|\.)(?:php[0-9]*|phps|phtml|phar|cgi|fcgi|pl|py|sh|shtml|asp|aspx|jsp)(?:\.|$)">
+    Require all denied
+</FilesMatch>
+
+# No private configuration / dotfiles are valid public media. Do not rely on
+# a server-wide FilesMatch or mod_rewrite being enabled for this protection.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>

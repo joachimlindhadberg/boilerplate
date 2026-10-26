@@ -1,0 +1,1423 @@
+{
+  "0 felter": {
+    "da": "0 felter",
+    "en": "0 fields",
+    "de": "0 Felder",
+    "sv": "0 fält",
+    "nb": "0 felt"
+  },
+  "1 felt": {
+    "da": "1 felt",
+    "en": "1 field",
+    "de": "1 Feld",
+    "sv": "1 fält",
+    "nb": "1 felt"
+  },
+  "Aktive": {
+    "da": "Aktive",
+    "en": "Active",
+    "de": "Aktive",
+    "sv": "Aktiva",
+    "nb": "Aktive"
+  },
+  "Aktivér formularen for at gøre den tilgængelig i Page Builder.": {
+    "en": "Activate the form to make it available in Page Builder.",
+    "da": "Aktivér formularen for at gøre den tilgængelig i Page Builder.",
+    "de": "Aktivieren Sie das Formular, damit es im Page Builder verfügbar wird.",
+    "sv": "Aktivera formuläret för att göra det tillgängligt i Page Builder.",
+    "nb": "Aktiver skjemaet for å gjøre det tilgjengelig i Page Builder."
+  },
+  "Alle formularer": {
+    "en": "All forms",
+    "da": "Alle formularer",
+    "de": "Alle Formulare",
+    "sv": "Alla formulär",
+    "nb": "Alle skjemaer"
+  },
+  "Alle statusser": {
+    "en": "All statuses",
+    "da": "Alle statusser",
+    "de": "Alle Status",
+    "sv": "Alla statusar",
+    "nb": "Alle statuser"
+  },
+  "Alt + pil op/ned flytter rækken": {
+    "da": "Alt + pil op/ned flytter rækken",
+    "en": "Alt + Up/Down moves the row",
+    "de": "Alt + Pfeil hoch/runter verschiebt die Zeile",
+    "sv": "Alt + pil upp/ned flyttar raden",
+    "nb": "Alt + pil opp/ned flytter raden"
+  },
+  "Andet": {
+    "en": "Other",
+    "de": "Sonstiges",
+    "sv": "Annat",
+    "nb": "Annet",
+    "da": "Andet"
+  },
+  "Arrangement": {
+    "en": "Event",
+    "de": "Veranstaltung",
+    "sv": "Evenemang",
+    "nb": "Arrangement",
+    "da": "Arrangement"
+  },
+  "Bekræftelsesmail": {
+    "en": "Confirmation email",
+    "da": "Bekræftelsesmail",
+    "de": "Bestätigungs-E-Mail",
+    "sv": "Bekräftelsemejl",
+    "nb": "Bekreftelses-e-post"
+  },
+  "Bemærkninger": {
+    "en": "Comments",
+    "de": "Anmerkungen",
+    "sv": "Kommentarer",
+    "nb": "Merknader",
+    "da": "Bemærkninger"
+  },
+  "Besked": {
+    "en": "Message",
+    "de": "Nachricht",
+    "sv": "Meddelande",
+    "nb": "Melding",
+    "da": "Besked"
+  },
+  "Besked *": {
+    "en": "Message *",
+    "da": "Besked *",
+    "de": "Nachricht *",
+    "sv": "Meddelande *",
+    "nb": "Melding *"
+  },
+  "Beskrivelse": {
+    "en": "Description",
+    "de": "Beschreibung",
+    "sv": "Beskrivning",
+    "nb": "Beskrivelse",
+    "da": "Beskrivelse"
+  },
+  "Booking": {
+    "en": "Booking",
+    "de": "Buchung",
+    "sv": "Bokning",
+    "nb": "Booking",
+    "da": "Booking"
+  },
+  "Brug på sider": {
+    "en": "Use on pages",
+    "da": "Brug på sider",
+    "de": "Auf Seiten verwenden",
+    "sv": "Använd på sidor",
+    "nb": "Bruk på sider"
+  },
+  "Brug skabelon": {
+    "en": "Use template",
+    "de": "Vorlage verwenden",
+    "sv": "Använd mall",
+    "nb": "Bruk mal",
+    "da": "Brug skabelon"
+  },
+  "Bruges kun som udgangspunkt, når en ny formular oprettes.": {
+    "en": "Only used as a starting point when a new form is created.",
+    "da": "Bruges kun som udgangspunkt, når en ny formular oprettes.",
+    "de": "Wird nur als Ausgangspunkt für neue Formulare verwendet.",
+    "sv": "Används bara som utgångspunkt när ett nytt formulär skapas.",
+    "nb": "Brukes bare som utgangspunkt når et nytt skjema opprettes."
+  },
+  "Byg formularen med 100% eller 50 / 50 rows. På mobil stables 50 / 50 automatisk.": {
+    "en": "Build the form with full-width or 50/50 rows. On mobile, 50/50 rows stack automatically.",
+    "da": "Byg formularen med 100% eller 50 / 50 rows. På mobil stables 50 / 50 automatisk.",
+    "de": "Erstellen Sie Formulare mit Zeilen in voller Breite oder 50/50. Auf Mobilgeräten werden 50/50-Spalten untereinander angezeigt.",
+    "sv": "Bygg formuläret med helbredd eller 50/50-rader. På mobilen staplas 50/50 automatiskt.",
+    "nb": "Bygg skjemaet med fullbredde eller 50/50-rader. På mobil stables 50/50 automatisk."
+  },
+  "Checkbox": {
+    "en": "Checkbox",
+    "da": "Checkbox",
+    "de": "Kontrollkästchen",
+    "sv": "Kryssruta",
+    "nb": "Avkrysningsboks"
+  },
+  "Data": {
+    "en": "Data",
+    "da": "Data",
+    "de": "Daten",
+    "sv": "Data",
+    "nb": "Data"
+  },
+  "Definér felter, mails og hvad der skal ske efter en indsendelse.": {
+    "en": "Define fields, emails and what happens after submission.",
+    "da": "Definér felter, mails og hvad der skal ske efter en indsendelse.",
+    "de": "Definieren Sie Felder, E-Mails und die Aktionen nach dem Absenden.",
+    "sv": "Definiera fält, e-post och vad som händer efter ett inskick.",
+    "nb": "Definer felter, e-post og hva som skjer etter innsending."
+  },
+  "den centrale notifikationsadresse": {
+    "en": "the central notification address",
+    "da": "den centrale notifikationsadresse",
+    "de": "die zentrale Benachrichtigungsadresse",
+    "sv": "den centrala aviseringsadressen",
+    "nb": "den sentrale varslingsadressen"
+  },
+  "Denne handling kan ikke fortrydes.": {
+    "en": "This action cannot be undone.",
+    "da": "Denne handling kan ikke fortrydes.",
+    "de": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "sv": "Åtgärden kan inte ångras.",
+    "nb": "Denne handlingen kan ikke angres."
+  },
+  "Din feedback": {
+    "en": "Your feedback",
+    "de": "Ihr Feedback",
+    "sv": "Din återkoppling",
+    "nb": "Din tilbakemelding",
+    "da": "Din feedback"
+  },
+  "Din vurdering": {
+    "en": "Your rating",
+    "de": "Ihre Bewertung",
+    "sv": "Din bedömning",
+    "nb": "Din vurdering",
+    "da": "Din vurdering"
+  },
+  "Dropdown": {
+    "en": "Dropdown",
+    "da": "Dropdown",
+    "de": "Dropdown",
+    "sv": "Rullgardinsmeny",
+    "nb": "Nedtrekksliste"
+  },
+  "Dynamisk komponent": {
+    "en": "Dynamic component",
+    "da": "Dynamisk komponent",
+    "de": "Dynamische Komponente",
+    "sv": "Dynamisk komponent",
+    "nb": "Dynamisk komponent"
+  },
+  "E-mail": {
+    "en": "Email",
+    "de": "E-Mail",
+    "sv": "E-post",
+    "nb": "E-post",
+    "da": "E-mail"
+  },
+  "E-mail-notifikation": {
+    "en": "Email notification",
+    "da": "E-mail-notifikation",
+    "de": "E-Mail-Benachrichtigung",
+    "sv": "E-postavisering",
+    "nb": "E-postvarsel"
+  },
+  "E-mails": {
+    "da": "E-mails",
+    "en": "Emails",
+    "de": "E-Mails",
+    "sv": "E-post",
+    "nb": "E-poster"
+  },
+  "Efter afsendelse": {
+    "en": "After submission",
+    "da": "Efter afsendelse",
+    "de": "Nach dem Absenden",
+    "sv": "Efter inskick",
+    "nb": "Etter innsending"
+  },
+  "Efternavn": {
+    "en": "Last name",
+    "de": "Nachname",
+    "sv": "Efternamn",
+    "nb": "Etternavn",
+    "da": "Efternavn"
+  },
+  "Emne": {
+    "en": "Subject",
+    "da": "Emne",
+    "de": "Betreff",
+    "sv": "Ämne",
+    "nb": "Emne"
+  },
+  "Emne *": {
+    "en": "Subject *",
+    "da": "Emne *",
+    "de": "Betreff *",
+    "sv": "Ämne *",
+    "nb": "Emne *"
+  },
+  "En formular kan højst indeholde 100 rækker.": {
+    "en": "A form can contain at most 100 rows.",
+    "da": "En formular kan højst indeholde 100 rækker.",
+    "de": "Ein Formular darf höchstens 100 Zeilen enthalten.",
+    "sv": "Ett formulär får innehålla högst 100 rader.",
+    "nb": "Et skjema kan inneholde maksimalt 100 rader."
+  },
+  "Engangstoken, honeypot og server-side validering er altid aktive og kan ikke slås fra.": {
+    "en": "One-time token, honeypot and server-side validation are always enabled.",
+    "da": "Engangstoken, honeypot og server-side validering er altid aktive og kan ikke slås fra.",
+    "de": "Einmaltoken, Honeypot und serverseitige Validierung sind immer aktiviert.",
+    "sv": "Engångstoken, honeypot och servervalidering är alltid aktiverade.",
+    "nb": "Engangstoken, honeypot og validering på serveren er alltid aktivert."
+  },
+  "Er du sikker på, at du vil slette denne indsendelse permanent?": {
+    "en": "Are you sure you want to delete this submission permanently?",
+    "da": "Er du sikker på, at du vil slette denne indsendelse permanent?",
+    "de": "Möchten Sie diese Einsendung wirklich dauerhaft löschen?",
+    "sv": "Är du säker på att du vill ta bort inskicket permanent?",
+    "nb": "Er du sikker på at du vil slette denne innsendingen permanent?"
+  },
+  "Er du sikker på, at du vil slette formularen": {
+    "en": "Are you sure you want to delete the form",
+    "da": "Er du sikker på, at du vil slette formularen",
+    "de": "Möchten Sie das Formular wirklich löschen",
+    "sv": "Är du säker på att du vill radera formuläret",
+    "nb": "Er du sikker på at du vil slette skjemaet"
+  },
+  "Er du sikker på, at du vil slette indsendelsen fra": {
+    "en": "Are you sure you want to delete the submission from",
+    "da": "Er du sikker på, at du vil slette indsendelsen fra",
+    "de": "Möchten Sie wirklich die Einsendung aus folgendem Formular löschen:",
+    "sv": "Är du säker på att du vill ta bort inskicket från",
+    "nb": "Er du sikker på at du vil slette innsendingen fra"
+  },
+  "Erstat felter": {
+    "en": "Replace fields",
+    "de": "Felder ersetzen",
+    "sv": "Ersätt fält",
+    "nb": "Erstatt felt",
+    "da": "Erstat felter"
+  },
+  "Erstat formularens felter?": {
+    "en": "Replace the form fields?",
+    "de": "Formularfelder ersetzen?",
+    "sv": "Ersätta formulärfälten?",
+    "nb": "Erstatte skjemafeltene?",
+    "da": "Erstat formularens felter?"
+  },
+  "Et felt i fuld bredde (100%).": {
+    "en": "One full-width field (100%).",
+    "da": "Et felt i fuld bredde (100%).",
+    "de": "Ein Feld in voller Breite (100 %).",
+    "sv": "Ett fält i full bredd (100 %).",
+    "nb": "Ett felt i full bredde (100 %)."
+  },
+  "Feedbackformular": {
+    "en": "Feedback form",
+    "de": "Feedbackformular",
+    "sv": "Feedbackformulär",
+    "nb": "Tilbakemeldingsskjema",
+    "da": "Feedbackformular"
+  },
+  "Felt": {
+    "en": "Field",
+    "da": "Felt",
+    "de": "Feld",
+    "sv": "Fält",
+    "nb": "Felt"
+  },
+  "Felter": {
+    "en": "Fields",
+    "da": "Felter",
+    "de": "Felder",
+    "sv": "Fält",
+    "nb": "Felter"
+  },
+  "Felter i kolonne 2 skal fjernes, før du kan vælge én kolonne.": {
+    "da": "Felter i kolonne 2 skal fjernes, før du kan vælge én kolonne.",
+    "en": "Remove fields from column 2 before selecting one column.",
+    "de": "Entfernen Sie die Felder aus Spalte 2, bevor Sie eine Spalte auswählen.",
+    "sv": "Ta bort fält i kolumn 2 innan du väljer en kolumn.",
+    "nb": "Fjern felt i kolonne 2 før du velger én kolonne."
+  },
+  "Filtrer efter formular": {
+    "en": "Filter by form",
+    "da": "Filtrer efter formular",
+    "de": "Nach Formular filtern",
+    "sv": "Filtrera efter formulär",
+    "nb": "Filtrer etter skjema"
+  },
+  "Filtrer efter status": {
+    "en": "Filter by status",
+    "da": "Filtrer efter status",
+    "de": "Nach Status filtern",
+    "sv": "Filtrera efter status",
+    "nb": "Filtrer etter status"
+  },
+  "Filtrer formularstatus": {
+    "da": "Filtrer formularstatus",
+    "en": "Filter form status",
+    "de": "Formularstatus filtern",
+    "sv": "Filtrera formulärstatus",
+    "nb": "Filtrer skjemastatus"
+  },
+  "Filtrer indsendelsesstatus": {
+    "da": "Filtrer indsendelsesstatus",
+    "en": "Filter submission status",
+    "de": "Einsendungsstatus filtern",
+    "sv": "Filtrera inskickningsstatus",
+    "nb": "Filtrer innsendingstatus"
+  },
+  "Fjern dette felt? Ændringen gemmes først, når du gemmer formularen.": {
+    "en": "Remove this field? The change is saved only when you save the form.",
+    "da": "Fjern dette felt? Ændringen gemmes først, når du gemmer formularen.",
+    "de": "Dieses Feld entfernen? Die Änderung wird erst beim Speichern des Formulars übernommen.",
+    "sv": "Ta bort det här fältet? Ändringen sparas först när du sparar formuläret.",
+    "nb": "Fjerne dette feltet? Endringen lagres først når du lagrer skjemaet."
+  },
+  "Fjern felt": {
+    "en": "Remove field",
+    "da": "Fjern felt",
+    "de": "Feld entfernen",
+    "sv": "Ta bort fält",
+    "nb": "Fjern felt"
+  },
+  "Fjern række": {
+    "en": "Remove row",
+    "da": "Fjern række",
+    "de": "Zeile entfernen",
+    "sv": "Ta bort rad",
+    "nb": "Fjern rad"
+  },
+  "Forespørgselsformular": {
+    "en": "Inquiry form",
+    "de": "Anfrageformular",
+    "sv": "Förfrågningsformulär",
+    "nb": "Forespørselsskjema",
+    "da": "Forespørgselsformular"
+  },
+  "Form Builder": {
+    "en": "Form Builder",
+    "da": "Form Builder",
+    "de": "Formular-Builder",
+    "sv": "Formulärbyggare",
+    "nb": "Skjemabygger"
+  },
+  "Form Row": {
+    "en": "Form row",
+    "da": "Form Row",
+    "de": "Formularzeile",
+    "sv": "Formulärrad",
+    "nb": "Skjemarad"
+  },
+  "Forms": {
+    "en": "Forms",
+    "da": "Forms",
+    "de": "Formulare",
+    "sv": "Formulär",
+    "nb": "Skjemaer"
+  },
+  "Forms · Indsendelser": {
+    "en": "Forms · Submissions",
+    "da": "Forms · Indsendelser",
+    "de": "Formulare · Einsendungen",
+    "sv": "Formulär · Inskick",
+    "nb": "Skjemaer · Innsendinger"
+  },
+  "Forms · Indstillinger": {
+    "en": "Forms · Settings",
+    "da": "Forms · Indstillinger",
+    "de": "Formulare · Einstellungen",
+    "sv": "Formulär · Inställningar",
+    "nb": "Skjemaer · Innstillinger"
+  },
+  "Formular": {
+    "en": "Form",
+    "da": "Formular",
+    "de": "Formular",
+    "sv": "Formulär",
+    "nb": "Skjema"
+  },
+  "Formulareditor": {
+    "da": "Formulareditor",
+    "en": "Form editor",
+    "de": "Formulareditor",
+    "sv": "Formulärredigerare",
+    "nb": "Skjemaredigering"
+  },
+  "formularen": {
+    "en": "the form",
+    "da": "formularen",
+    "de": "das Formular",
+    "sv": "formuläret",
+    "nb": "skjemaet"
+  },
+  "Formularen bruges i Page Builder. Fjern den fra siderne først.": {
+    "en": "This form is used in Page Builder. Remove it from the pages first.",
+    "da": "Formularen bruges i Page Builder. Fjern den fra siderne først.",
+    "de": "Dieses Formular wird im Page Builder verwendet. Entfernen Sie es zuerst von den Seiten.",
+    "sv": "Formuläret används i Page Builder. Ta bort det från sidorna först.",
+    "nb": "Skjemaet brukes i Page Builder. Fjern det fra sidene først."
+  },
+  "Formularen er slettet.": {
+    "en": "The form has been deleted.",
+    "da": "Formularen er slettet.",
+    "de": "Das Formular wurde gelöscht.",
+    "sv": "Formuläret har raderats.",
+    "nb": "Skjemaet er slettet."
+  },
+  "Formularen findes ikke længere.": {
+    "en": "The form no longer exists.",
+    "da": "Formularen findes ikke længere.",
+    "de": "Das Formular existiert nicht mehr.",
+    "sv": "Formuläret finns inte längre.",
+    "nb": "Skjemaet finnes ikke lenger."
+  },
+  "Formularen har gemte indsendelser. Slet dem først, eller deaktivér formularen.": {
+    "en": "This form has saved submissions. Delete them first or deactivate the form.",
+    "da": "Formularen har gemte indsendelser. Slet dem først, eller deaktivér formularen.",
+    "de": "Dieses Formular enthält gespeicherte Einsendungen. Löschen Sie diese zuerst oder deaktivieren Sie das Formular.",
+    "sv": "Formuläret har sparade inskick. Radera dem först eller inaktivera formuläret.",
+    "nb": "Skjemaet har lagrede innsendinger. Slett dem først, eller deaktiver skjemaet."
+  },
+  "Formularen kunne ikke slettes. Genindlæs siden og prøv igen.": {
+    "en": "The form could not be deleted. Reload the page and try again.",
+    "da": "Formularen kunne ikke slettes. Genindlæs siden og prøv igen.",
+    "de": "Das Formular konnte nicht gelöscht werden. Laden Sie die Seite neu und versuchen Sie es erneut.",
+    "sv": "Formuläret kunde inte raderas. Ladda om sidan och försök igen.",
+    "nb": "Skjemaet kunne ikke slettes. Last inn siden på nytt og prøv igjen."
+  },
+  "Formularen kunne ikke slettes. Prøv igen.": {
+    "en": "The form could not be deleted. Try again.",
+    "da": "Formularen kunne ikke slettes. Prøv igen.",
+    "de": "Das Formular konnte nicht gelöscht werden. Versuchen Sie es erneut.",
+    "sv": "Formuläret kunde inte raderas. Försök igen.",
+    "nb": "Skjemaet kunne ikke slettes. Prøv igjen."
+  },
+  "Formularer": {
+    "en": "Forms",
+    "da": "Formularer",
+    "de": "Formulare",
+    "sv": "Formulär",
+    "nb": "Skjemaer"
+  },
+  "Formularfelt": {
+    "en": "Form field",
+    "da": "Formularfelt",
+    "de": "Formularfeld",
+    "sv": "Formulärfält",
+    "nb": "Skjemafelt"
+  },
+  "Formularskabeloner": {
+    "en": "Form templates",
+    "da": "Formularskabeloner",
+    "de": "Formularvorlagen",
+    "sv": "Formulärmallar",
+    "nb": "Skjemamaler"
+  },
+  "Formularstatus": {
+    "da": "Formularstatus",
+    "en": "Form status",
+    "de": "Formularstatus",
+    "sv": "Formulärstatus",
+    "nb": "Skjemastatus"
+  },
+  "Fornavn": {
+    "en": "First name",
+    "de": "Vorname",
+    "sv": "Förnamn",
+    "nb": "Fornavn",
+    "da": "Fornavn"
+  },
+  "Fornavn og efternavn side om side, efterfulgt af e-mail og besked.": {
+    "en": "First and last name side by side, followed by email and message.",
+    "de": "Vor- und Nachname nebeneinander, gefolgt von E-Mail und Nachricht.",
+    "sv": "För- och efternamn bredvid varandra, följt av e-post och meddelande.",
+    "nb": "Fornavn og etternavn side om side, etterfulgt av e-post og melding.",
+    "da": "Fornavn og efternavn side om side, efterfulgt af e-mail og besked."
+  },
+  "fra Indstillinger → Notifikationer.": {
+    "en": "from Settings → Notifications.",
+    "da": "fra Indstillinger → Notifikationer.",
+    "de": "aus Einstellungen → Benachrichtigungen.",
+    "sv": "från Inställningar → Aviseringar.",
+    "nb": "fra Innstillinger → Varsler."
+  },
+  "Frontend-indsendelser beskyttes med engangstoken, honeypot, server-side validering og rate limit.": {
+    "en": "Frontend submissions are protected by one-time tokens, honeypot, server-side validation and rate limiting.",
+    "da": "Frontend-indsendelser beskyttes med engangstoken, honeypot, server-side validering og rate limit.",
+    "de": "Einsendungen von der Website werden durch Einmaltokens, Honeypot, serverseitige Validierung und Ratenbegrenzung geschützt.",
+    "sv": "Inskick från webbplatsen skyddas av engångstoken, honeypot, servervalidering och hastighetsbegränsning.",
+    "nb": "Innsendinger fra nettstedet beskyttes av engangstoken, honeypot, servervalidering og ratebegrensning."
+  },
+  "Gem formular": {
+    "en": "Save form",
+    "da": "Gem formular",
+    "de": "Formular speichern",
+    "sv": "Spara formulär",
+    "nb": "Lagre skjema"
+  },
+  "Gem formularen først for at se indsendelser.": {
+    "da": "Gem formularen først for at se indsendelser.",
+    "en": "Save the form first to view submissions.",
+    "de": "Speichern Sie zuerst das Formular, um Einsendungen anzuzeigen.",
+    "sv": "Spara formuläret först för att se inskick.",
+    "nb": "Lagre skjemaet først for å se innsendinger."
+  },
+  "Gem formularen først. Derefter bliver den tilgængelig som dynamisk Page Builder-komponent.": {
+    "en": "Save the form first. Then it becomes available as a dynamic Page Builder component.",
+    "da": "Gem formularen først. Derefter bliver den tilgængelig som dynamisk Page Builder-komponent.",
+    "de": "Speichern Sie zuerst das Formular. Danach steht es als dynamische Page-Builder-Komponente zur Verfügung.",
+    "sv": "Spara formuläret först. Sedan blir det tillgängligt som dynamisk Page Builder-komponent.",
+    "nb": "Lagre skjemaet først. Deretter blir det tilgjengelig som en dynamisk Page Builder-komponent."
+  },
+  "Gem indsendelser i CMS'et": {
+    "en": "Save submissions in the CMS",
+    "da": "Gem indsendelser i CMS'et",
+    "de": "Einsendungen im CMS speichern",
+    "sv": "Spara inskick i CMS",
+    "nb": "Lagre innsendinger i CMS"
+  },
+  "Gem indsendelser som standard": {
+    "en": "Save submissions by default",
+    "da": "Gem indsendelser som standard",
+    "de": "Einsendungen standardmäßig speichern",
+    "sv": "Spara inskick som standard",
+    "nb": "Lagre innsendinger som standard"
+  },
+  "Gem indstillinger": {
+    "da": "Gem indstillinger",
+    "en": "Save settings",
+    "de": "Einstellungen speichern",
+    "sv": "Spara inställningar",
+    "nb": "Lagre innstillinger"
+  },
+  "Globale Forms-indstillinger": {
+    "da": "Globale Forms-indstillinger",
+    "en": "Global Forms settings",
+    "de": "Globale Formulareinstellungen",
+    "sv": "Globala formulärinställningar",
+    "nb": "Globale Forms-innstillinger"
+  },
+  "Henvendelsestype": {
+    "en": "Inquiry type",
+    "de": "Art der Anfrage",
+    "sv": "Typ av förfrågan",
+    "nb": "Type henvendelse",
+    "da": "Henvendelsestype"
+  },
+  "Hjælpetekst": {
+    "en": "Help text",
+    "da": "Hjælpetekst",
+    "de": "Hilfetext",
+    "sv": "Hjälptext",
+    "nb": "Hjelpetekst"
+  },
+  "ID": {
+    "en": "ID",
+    "da": "ID",
+    "de": "ID",
+    "sv": "ID",
+    "nb": "ID"
+  },
+  "Inaktive": {
+    "da": "Inaktive",
+    "en": "Inactive",
+    "de": "Inaktive",
+    "sv": "Inaktiva",
+    "nb": "Inaktive"
+  },
+  "Indsamler kontaktoplysninger, arrangement og eventuelle bemærkninger.": {
+    "en": "Collects contact details, event information, and optional comments.",
+    "de": "Erfasst Kontaktdaten, Veranstaltung und optionale Anmerkungen.",
+    "sv": "Samlar in kontaktuppgifter, evenemang och eventuella kommentarer.",
+    "nb": "Samler inn kontaktopplysninger, arrangement og eventuelle merknader.",
+    "da": "Indsamler kontaktoplysninger, arrangement og eventuelle bemærkninger."
+  },
+  "Indsendelser": {
+    "en": "Submissions",
+    "da": "Indsendelser",
+    "de": "Einsendungen",
+    "sv": "Inskick",
+    "nb": "Innsendinger"
+  },
+  "Ingen formularer endnu": {
+    "en": "No forms yet",
+    "da": "Ingen formularer endnu",
+    "de": "Noch keine Formulare",
+    "sv": "Inga formulär ännu",
+    "nb": "Ingen skjemaer ennå"
+  },
+  "Ingen formularer fundet": {
+    "en": "No forms found",
+    "da": "Ingen formularer fundet",
+    "de": "Keine Formulare gefunden",
+    "sv": "Inga formulär hittades",
+    "nb": "Ingen skjemaer funnet"
+  },
+  "Ingen indsendelser fundet": {
+    "en": "No submissions found",
+    "da": "Ingen indsendelser fundet",
+    "de": "Keine Einsendungen gefunden",
+    "sv": "Inga inskick hittades",
+    "nb": "Ingen innsendinger funnet"
+  },
+  "Klik her for at tilføje et formularfelt": {
+    "en": "Click here to add a form field",
+    "da": "Klik her for at tilføje et formularfelt",
+    "de": "Hier klicken, um ein Formularfeld hinzuzufügen",
+    "sv": "Klicka här för att lägga till ett formulärfält",
+    "nb": "Klikk her for å legge til et skjemafelt"
+  },
+  "Knaptekst *": {
+    "en": "Button text *",
+    "da": "Knaptekst *",
+    "de": "Schaltflächentext *",
+    "sv": "Knapptext *",
+    "nb": "Knappetekst *"
+  },
+  "Kolonne": {
+    "da": "Kolonne",
+    "en": "Column",
+    "de": "Spalte",
+    "sv": "Kolumn",
+    "nb": "Kolonne"
+  },
+  "Kolonne 2 indeholder et felt. Fjern feltet, før du skifter til én kolonne.": {
+    "da": "Kolonne 2 indeholder et felt. Fjern feltet, før du skifter til én kolonne.",
+    "en": "Column 2 contains a field. Remove it before switching to one column.",
+    "de": "Spalte 2 enthält ein Feld. Entfernen Sie es, bevor Sie zu einer Spalte wechseln.",
+    "sv": "Kolumn 2 innehåller ett fält. Ta bort det innan du byter till en kolumn.",
+    "nb": "Kolonne 2 inneholder et felt. Fjern det før du bytter til én kolonne."
+  },
+  "Kolonnelayout": {
+    "da": "Kolonnelayout",
+    "en": "Column layout",
+    "de": "Spaltenlayout",
+    "sv": "Kolumnlayout",
+    "nb": "Kolonneoppsett"
+  },
+  "Kontaktformular": {
+    "en": "Contact form",
+    "de": "Kontaktformular",
+    "sv": "Kontaktformulär",
+    "nb": "Kontaktskjema",
+    "da": "Kontaktformular"
+  },
+  "Kontaktoplysninger, type af forespørgsel og beskrivelse.": {
+    "en": "Contact details, inquiry type and description.",
+    "de": "Kontaktdaten, Art der Anfrage und Beschreibung.",
+    "sv": "Kontaktuppgifter, typ av förfrågan och beskrivning.",
+    "nb": "Kontaktopplysninger, type forespørsel og beskrivelse.",
+    "da": "Kontaktoplysninger, type af forespørgsel og beskrivelse."
+  },
+  "Kun aktive formularer kan vælges i Page Builder og sendes fra frontend.": {
+    "en": "Only active forms can be selected in Page Builder and submitted from frontend.",
+    "da": "Kun aktive formularer kan vælges i Page Builder og sendes fra frontend.",
+    "de": "Nur aktive Formulare können im Page Builder ausgewählt und auf der Website abgesendet werden.",
+    "sv": "Bara aktiva formulär kan väljas i Page Builder och skickas in från webbplatsen.",
+    "nb": "Bare aktive skjemaer kan velges i Page Builder og sendes inn fra nettstedet."
+  },
+  "Kvitteringstekst *": {
+    "en": "Confirmation text *",
+    "da": "Kvitteringstekst *",
+    "de": "Bestätigungstext *",
+    "sv": "Bekräftelsetext *",
+    "nb": "Bekreftelsestekst *"
+  },
+  "Label *": {
+    "en": "Label *",
+    "da": "Label *",
+    "de": "Bezeichnung *",
+    "sv": "Etikett *",
+    "nb": "Etikett *"
+  },
+  "Luk redigering": {
+    "en": "Close editor",
+    "da": "Luk redigering",
+    "de": "Bearbeitung schließen",
+    "sv": "Stäng redigering",
+    "nb": "Lukk redigering"
+  },
+  "Læst": {
+    "en": "Read",
+    "da": "Læst",
+    "de": "Gelesen",
+    "sv": "Läst",
+    "nb": "Lest"
+  },
+  "Læste": {
+    "en": "Read",
+    "da": "Læste",
+    "de": "Gelesen",
+    "sv": "Läst",
+    "nb": "Lest"
+  },
+  "Maks. indsendelser": {
+    "en": "Maximum submissions",
+    "da": "Maks. indsendelser",
+    "de": "Maximale Einsendungen",
+    "sv": "Maximalt antal inskick",
+    "nb": "Maksimalt antall innsendinger"
+  },
+  "Markér læst": {
+    "en": "Mark read",
+    "da": "Markér læst",
+    "de": "Als gelesen markieren",
+    "sv": "Markera som läst",
+    "nb": "Marker som lest"
+  },
+  "Markér ulæst": {
+    "en": "Mark unread",
+    "da": "Markér ulæst",
+    "de": "Als ungelesen markieren",
+    "sv": "Markera som oläst",
+    "nb": "Merk som ulest"
+  },
+  "Meget tilfreds": {
+    "en": "Very satisfied",
+    "de": "Sehr zufrieden",
+    "sv": "Mycket nöjd",
+    "nb": "Svært fornøyd",
+    "da": "Meget tilfreds"
+  },
+  "Metadata": {
+    "en": "Metadata",
+    "da": "Metadata",
+    "de": "Metadaten",
+    "sv": "Metadata",
+    "nb": "Metadata"
+  },
+  "Mindre tilfreds": {
+    "en": "Less satisfied",
+    "de": "Weniger zufrieden",
+    "sv": "Mindre nöjd",
+    "nb": "Mindre fornøyd",
+    "da": "Mindre tilfreds"
+  },
+  "Modtaget": {
+    "en": "Received",
+    "da": "Modtaget",
+    "de": "Empfangen",
+    "sv": "Mottaget",
+    "nb": "Mottatt"
+  },
+  "Navn": {
+    "en": "Name",
+    "de": "Name",
+    "sv": "Namn",
+    "nb": "Navn",
+    "da": "Navn"
+  },
+  "Navn, e-mail, vurdering og en længere feedbackbesked.": {
+    "en": "Name, email, rating and longer feedback.",
+    "de": "Name, E-Mail, Bewertung und ausführliches Feedback.",
+    "sv": "Namn, e-post, bedömning och utförligare återkoppling.",
+    "nb": "Navn, e-post, vurdering og en lengre tilbakemelding.",
+    "da": "Navn, e-mail, vurdering og en længere feedbackbesked."
+  },
+  "Ny formular": {
+    "en": "New form",
+    "da": "Ny formular",
+    "de": "Neues Formular",
+    "sv": "Nytt formulär",
+    "nb": "Nytt skjema"
+  },
+  "Nye": {
+    "en": "New",
+    "da": "Nye",
+    "de": "Neu",
+    "sv": "Ny",
+    "nb": "Ny"
+  },
+  "Nyt felt": {
+    "en": "New field",
+    "da": "Nyt felt",
+    "de": "Neues Feld",
+    "sv": "Nytt fält",
+    "nb": "Nytt felt"
+  },
+  "Når du trykker Svar i mailprogrammet, svarer du direkte til værdien fra dette e-mailfelt.": {
+    "en": "When you select Reply in your email client, replies go to this email field.",
+    "da": "Når du trykker Svar i mailprogrammet, svarer du direkte til værdien fra dette e-mailfelt.",
+    "de": "Bei „Antworten“ im E-Mail-Programm geht die Antwort an dieses E-Mail-Feld.",
+    "sv": "När du väljer Svara i e-postprogrammet skickas svaret till detta e-postfält.",
+    "nb": "Når du velger Svar i e-postprogrammet, sendes svaret til dette e-postfeltet."
+  },
+  "og vælg:": {
+    "en": "and choose:",
+    "da": "og vælg:",
+    "de": "und wählen Sie:",
+    "sv": "och välj:",
+    "nb": "og velg:"
+  },
+  "Om indstillingerne": {
+    "en": "About these settings",
+    "da": "Om indstillingerne",
+    "de": "Über diese Einstellungen",
+    "sv": "Om inställningarna",
+    "nb": "Om innstillingene"
+  },
+  "Opret den første formular og indsæt den derefter via Page Builderens dynamiske komponent.": {
+    "en": "Create your first form and insert it through the dynamic Page Builder component.",
+    "da": "Opret den første formular og indsæt den derefter via Page Builderens dynamiske komponent.",
+    "de": "Erstellen Sie Ihr erstes Formular und fügen Sie es als dynamische Komponente im Page Builder ein.",
+    "sv": "Skapa ditt första formulär och lägg in det via den dynamiska Page Builder-komponenten.",
+    "nb": "Opprett ditt første skjema og sett det inn via den dynamiske Page Builder-komponenten."
+  },
+  "Opret eller rediger formularens felter.": {
+    "en": "Create or edit the form fields.",
+    "da": "Opret eller rediger formularens felter.",
+    "de": "Formularfelder erstellen oder bearbeiten.",
+    "sv": "Skapa eller redigera formulärets fält.",
+    "nb": "Opprett eller rediger skjemafeltene."
+  },
+  "Opret formular": {
+    "en": "Create form",
+    "da": "Opret formular",
+    "de": "Formular erstellen",
+    "sv": "Skapa formulär",
+    "nb": "Opprett skjema"
+  },
+  "Opret genbrugelige formularer og administrér indsendelser.": {
+    "en": "Create reusable forms and manage submissions.",
+    "da": "Opret genbrugelige formularer og administrér indsendelser.",
+    "de": "Wiederverwendbare Formulare erstellen und Einsendungen verwalten.",
+    "sv": "Skapa återanvändbara formulär och hantera inskick.",
+    "nb": "Opprett gjenbrukbare skjemaer og administrer innsendinger."
+  },
+  "Placeholder": {
+    "en": "Placeholder",
+    "da": "Placeholder",
+    "de": "Platzhalter",
+    "sv": "Platshållare",
+    "nb": "Plassholder"
+  },
+  "Pr. IP-adresse og formular inden for tidsvinduet.": {
+    "en": "Per IP address and form within the selected time window.",
+    "da": "Pr. IP-adresse og formular inden for tidsvinduet.",
+    "de": "Pro IP-Adresse und Formular im festgelegten Zeitraum.",
+    "sv": "Per IP-adress och formulär inom tidsfönstret.",
+    "nb": "Per IP-adresse og skjema innenfor tidsvinduet."
+  },
+  "Prøv at ændre filtrene, eller send en formular fra frontend.": {
+    "en": "Try different filters or submit a form on the frontend.",
+    "da": "Prøv at ændre filtrene, eller send en formular fra frontend.",
+    "de": "Versuchen Sie andere Filter oder senden Sie ein Formular auf der Website ab.",
+    "sv": "Prova andra filter eller skicka in ett formulär på webbplatsen.",
+    "nb": "Prøv andre filtre eller send inn et skjema på nettstedet."
+  },
+  "Prøv en anden søgning.": {
+    "en": "Try another search.",
+    "da": "Prøv en anden søgning.",
+    "de": "Versuchen Sie eine andere Suche.",
+    "sv": "Prova en annan sökning.",
+    "nb": "Prøv et annet søk."
+  },
+  "Påkrævet": {
+    "en": "Required",
+    "da": "Påkrævet",
+    "de": "Pflichtfeld",
+    "sv": "Obligatoriskt",
+    "nb": "Påkrevd"
+  },
+  "Påkrævet felt": {
+    "en": "Required field",
+    "da": "Påkrævet felt",
+    "de": "Pflichtfeld",
+    "sv": "Obligatoriskt fält",
+    "nb": "Obligatorisk felt"
+  },
+  "Radio-knapper": {
+    "en": "Radio buttons",
+    "da": "Radio-knapper",
+    "de": "Optionsfelder",
+    "sv": "Alternativknappar",
+    "nb": "Radioknapper"
+  },
+  "Rate limit kan justeres under Forms → Indstillinger.": {
+    "en": "Rate limits can be adjusted under Forms → Settings.",
+    "da": "Rate limit kan justeres under Forms → Indstillinger.",
+    "de": "Ratenbegrenzungen können unter Formulare → Einstellungen angepasst werden.",
+    "sv": "Begränsningarna kan ändras under Formulär → Inställningar.",
+    "nb": "Rategrenser kan justeres under Skjemaer → Innstillinger."
+  },
+  "Rate limiting": {
+    "en": "Rate limiting",
+    "da": "Rate limiting",
+    "de": "Ratenbegrenzung",
+    "sv": "Hastighetsbegränsning",
+    "nb": "Ratebegrensning"
+  },
+  "Rediger": {
+    "en": "Edit",
+    "da": "Rediger",
+    "de": "Bearbeiten",
+    "sv": "Redigera",
+    "nb": "Rediger"
+  },
+  "Rediger formular": {
+    "en": "Edit form",
+    "da": "Rediger formular",
+    "de": "Formular bearbeiten",
+    "sv": "Redigera formulär",
+    "nb": "Rediger skjema"
+  },
+  "Redirectet bruger sidens aktuelle URL, så senere slug-ændringer følger automatisk med.": {
+    "en": "The redirect uses the page's current URL and automatically follows slug changes.",
+    "da": "Redirectet bruger sidens aktuelle URL, så senere slug-ændringer følger automatisk med.",
+    "de": "Die Weiterleitung verwendet die aktuelle Seiten-URL und folgt automatisch Änderungen des Slugs.",
+    "sv": "Omdirigeringen använder sidans aktuella URL och följer automatiskt ändringar i URL-namnet.",
+    "nb": "Viderekoblingen bruker sidens gjeldende URL og følger automatisk endringer i URL-navnet."
+  },
+  "Reply-To": {
+    "en": "Reply-To",
+    "da": "Reply-To",
+    "de": "Antwortadresse",
+    "sv": "Svarsadress",
+    "nb": "Svaradresse"
+  },
+  "Row": {
+    "en": "Row",
+    "da": "Row",
+    "de": "Zeile",
+    "sv": "Rad",
+    "nb": "Rad"
+  },
+  "Row-indstillinger": {
+    "da": "Row-indstillinger",
+    "en": "Row settings",
+    "de": "Zeileneinstellungen",
+    "sv": "Radinställningar",
+    "nb": "Radinnstillinger"
+  },
+  "Samarbejde": {
+    "en": "Collaboration",
+    "de": "Zusammenarbeit",
+    "sv": "Samarbete",
+    "nb": "Samarbeid",
+    "da": "Samarbejde"
+  },
+  "Send e-mail-notifikation som standard": {
+    "en": "Send email notifications by default",
+    "da": "Send e-mail-notifikation som standard",
+    "de": "E-Mail-Benachrichtigungen standardmäßig senden",
+    "sv": "Skicka e-postaviseringar som standard",
+    "nb": "Send e-postvarsler som standard"
+  },
+  "Send e-mail-notifikation ved ny indsendelse": {
+    "en": "Send email notification for new submissions",
+    "da": "Send e-mail-notifikation ved ny indsendelse",
+    "de": "Bei neuen Einsendungen per E-Mail benachrichtigen",
+    "sv": "Skicka e-postavisering vid nya inskick",
+    "nb": "Send e-postvarsel ved nye innsendinger"
+  },
+  "Send en bekræftelse til afsenderen": {
+    "en": "Send a confirmation to the sender",
+    "da": "Send en bekræftelse til afsenderen",
+    "de": "Bestätigung an Absender senden",
+    "sv": "Skicka bekräftelse till avsändaren",
+    "nb": "Send bekreftelse til avsenderen"
+  },
+  "Send til e-mailfelt *": {
+    "en": "Send to email field *",
+    "da": "Send til e-mailfelt *",
+    "de": "An E-Mail-Feld senden *",
+    "sv": "Skicka till e-postfält *",
+    "nb": "Send til e-postfelt *"
+  },
+  "Send videre til side": {
+    "en": "Redirect to page",
+    "da": "Send videre til side",
+    "de": "Zur Seite weiterleiten",
+    "sv": "Omdirigera till sida",
+    "nb": "Viderekoble til side"
+  },
+  "Sendes til": {
+    "en": "Send to",
+    "da": "Sendes til",
+    "de": "Senden an",
+    "sv": "Skicka till",
+    "nb": "Send til"
+  },
+  "Side *": {
+    "en": "Page *",
+    "da": "Side *",
+    "de": "Seite *",
+    "sv": "Sida *",
+    "nb": "Side *"
+  },
+  "Sikkerhed": {
+    "en": "Security",
+    "da": "Sikkerhed",
+    "de": "Sicherheit",
+    "sv": "Säkerhet",
+    "nb": "Sikkerhet"
+  },
+  "Skabelonen erstatter alle eksisterende rækker og felter. Ændringen gemmes først, når du gemmer formularen. Vil du fortsætte?": {
+    "en": "The template will replace all existing rows and fields. The change is only saved when you save the form. Continue?",
+    "de": "Die Vorlage ersetzt alle vorhandenen Zeilen und Felder. Die Änderung wird erst beim Speichern des Formulars übernommen. Fortfahren?",
+    "sv": "Mallen ersätter alla befintliga rader och fält. Ändringen sparas först när du sparar formuläret. Fortsätta?",
+    "nb": "Malen erstatter alle eksisterende rader og felt. Endringen lagres først når du lagrer skjemaet. Vil du fortsette?",
+    "da": "Skabelonen erstatter alle eksisterende rækker og felter. Ændringen gemmes først, når du gemmer formularen. Vil du fortsætte?"
+  },
+  "Skabelonen erstatter kun formularens rækker og felter. Andre formularindstillinger ændres ikke.": {
+    "en": "The template replaces only the form rows and fields. Other form settings remain unchanged.",
+    "de": "Die Vorlage ersetzt nur Formularzeilen und -felder. Andere Formulareinstellungen bleiben unverändert.",
+    "sv": "Mallen ersätter endast formulärets rader och fält. Övriga inställningar ändras inte.",
+    "nb": "Malen erstatter bare skjemaets rader og felt. Andre innstillinger endres ikke.",
+    "da": "Skabelonen erstatter kun formularens rækker og felter. Andre formularindstillinger ændres ikke."
+  },
+  "Skabelonen kunne ikke indsættes. Prøv igen.": {
+    "en": "The template could not be inserted. Please try again.",
+    "de": "Die Vorlage konnte nicht eingefügt werden. Bitte erneut versuchen.",
+    "sv": "Mallen kunde inte infogas. Försök igen.",
+    "nb": "Malen kunne ikke settes inn. Prøv igjen.",
+    "da": "Skabelonen kunne ikke indsættes. Prøv igen."
+  },
+  "Skabeloner": {
+    "en": "Templates",
+    "da": "Skabeloner",
+    "de": "Vorlagen",
+    "sv": "Mallar",
+    "nb": "Maler"
+  },
+  "Skabeloner kan indsættes fra næste version. Du kan allerede opbygge formularer med felter og Form Rows.": {
+    "en": "Templates can be inserted in the next release. You can already build forms with fields and form rows.",
+    "da": "Skabeloner kan indsættes fra næste version. Du kan allerede opbygge formularer med felter og Form Rows.",
+    "de": "Vorlagen können ab der nächsten Version eingefügt werden. Formulare lassen sich bereits mit Feldern und Zeilen erstellen.",
+    "sv": "Mallar kan infogas i nästa version. Du kan redan bygga formulär med fält och rader.",
+    "nb": "Maler kan settes inn fra neste versjon. Du kan allerede bygge skjemaer med felt og rader."
+  },
+  "Slet formular": {
+    "en": "Delete form",
+    "da": "Slet formular",
+    "de": "Formular löschen",
+    "sv": "Radera formulär",
+    "nb": "Slett skjema"
+  },
+  "Slet formularen og dens felter permanent.": {
+    "en": "Permanently delete this form and its fields.",
+    "da": "Slet formularen og dens felter permanent.",
+    "de": "Dieses Formular und seine Felder dauerhaft löschen.",
+    "sv": "Radera formuläret och dess fält permanent.",
+    "nb": "Slett skjemaet og feltene permanent."
+  },
+  "Slet indsendelse": {
+    "en": "Delete submission",
+    "da": "Slet indsendelse",
+    "de": "Einsendung löschen",
+    "sv": "Ta bort inskick",
+    "nb": "Slett innsending"
+  },
+  "Standard kvitteringstekst *": {
+    "en": "Default confirmation text *",
+    "da": "Standard kvitteringstekst *",
+    "de": "Standardbestätigungstext *",
+    "sv": "Standardtext för bekräftelse *",
+    "nb": "Standard bekreftelsestekst *"
+  },
+  "Standarder for nye formularer": {
+    "en": "Defaults for new forms",
+    "da": "Standarder for nye formularer",
+    "de": "Standardwerte für neue Formulare",
+    "sv": "Standardvärden för nya formulär",
+    "nb": "Standardverdier for nye skjemaer"
+  },
+  "Standarder og spam-beskyttelse for nye formularer.": {
+    "en": "Defaults and spam protection for new forms.",
+    "da": "Standarder og spam-beskyttelse for nye formularer.",
+    "de": "Standardwerte und Spamschutz für neue Formulare.",
+    "sv": "Standardvärden och spamskydd för nya formulär.",
+    "nb": "Standardverdier og spambeskyttelse for nye skjemaer."
+  },
+  "Svar på bekræftelsesmailen går til den centrale notifikationsadresse.": {
+    "en": "Replies to confirmation emails go to the central notification address.",
+    "da": "Svar på bekræftelsesmailen går til den centrale notifikationsadresse.",
+    "de": "Antworten auf Bestätigungs-E-Mails gehen an die zentrale Benachrichtigungsadresse.",
+    "sv": "Svar på bekräftelsemejl går till den centrala aviseringsadressen.",
+    "nb": "Svar på bekreftelsesmeldinger går til den sentrale varslingsadressen."
+  },
+  "Søg formularer": {
+    "en": "Search forms",
+    "da": "Søg formularer",
+    "de": "Formulare suchen",
+    "sv": "Sök formulär",
+    "nb": "Søk i skjemaer"
+  },
+  "Søg formularer…": {
+    "en": "Search forms…",
+    "da": "Søg formularer…",
+    "de": "Formulare suchen…",
+    "sv": "Sök formulär…",
+    "nb": "Søk i skjemaer…"
+  },
+  "Søg i indsendelser": {
+    "en": "Search submissions",
+    "da": "Søg i indsendelser",
+    "de": "Einsendungen suchen",
+    "sv": "Sök inskick",
+    "nb": "Søk innsendinger"
+  },
+  "Søg, læs og administrér gemte formularindsendelser.": {
+    "en": "Search, read and manage saved form submissions.",
+    "da": "Søg, læs og administrér gemte formularindsendelser.",
+    "de": "Gespeicherte Formulareinsendungen suchen, lesen und verwalten.",
+    "sv": "Sök, läs och hantera sparade formulärinskick.",
+    "nb": "Søk, les og administrer lagrede skjemainnsendinger."
+  },
+  "Tekst": {
+    "en": "Text",
+    "da": "Tekst",
+    "de": "Text",
+    "sv": "Text",
+    "nb": "Tekst"
+  },
+  "Tekstområde": {
+    "en": "Text area",
+    "da": "Tekstområde",
+    "de": "Textbereich",
+    "sv": "Textområde",
+    "nb": "Tekstområde"
+  },
+  "Telefon": {
+    "en": "Phone",
+    "de": "Telefon",
+    "sv": "Telefon",
+    "nb": "Telefon",
+    "da": "Telefon"
+  },
+  "Tidsvindue i minutter": {
+    "en": "Time window in minutes",
+    "da": "Tidsvindue i minutter",
+    "de": "Zeitfenster in Minuten",
+    "sv": "Tidsfönster i minuter",
+    "nb": "Tidsvindu i minutter"
+  },
+  "Tilfreds": {
+    "en": "Satisfied",
+    "de": "Zufrieden",
+    "sv": "Nöjd",
+    "nb": "Fornøyd",
+    "da": "Tilfreds"
+  },
+  "Tilføj felt": {
+    "da": "Tilføj felt",
+    "en": "Add field",
+    "de": "Feld hinzufügen",
+    "sv": "Lägg till fält",
+    "nb": "Legg til felt"
+  },
+  "Tilføj mindst én række til formularen.": {
+    "en": "Add at least one row to the form.",
+    "da": "Tilføj mindst én række til formularen.",
+    "de": "Fügen Sie dem Formular mindestens eine Zeile hinzu.",
+    "sv": "Lägg till minst en rad i formuläret.",
+    "nb": "Legg til minst én rad i skjemaet."
+  },
+  "Tilføj row": {
+    "en": "Add row",
+    "da": "Tilføj row",
+    "de": "Zeile hinzufügen",
+    "sv": "Lägg till rad",
+    "nb": "Legg til rad"
+  },
+  "Tilføj til formularen": {
+    "en": "Add to form",
+    "da": "Tilføj til formularen",
+    "de": "Zum Formular hinzufügen",
+    "sv": "Lägg till i formuläret",
+    "nb": "Legg til i skjemaet"
+  },
+  "Tilmeldingsformular": {
+    "en": "Registration form",
+    "de": "Anmeldeformular",
+    "sv": "Anmälningsformulär",
+    "nb": "Påmeldingsskjema",
+    "da": "Tilmeldingsformular"
+  },
+  "To tomme kolonner side om side (50/50).": {
+    "en": "Two empty side-by-side columns (50/50).",
+    "da": "To tomme kolonner side om side (50/50).",
+    "de": "Zwei leere Spalten nebeneinander (50/50).",
+    "sv": "Två tomma kolumner bredvid varandra (50/50).",
+    "nb": "To tomme kolonner side om side (50/50)."
+  },
+  "Tomt felt bruger automatisk formularens navn.": {
+    "en": "Leaving this empty uses the form name.",
+    "da": "Tomt felt bruger automatisk formularens navn.",
+    "de": "Wenn das Feld leer bleibt, wird der Formularname verwendet.",
+    "sv": "Om fältet lämnas tomt används formulärets namn.",
+    "nb": "Hvis feltet er tomt, brukes skjemanavnet."
+  },
+  "ui.field_type": {
+    "en": "Field type",
+    "da": "Felttype",
+    "de": "Feldtyp",
+    "sv": "Fälttyp",
+    "nb": "Felttype"
+  },
+  "ui.forms_navigation": {
+    "en": "Forms navigation",
+    "da": "Formularnavigation",
+    "de": "Formularnavigation",
+    "sv": "Formulärnavigering",
+    "nb": "Skjemanavigasjon"
+  },
+  "ui.new_row_layout": {
+    "en": "New row layout",
+    "da": "Layout for ny række",
+    "de": "Layout für neue Zeile",
+    "sv": "Layout för ny rad",
+    "nb": "Oppsett for ny rad"
+  },
+  "Ulæst": {
+    "en": "Unread",
+    "da": "Ulæst",
+    "de": "Ungelesen",
+    "sv": "Oläst",
+    "nb": "Ulest"
+  },
+  "Ulæste": {
+    "en": "Unread",
+    "da": "Ulæste",
+    "de": "Ungelesen",
+    "sv": "Oläst",
+    "nb": "Ulest"
+  },
+  "Ulæste indsendelser": {
+    "da": "ulæste indsendelser",
+    "en": "unread submissions",
+    "de": "ungelesene Einsendungen",
+    "sv": "olästa inskick",
+    "nb": "uleste innsendinger"
+  },
+  "Valgfrit": {
+    "en": "Optional",
+    "da": "Valgfrit",
+    "de": "Optional",
+    "sv": "Valfritt",
+    "nb": "Valgfritt"
+  },
+  "Valgmuligheder": {
+    "en": "Options",
+    "da": "Valgmuligheder",
+    "de": "Optionen",
+    "sv": "Alternativ",
+    "nb": "Alternativer"
+  },
+  "Validering": {
+    "en": "Validation",
+    "da": "Validering",
+    "de": "Validierung",
+    "sv": "Validering",
+    "nb": "Validering"
+  },
+  "Vis kvittering": {
+    "en": "Show confirmation",
+    "da": "Vis kvittering",
+    "de": "Bestätigung anzeigen",
+    "sv": "Visa bekräftelse",
+    "nb": "Vis bekreftelse"
+  },
+  "Vælg antal kolonner for rækken.": {
+    "da": "Vælg antal kolonner for rækken.",
+    "en": "Choose the number of columns for this row.",
+    "de": "Wählen Sie die Anzahl der Spalten für diese Zeile.",
+    "sv": "Välj antal kolumner för raden.",
+    "nb": "Velg antall kolonner for raden."
+  },
+  "Vælg den felttype, du vil indsætte.": {
+    "en": "Choose which field type to insert.",
+    "da": "Vælg den felttype, du vil indsætte.",
+    "de": "Den einzufügenden Feldtyp auswählen.",
+    "sv": "Välj vilken fälttyp du vill infoga.",
+    "nb": "Velg felttypen du vil sette inn."
+  },
+  "Vælg e-mailfelt…": {
+    "en": "Select email field…",
+    "da": "Vælg e-mailfelt…",
+    "de": "E-Mail-Feld auswählen…",
+    "sv": "Välj e-postfält…",
+    "nb": "Velg e-postfelt…"
+  },
+  "Vælg en skabelon. Alle felter og rækker kan redigeres bagefter.": {
+    "en": "Choose a template. You can edit all fields and rows afterwards.",
+    "de": "Vorlage auswählen. Alle Felder und Zeilen können anschließend bearbeitet werden.",
+    "sv": "Välj en mall. Alla fält och rader kan redigeras efteråt.",
+    "nb": "Velg en mal. Alle felt og rader kan redigeres etterpå.",
+    "da": "Vælg en skabelon. Alle felter og rækker kan redigeres bagefter."
+  },
+  "Vælg et formularfelt eller en række med to kolonner.": {
+    "en": "Choose a field or a row with two columns.",
+    "da": "Vælg et formularfelt eller en række med to kolonner.",
+    "de": "Ein Feld oder eine Zeile mit zwei Spalten auswählen.",
+    "sv": "Välj ett fält eller en rad med två kolumner.",
+    "nb": "Velg et felt eller en rad med to kolonner."
+  },
+  "Vælg felttype": {
+    "en": "Choose field type",
+    "da": "Vælg felttype",
+    "de": "Feldtyp auswählen",
+    "sv": "Välj fälttyp",
+    "nb": "Velg felttype"
+  },
+  "Åbn": {
+    "en": "Open",
+    "da": "Åbn",
+    "de": "Öffnen",
+    "sv": "Öppna",
+    "nb": "Åpne"
+  },
+  "Åbn en side i Page Builder, tilføj": {
+    "en": "Open a page in Page Builder, add",
+    "da": "Åbn en side i Page Builder, tilføj",
+    "de": "Öffnen Sie eine Seite im Page Builder und fügen Sie hinzu:",
+    "sv": "Öppna en sida i Page Builder och lägg till",
+    "nb": "Åpne en side i Page Builder og legg til"
+  },
+  "Åbn redigering": {
+    "da": "Åbn redigering",
+    "en": "Expand editing",
+    "de": "Bearbeitung aufklappen",
+    "sv": "Öppna redigering",
+    "nb": "Åpne redigering"
+  },
+  "Ændringer her påvirker kun nye formularer, bortset fra rate limiting, som gælder alle Forms-indsendelser med det samme.": {
+    "en": "Changes affect new forms only, except rate limiting, which applies to all Forms submissions immediately.",
+    "da": "Ændringer her påvirker kun nye formularer, bortset fra rate limiting, som gælder alle Forms-indsendelser med det samme.",
+    "de": "Änderungen betreffen nur neue Formulare, außer der Ratenbegrenzung, die sofort für alle Einsendungen gilt.",
+    "sv": "Ändringar gäller bara nya formulär, förutom hastighetsbegränsning som gäller alla inskick direkt.",
+    "nb": "Endringer gjelder bare nye skjemaer, bortsett fra ratebegrensning som gjelder alle innsendinger umiddelbart."
+  },
+  "Én mulighed pr. linje.": {
+    "en": "One option per line.",
+    "da": "Én mulighed pr. linje.",
+    "de": "Eine Option pro Zeile.",
+    "sv": "Ett alternativ per rad.",
+    "nb": "Ett alternativ per linje."
+  },
+  "← Tilbage til Forms": {
+    "en": "← Back to Forms",
+    "da": "← Tilbage til Forms",
+    "de": "← Zurück zu Formularen",
+    "sv": "← Tillbaka till formulär",
+    "nb": "← Tilbake til skjemaer"
+  },
+  "← Tilbage til indsendelser": {
+    "en": "← Back to submissions",
+    "da": "← Tilbage til indsendelser",
+    "de": "← Zurück zu Einsendungen",
+    "sv": "← Tillbaka till inskick",
+    "nb": "← Tilbake til innsendinger"
+  },
+  "Tilbage til Forms": {
+    "en": "Back to Forms",
+    "da": "Tilbage til Forms",
+    "de": "Zurück zu Formularen",
+    "sv": "Tillbaka till formulär",
+    "nb": "Tilbake til skjemaer"
+  },
+  "forms_page_builder_component": {
+    "en": "Page Builder component: Forms",
+    "da": "Page Builder-komponent: Forms",
+    "de": "Page-Builder-Komponente: Formulare",
+    "sv": "Page Builder-komponent: Formulär",
+    "nb": "Page Builder-komponent: Skjemaer"
+  },
+  "Tilbage til indsendelser": {
+    "en": "Back to submissions",
+    "da": "Tilbage til indsendelser",
+    "de": "Zurück zu Einsendungen",
+    "sv": "Tillbaka till inskick",
+    "nb": "Tilbake til innsendinger"
+  }
+}

@@ -1,0 +1,324 @@
+[
+  {
+    "id": "home",
+    "title_key": "page_templates.home.title",
+    "description_key": "page_templates.home.description",
+    "blocks": [
+      {
+        "type": "hero",
+        "data": {
+          "title": "@page_templates.content.hero_home",
+          "lead": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "intro",
+        "data": {
+          "title": "@page_templates.content.intro_home",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "grid",
+        "data": {
+          "column_count": 3,
+          "preset": "equal",
+          "layout_version": "v2",
+          "columns": [
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.feature_1"
+                  }
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.feature_2"
+                  }
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.feature_3"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "text_image",
+        "data": {
+          "title": "@page_templates.content.about_image",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "cta",
+        "data": {
+          "title": "@page_templates.content.cta",
+          "button_label": "@page_templates.content.cta_label",
+          "button_url": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "about",
+    "title_key": "page_templates.about.title",
+    "description_key": "page_templates.about.description",
+    "blocks": [
+      {
+        "type": "hero",
+        "data": {
+          "title": "@page_templates.content.hero_about",
+          "lead": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "intro",
+        "data": {
+          "title": "@page_templates.content.intro_about",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "text_image",
+        "data": {
+          "title": "@page_templates.content.about_image",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "grid",
+        "data": {
+          "column_count": 2,
+          "preset": "equal",
+          "layout_version": "v2",
+          "columns": [
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.about_1"
+                  }
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.about_2"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "cta",
+        "data": {
+          "title": "@page_templates.content.cta",
+          "button_label": "@page_templates.content.cta_label",
+          "button_url": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "services",
+    "title_key": "page_templates.services.title",
+    "description_key": "page_templates.services.description",
+    "blocks": [
+      {
+        "type": "hero",
+        "data": {
+          "title": "@page_templates.content.hero_services",
+          "lead": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "intro",
+        "data": {
+          "title": "@page_templates.content.intro_services",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "grid",
+        "data": {
+          "column_count": 3,
+          "preset": "equal",
+          "layout_version": "v2",
+          "columns": [
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.service_1"
+                  }
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.service_2"
+                  }
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.service_3"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "text_image",
+        "data": {
+          "title": "@page_templates.content.service_image",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "cta",
+        "data": {
+          "title": "@page_templates.content.cta",
+          "button_label": "@page_templates.content.cta_label",
+          "button_url": ""
+        }
+      }
+    ]
+  },
+  {
+    "id": "contact",
+    "title_key": "page_templates.contact.title",
+    "description_key": "page_templates.contact.description",
+    "blocks": [
+      {
+        "type": "intro",
+        "data": {
+          "title": "@page_templates.content.intro_contact",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "grid",
+        "data": {
+          "column_count": 2,
+          "preset": "equal",
+          "layout_version": "v2",
+          "columns": [
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.contact_details",
+                    "body": "@page_templates.content.contact_body"
+                  }
+                }
+              ]
+            },
+            {
+              "blocks": []
+            }
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "id": "landing",
+    "title_key": "page_templates.landing.title",
+    "description_key": "page_templates.landing.description",
+    "blocks": [
+      {
+        "type": "hero",
+        "data": {
+          "title": "@page_templates.content.hero_landing",
+          "lead": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "text",
+        "data": {
+          "title": "@page_templates.content.landing_intro",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "text_image",
+        "data": {
+          "title": "@page_templates.content.landing_image",
+          "body": "@page_templates.content.intro_body"
+        }
+      },
+      {
+        "type": "grid",
+        "data": {
+          "column_count": 2,
+          "preset": "equal",
+          "layout_version": "v2",
+          "columns": [
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.landing_benefit1"
+                  }
+                }
+              ]
+            },
+            {
+              "blocks": [
+                {
+                  "type": "text",
+                  "data": {
+                    "title": "@page_templates.content.landing_benefit2"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "type": "cta",
+        "data": {
+          "title": "@page_templates.content.cta",
+          "button_label": "@page_templates.content.cta_label",
+          "button_url": ""
+        }
+      }
+    ]
+  }
+]

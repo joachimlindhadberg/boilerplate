@@ -1,0 +1,61 @@
+.hero {
+  position: relative;
+  display: flex;
+  min-height: 520px;
+  align-items: flex-end;
+  overflow: hidden;
+  padding-block: var(--section-space);
+  background: var(--color-surface-dark);
+  color: #fff;
+}
+
+.hero__background,
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+}
+
+.hero__background img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero__overlay {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.62));
+}
+
+.hero__content {
+  position: relative;
+  z-index: 1;
+}
+
+.hero__kicker {
+  margin-bottom: 8px;
+  color: rgba(255,255,255,.78);
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.hero__title {
+  max-width: 900px;
+  font-size: clamp(2.75rem, 8vw, 5.5rem);
+  line-height: .98;
+  letter-spacing: -.035em;
+}
+
+.hero__lead {
+  max-width: 700px;
+  margin-top: 24px;
+  font-size: 1.125rem;
+}
+
+.hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+  margin-top: 32px;
+}

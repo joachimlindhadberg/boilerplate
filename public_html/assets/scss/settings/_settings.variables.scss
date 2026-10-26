@@ -1,0 +1,29 @@
+/* Frontend design tokens. Keep this file project-specific. */
+:root {
+  --color-text: #262626;
+  --color-muted: #737373;
+  --color-border: #e4e3e3;
+  --color-surface: #ffffff;
+  --color-surface-soft: #f6f4f2;
+  --color-surface-dark: #262626;
+  --color-link: #147ac2;
+  --color-error: #a32626;
+  --color-success: #004b32;
+
+  --font-family-base: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-family-heading: var(--font-family-base);
+
+  --container-max: 1400px;
+  --container-padding: 24px;
+  --section-space: 72px;
+  --grid-gap: 24px;
+  --radius: 2px;
+  --transition: 180ms ease;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --container-padding: 36px;
+    --section-space: 96px;
+  }
+}

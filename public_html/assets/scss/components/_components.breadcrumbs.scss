@@ -1,0 +1,32 @@
+.breadcrumbs {
+  padding-block: 16px;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.875rem;
+}
+
+.breadcrumbs__list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.breadcrumbs__item {
+  margin: 0;
+}
+
+.breadcrumbs__item:not(:last-child)::after {
+  margin-left: 6px;
+  color: var(--color-muted);
+  content: "/";
+}
+
+.breadcrumbs__link {
+  color: inherit;
+}
+
+.breadcrumbs__item--current {
+  color: var(--color-muted);
+}

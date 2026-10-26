@@ -1,0 +1,11 @@
+{
+  "name": "Example Module",
+  "slug": "example",
+  "version": "1.0.2",
+  "description": "Minimal example module to verify activation, navigation and admin routes.",
+  "author": "Boilerplate CMS",
+  "requires": "2.2.0",
+  "requires_php": "8.3.0",
+  "entry": "ExampleModule.php",
+  "class": "ExampleModule"
+}

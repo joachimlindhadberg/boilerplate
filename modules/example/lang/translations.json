@@ -1,0 +1,37 @@
+{
+  "Boilerplate har indlæst modulets manifest, startet det aktive module, registreret menupunktet og sendt denne admin-route til modulets egen handler.": {
+    "en": "Boilerplate has loaded the module manifest, started the active module, registered the menu item and dispatched this admin route to the module handler.",
+    "da": "Boilerplate har indlæst modulets manifest, startet det aktive module, registreret menupunktet og sendt denne admin-route til modulets egen handler.",
+    "de": "Boilerplate hat das Modulmanifest geladen, das aktive Modul gestartet, den Menüpunkt registriert und diese Verwaltungsroute an das Modul übergeben.",
+    "sv": "Boilerplate har läst modulmanifestet, startat den aktiva modulen, registrerat menyalternativet och skickat adminadressen till modulen.",
+    "nb": "Boilerplate har lest modulmanifestet, startet den aktive modulen, registrert menypunktet og sendt administrasjonsruten til modulen."
+  },
+  "Denne side kommer fra Example Module og er ikke en del af CMS-kernen.": {
+    "en": "This page comes from Example Module and is not part of CMS Core.",
+    "da": "Denne side kommer fra Example Module og er ikke en del af CMS-kernen.",
+    "de": "Diese Seite stammt aus dem Beispielmodul und gehört nicht zum CMS-Core.",
+    "sv": "Den här sidan kommer från exempelmodulen och är inte en del av CMS Core.",
+    "nb": "Denne siden kommer fra eksempelmodulen og er ikke en del av CMS Core."
+  },
+  "Eksempel": {
+    "en": "Example",
+    "da": "Eksempel",
+    "de": "Beispiel",
+    "sv": "Exempel",
+    "nb": "Eksempel"
+  },
+  "Example Module er aktivt.": {
+    "en": "Example Module is active.",
+    "da": "Example Module er aktivt.",
+    "de": "Das Beispielmodul ist aktiv.",
+    "sv": "Exempelmodulen är aktiv.",
+    "nb": "Eksempelmodulen er aktiv."
+  },
+  "Module-systemet fungerer": {
+    "en": "The module system works",
+    "da": "Module-systemet fungerer",
+    "de": "Das Modulsystem funktioniert",
+    "sv": "Modulsystemet fungerar",
+    "nb": "Modulsystemet fungerer"
+  }
+}

@@ -1,0 +1,48 @@
+<?php
+/** V2.4.4z1 – Pages create/save/edit/delete workflow invariants. */
+declare(strict_types=1);
+if (PHP_SAPI !== 'cli') { http_response_code(403); exit; }
+$root = dirname(__DIR__);
+$controller = file_get_contents($root . '/public_html/admin/pages.php');
+$form = file_get_contents($root . '/public_html/admin/views/pages/partials/form-fields.php');
+$deleteModal = file_get_contents($root . '/public_html/admin/views/pages/partials/delete-modal.php');
+$deletePanel = file_get_contents($root . '/public_html/admin/views/pages/partials/delete-panel.php');
+$js = file_get_contents($root . '/public_html/admin/assets/js/admin-page-workflow.js');
+$sharedJs = file_get_contents($root . '/public_html/admin/assets/js/admin.js');
+$version = file_get_contents($root . '/public_html/incl/init.php');
+$pass=0;$fail=0;
+$check=static function(bool $value,string $label) use (&$pass,&$fail):void { $value?++$pass:++$fail;echo ($value?'PASS':'FAIL').': '.$label."\n"; };
+$section = static function(string $start, string $end) use ($controller):string { $a=strpos($controller,$start);$b=strpos($controller,$end,$a===false?0:$a+strlen($start));return $a===false||$b===false?'':substr($controller,$a,$b-$a); };
+$create = $section("if (\$mode === 'new')", "if (\$mode === 'edit')");
+$edit = $section("if (\$mode === 'edit')", "if (\$mode === 'history'");
+$delete = $section("if (\$mode === 'delete')", "\n}\n\nhttp_response_code(404);");
+$check(str_contains($create,"admin_redirect('/admin/sider?mode=edit&id=' . \$createdId);"),'Create redirects to editor of new ID');
+$check(str_contains($edit,"admin_redirect('/admin/sider?mode=edit&id=' . \$id);"),'Saved changes redirect back to edit');
+$check(!str_contains($create,"admin_redirect('/admin/sider?mode=view&id='") && !str_contains($edit,"admin_redirect('/admin/sider?mode=view&id='"),'No forced detail view in page save branches');
+$check(str_contains($controller, "admin_set_notice('Siden er oprettet.')") && str_contains($controller, "admin_set_notice('Siden er opdateret.')"),'Existing success notices retained');
+$check(str_contains($edit,"'notice' => admin_pull_notice()"),'Editor receives server flash notices');
+$check(str_contains($form,"<?php if (!empty(\$notice)): ?>") && str_contains($form,'role="status"'),'Editor displays success/error notices');
+$check(str_contains($form, 'target="_blank" rel="noopener noreferrer"'),'Public page opens in new tab with safe rel');
+$check(str_contains($form,"admin_page_public_url(\$pageRecord)"),'View page uses public URL builder, not admin detail URL');
+$check(str_contains($form, 'href="/admin/sider"') && !str_contains($form, '/admin/sider?mode=view&amp;id='),'Back and Cancel lead directly to pages list');
+$check(str_contains($form,"if (\$isEdit): require __DIR__ . '/delete-panel.php'; endif;"),'Delete panel shown only for an existing page');
+$check(str_contains($form,"\$id = \$pageId; \$deleteReturnMode = 'edit'; require __DIR__ . '/delete-modal.php';"),'Existing delete modal reused after save form closes');
+$check(strpos($form,'</form>') < strpos($form,"require __DIR__ . '/delete-modal.php'"),'Delete form not nested in save form');
+$check(str_contains($edit,"'childCount' => \$pagesModel->childCount(\$id)"),'Delete panel gets authoritative child count');
+$check(str_contains($deletePanel,'$isSystem || (int)($childCount ?? 0) > 0'),'Delete blocked for system pages and parents');
+$check(str_contains($deletePanel,'type="button" data-admin-open-delete="page-delete-dialog"'),'Delete button opens confirmation, not main Save');
+$check(str_contains($deleteModal,'AdminDeleteDialog::render(') && str_contains($deleteModal, "'csrfToken' => admin_csrf_token()") && str_contains($deleteModal, "'confirm_delete' => 'permanent'"),'Delete still uses POST, CSRF and explicit confirmation');
+$check(str_contains($deleteModal, 'return_to') && str_contains($deleteModal, 'deleteReturnMode'),'Modal passes safe return origin');
+$check(str_contains($delete,'admin_verify_csrf(') && str_contains($delete,"(\$_POST['confirm_delete'] ?? '') !== 'permanent'"),'Delete controller still verifies CSRF and confirmation');
+$check(str_contains($delete,"'edit' => '/admin/sider?mode=edit&id=' . \$id") && str_contains($delete,"'list' => '/admin/sider'") && str_contains($delete,"default => '/admin/sider?mode=view&id=' . \$id"),'Return-to mode strictly allowlisted (editor/list/detail)');
+$check(substr_count($delete,'admin_redirect($failureUrl);') === 4,'Delete error cases return to origin');
+$check(str_contains($delete,"admin_redirect('/admin/sider');"),'Successful delete returns to listing');
+$check(str_contains($form,'data-page-save-scroll') && str_contains($form,'admin-page-workflow.js'),'Scroll behavior only attached to existing editor');
+$check(str_contains($js,'sessionStorage.setItem') && str_contains($js,'sessionStorage.removeItem'),'Save stores single-use scroll position');
+$check(str_contains($js,'Date.now() - saved.at > maxAge') && str_contains($js,'5 * 60 * 1000'),'Saved scroll position expires');
+$check(str_contains($js,"window.addEventListener('load', restore"),'Scroll restores after page load');
+$check(str_contains($js,"form.dispatchEvent(new Event('admin:discard-draft'))") && str_contains($sharedJs,"form.addEventListener('admin:discard-draft'"),'Explicit delete confirmation bypasses redundant dirty warning');
+$check((bool)preg_match("/BOILERPLATE_VERSION', '([0-9]+(?:\\.[0-9]+){2,3})'/", $version, $m) && version_compare($m[1] ?? '0', '2.4.4.48', '>='),'V2.4.4z1 version metadata');
+$check(file_get_contents($root.'/public_html/admin/assets/scss/admin.scss')===file_get_contents($root.'/public_html/admin/assets/css/admin.css'),'Global admin SCSS/CSS remain synchronized');
+echo "Summary V2.4.4z1: $pass PASS / $fail FAIL\n";
+exit($fail===0?0:1);
