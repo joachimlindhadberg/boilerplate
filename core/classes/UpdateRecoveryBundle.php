@@ -9,7 +9,10 @@ declare(strict_types=1);
  */
 final class UpdateRecoveryBundle
 {
-    private const MAX_RETAINED = 3;
+    // Allow one extra verified recovery point during an update.
+    // Retire the oldest only after an independently successful commit.
+    private const MAX_RETAINED = 4;
+    private const RETAIN_AFTER_SUCCESS = 3;
     private string $root;
     private string $vault;
     /** @var null|Closure():string */
@@ -102,6 +105,77 @@ final class UpdateRecoveryBundle
             }
             if (is_string($data)) $this->discardDataTemporary($data);
             if ($stage !== null && is_dir($stage)) $this->removePending($stage);
+            flock($lock, LOCK_UN);
+            fclose($lock);
+        }
+    }
+
+    /**
+     * Post-commit rotation only. Never called before the new release has been
+     * installed and its journal committed. A failure to prune must not turn a
+     * successful installation into a rollback attempt.
+     *
+     * The new verified point is always preserved. Existing points are never
+     * removed if another update is pending, if an archive is unverified, or
+     * if a vault member is unsafe. The caller holds UpdateMaintenanceGate EX.
+     */
+    public function pruneAfterSuccessfulInstall(string $newId): int
+    {
+        if (preg_match('/^recovery-[a-f0-9]{32}$/D', $newId) !== 1) {
+            throw new RuntimeException('Invalid newly completed recovery identifier.');
+        }
+        if (is_link($this->root . '/storage') || is_link($this->vault)
+            || !is_dir($this->vault) || (fileperms($this->vault) & 0077) !== 0) {
+            throw new RuntimeException('Unsafe private recovery vault.');
+        }
+        $lock = $this->lock();
+        try {
+            foreach (new DirectoryIterator($this->vault) as $member) {
+                if ($member->isDot()) continue;
+                if (str_starts_with($member->getFilename(), '.one-click-pending-')
+                    || str_starts_with($member->getFilename(), '.pending-')) {
+                    throw new RuntimeException('Recovery cleanup forbidden while work is pending.');
+                }
+            }
+            $ids = $this->completeBundles();
+            if (!in_array($newId, $ids, true)) {
+                throw new RuntimeException('Latest recovery bundle was not found.');
+            }
+            if (count($ids) > self::MAX_RETAINED) {
+                throw new RuntimeException('Unexpected recovery bundle count.');
+            }
+            // Read and verify ALL candidate recovery points before deleting any.
+            $records = [];
+            foreach ($ids as $id) {
+                $this->verify($id);
+                $raw = file_get_contents($this->vault . '/' . $id . '/manifest.json');
+                $manifest = is_string($raw) ? json_decode($raw, true, 16, JSON_THROW_ON_ERROR) : null;
+                $created = is_array($manifest) ? ($manifest['created_utc'] ?? null) : null;
+                if (!is_string($created) || strlen($created) > 40 || strtotime($created) === false) {
+                    throw new RuntimeException('Recovery bundle lacks valid creation timestamp.');
+                }
+                $records[] = ['id' => $id, 'created' => strtotime($created)];
+            }
+            if (count($records) <= self::RETAIN_AFTER_SUCCESS) return 0;
+            usort($records, static fn(array $a, array $b): int =>
+                ($a['created'] <=> $b['created']) ?: strcmp($a['id'], $b['id']));
+            $removed = 0;
+            foreach ($records as $record) {
+                if (count($records) - $removed <= self::RETAIN_AFTER_SUCCESS) break;
+                if ($record['id'] === $newId) continue;
+                $dir = $this->vault . '/' . $record['id'];
+                $this->inspectDirectory($dir);
+                foreach (['code.tar.gz', 'data.tar.gz', 'manifest.json'] as $member) {
+                    $file = $dir . '/' . $member;
+                    if (is_link($file) || !is_file($file) || !unlink($file)) {
+                        throw new RuntimeException('Cannot retire verified recovery archive safely.');
+                    }
+                }
+                if (!rmdir($dir)) throw new RuntimeException('Cannot remove empty recovery directory.');
+                ++$removed;
+            }
+            return $removed;
+        } finally {
             flock($lock, LOCK_UN);
             fclose($lock);
         }

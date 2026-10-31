@@ -168,6 +168,15 @@ final class UpdateOneClickInstaller
             try { $this->removeWork($completed); } catch (Throwable $ignored) {
                 error_log('Completed update temporary cleanup pending.');
             }
+            // The new recovery point was verified before any code writes.
+            // Prune older copies only AFTER successful journal commit.
+            try {
+                (new UpdateRecoveryBundle($this->root))->pruneAfterSuccessfulInstall($backup['id']);
+            } catch (Throwable $ignored) {
+                // Do not falsely report installation failure or roll back
+                // completed code merely because post-commit cleanup failed.
+                error_log('Completed update recovery retention cleanup pending.');
+            }
             return ['status' => 'updated', 'version' => $expectedVersion];
         } catch (Throwable $e) {
             error_log('One-click update interrupted: ' . get_class($e));
