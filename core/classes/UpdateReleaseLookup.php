@@ -34,6 +34,17 @@ final class UpdateReleaseLookup
     /** @return array{status:string,latest_version:string,release_url:string} */
     public function check(string $installedVersion, string $channel = 'stable'): array
     {
+        return $this->checkSource($installedVersion, $channel, false);
+    }
+
+    /** Read the preview catalog without allowing stable entries to hide beta/RC. */
+    public function checkPreview(string $installedVersion): array
+    {
+        return $this->checkSource($installedVersion, 'beta', true);
+    }
+
+    private function checkSource(string $installedVersion, string $channel, bool $previewOnly): array
+    {
         $result = ['status' => 'error', 'latest_version' => '', 'release_url' => ''];
         if (!UpdateReleaseVersion::valid($installedVersion)) {
             return $result;
@@ -93,7 +104,8 @@ final class UpdateReleaseLookup
             $result['status'] = 'invalid_response';
             return $result;
         }
-        $selected = UpdateReleaseVersion::select($release, $channel);
+        $selected = $previewOnly ? UpdateReleaseVersion::selectPreview($release)
+            : UpdateReleaseVersion::select($release, $channel);
         if ($selected === null) {
             if ($channel === 'stable' && ($release['draft'] ?? null) === false
                 && ($release['prerelease'] ?? null) === false

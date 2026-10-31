@@ -55,7 +55,18 @@ final class UpdateOfficialReleasePackage
         return $this->checkLatest(true, $channel);
     }
 
-    private function checkLatest(bool $prepare, string $channel): array
+    /** Prepare exactly the selected official release; never accept a client URL/asset. */
+    public function prepareSelected(string $expectedVersion, string $kind): array
+    {
+        if (!UpdateReleaseVersion::valid($expectedVersion)
+            || !in_array($kind, ['stable', 'beta'], true)
+            || UpdateReleaseVersion::isPrerelease($expectedVersion) !== ($kind === 'beta')) {
+            return ['status' => 'blocked', 'version' => '', 'sha256' => '', 'files' => 0, 'install_ready' => false];
+        }
+        return $this->checkLatest(true, $kind, $expectedVersion);
+    }
+
+    private function checkLatest(bool $prepare, string $channel, ?string $expectedVersion = null): array
     {
         $result = ['status' => 'blocked', 'version' => '', 'sha256' => '', 'files' => 0, 'install_ready' => false];
         $channel = UpdateReleaseVersion::channel($channel);
@@ -87,13 +98,19 @@ final class UpdateOfficialReleasePackage
             return $result;
         }
         if (!is_array($release) || ($channel === 'beta' && !array_is_list($release))) return $result;
-        $selected = UpdateReleaseVersion::select($release, $channel);
+        $selected = ($expectedVersion !== null && $channel === 'beta')
+            ? UpdateReleaseVersion::selectPreview($release)
+            : UpdateReleaseVersion::select($release, $channel);
         if ($selected === null) {
             $result['status'] = $channel === 'beta' ? 'no_release' : 'blocked';
             return $result;
         }
         $release = $selected;
         $version = $selected['_bp_version'];
+        if ($expectedVersion !== null && !hash_equals($expectedVersion, $version)) {
+            $result['status'] = 'selection_changed';
+            return $result;
+        }
         $result['version'] = $version;
         if (version_compare($version, $current, '<=')) {
             $result['status'] = 'no_new_version';

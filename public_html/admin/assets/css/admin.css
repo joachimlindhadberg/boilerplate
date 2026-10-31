@@ -3011,3 +3011,14 @@ body.nf-admin [data-gallery-interval-settings][hidden] { display:none !important
 body.nf-admin .admin-gallery-settings__options { display:grid; gap:12px; min-width:0; }
 body.nf-admin .admin-gallery-settings .admin-form-row { min-width:0; }
 body.nf-admin .admin-gallery-settings .admin-toggle { min-width:0; }
+
+/* Updates: Core-owned compact release picker. */
+.admin-update-options { display: grid; border: 1px solid var(--admin-border); border-radius: 4px; overflow: hidden; }
+.admin-update-option { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; padding: 13px 15px; border-bottom: 1px solid var(--admin-border); }
+.admin-update-option:last-child { border-bottom: 0; }
+.admin-update-option__choice { display: flex; align-items: flex-start; gap: 12px; min-width: 0; flex: 1 1 240px; cursor: pointer; }
+.admin-update-option__choice input { flex: 0 0 auto; margin-top: 3px; }
+.admin-update-option__details { display: grid; gap: 4px; }
+.admin-update-option__details strong { color: var(--admin-text); font-size: 12px; font-weight: 600; }
+.admin-update-option__details span { color: var(--admin-muted); font-size: 11px; line-height: 1.5; }
+.admin-update-option > a { font-size: 11px; white-space: nowrap; }

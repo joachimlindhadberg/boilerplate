@@ -57,7 +57,7 @@
       }).then((data) => {
         if (data?.status !== 'available'
           || typeof data.latest_version !== 'string'
-          || !/^\d+\.\d+\.\d+(?:\.\d+)?$/.test(data.latest_version)) return;
+          || !/^\d+\.\d+\.\d+(?:\.\d+)?(?:-(?:beta|rc)\.[1-9]\d*)?$/.test(data.latest_version)) return;
         const version = updateNotice.querySelector('[data-dashboard-update-version]');
         if (version) version.textContent = data.latest_version;
         updateNotice.hidden = false;

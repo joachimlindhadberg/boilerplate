@@ -10365,5 +10365,54 @@
     "de": "Eine neuere offizielle stabile oder Vorabversion wurde veröffentlicht.",
     "sv": "En nyare officiell stabil- eller förhandsversion har publicerats.",
     "nb": "En nyere offisiell stabil eller forhåndsversjon er publisert."
+  },
+  "updates.choices_title": {
+    "en": "Available updates",
+    "da": "Tilgængelige opdateringer",
+    "de": "Verfügbare Updates",
+    "sv": "Tillgängliga uppdateringar",
+    "nb": "Tilgjengelige oppdateringer"
+  },
+  "updates.choices_description": {
+    "en": "Choose a version to install.",
+    "da": "Vælg den version, du vil installere.",
+    "de": "Wählen Sie die Version aus, die Sie installieren möchten.",
+    "sv": "Välj vilken version du vill installera.",
+    "nb": "Velg versjonen du vil installere."
+  },
+  "updates.stable_label": {
+    "en": "Stable",
+    "da": "Stabil",
+    "de": "Stabil",
+    "sv": "Stabil",
+    "nb": "Stabil"
+  },
+  "updates.preview_label": {
+    "en": "Beta / preview",
+    "da": "Beta / prøveversion",
+    "de": "Beta / Vorabversion",
+    "sv": "Beta / förhandsversion",
+    "nb": "Beta / forhåndsversjon"
+  },
+  "updates.stable_help": {
+    "en": "Recommended for most websites.",
+    "da": "Anbefalet til de fleste hjemmesider.",
+    "de": "Für die meisten Websites empfohlen.",
+    "sv": "Rekommenderas för de flesta webbplatser.",
+    "nb": "Anbefalt for de fleste nettsteder."
+  },
+  "updates.preview_help": {
+    "en": "Early release. May contain bugs.",
+    "da": "Tidlig udgave. Kan indeholde fejl.",
+    "de": "Vorabversion. Kann Fehler enthalten.",
+    "sv": "Tidig utgåva. Kan innehålla fel.",
+    "nb": "Tidlig utgave. Kan inneholde feil."
+  },
+  "updates.update_selected": {
+    "en": "Update selected version",
+    "da": "Opdatér valgt version",
+    "de": "Ausgewählte Version installieren",
+    "sv": "Uppdatera vald version",
+    "nb": "Oppdater valgt versjon"
   }
 }

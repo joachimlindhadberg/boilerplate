@@ -22,7 +22,7 @@ final class UpdateAdminNotification
     {
         $none = ['status' => 'not_available', 'latest_version' => ''];
         if (!self::validVersion($installedVersion)) return $none;
-        $channel = UpdateReleaseVersion::channel($channel);
+        $channel = $channel === 'all' ? 'all' : UpdateReleaseVersion::channel($channel);
         $now ??= time();
         if ($now < 0) return $none;
         $cached = $session[self::SESSION_KEY] ?? null;
@@ -46,9 +46,22 @@ final class UpdateAdminNotification
         $status = $none;
         $ttl = self::FAILURE_TTL;
         try {
-            $result = $lookup === null
-                ? (new UpdateReleaseLookup())->check($installedVersion, $channel)
-                : $lookup($installedVersion);
+            if ($lookup !== null) {
+                $result = $lookup($installedVersion);
+            } elseif ($channel === 'all') {
+                $choices = (new UpdateReleaseChoices())->find($installedVersion);
+                $best = null;
+                foreach ($choices['releases'] as $candidate) {
+                    if ($best === null || version_compare($candidate['version'], $best, '>')) {
+                        $best = $candidate['version'];
+                    }
+                }
+                $result = $best !== null
+                    ? ['status' => 'available', 'latest_version' => $best]
+                    : ['status' => $choices['status'], 'latest_version' => ''];
+            } else {
+                $result = (new UpdateReleaseLookup())->check($installedVersion, $channel);
+            }
             if (is_array($result)) {
                 $candidate = $result['latest_version'] ?? null;
                 $state = $result['status'] ?? null;

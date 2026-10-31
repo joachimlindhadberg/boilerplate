@@ -147,8 +147,8 @@ if ($moduleRoute === '' && $mode === 'update-notice') {
         echo '{"status":"not_available","latest_version":""}';
         exit;
     }
-    $channel = UpdateReleaseVersion::channel((string)(new Settings())->get('update_channel', 'stable'));
-    $notice = UpdateAdminNotification::check((string)BOILERPLATE_VERSION, $_SESSION, null, null, $channel);
+    // No persistent channel: the dashboard follows the same relevant releases as Tools → Updates.
+    $notice = UpdateAdminNotification::check((string)BOILERPLATE_VERSION, $_SESSION, null, null, 'all');
     echo json_encode($notice, JSON_THROW_ON_ERROR);
     exit;
 }

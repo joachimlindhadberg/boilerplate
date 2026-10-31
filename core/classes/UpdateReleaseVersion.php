@@ -55,6 +55,21 @@ final class UpdateReleaseVersion
         return $best;
     }
 
+    /** Choose only the newest published beta/RC from GitHub's release catalog. */
+    public static function selectPreview(mixed $json): ?array
+    {
+        if (!is_array($json) || !array_is_list($json)) return null;
+        $best = null;
+        foreach ($json as $item) {
+            $candidate = self::normalizeRelease($item, 'beta');
+            if ($candidate === null || !self::isPrerelease($candidate['_bp_version'])) continue;
+            if ($best === null || version_compare($candidate['_bp_version'], $best['_bp_version'], '>')) {
+                $best = $candidate;
+            }
+        }
+        return $best;
+    }
+
     public static function api(string $repository, string $channel): string
     {
         $endpoint = self::channel($channel) === 'beta' ? '/releases?per_page=10' : '/releases/latest';

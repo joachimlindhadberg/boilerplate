@@ -14,49 +14,16 @@ if ($mode === null) {
 }
 
 if ($mode === 'update') {
-    $channelSettings = new Settings();
-    $updateChannel = UpdateReleaseVersion::channel((string)$channelSettings->get('update_channel', 'stable'));
-    $lookupResult = null;
-    $lookupAttempted = false;
-    $prepareResult = null;
+    $installedVersion = defined('BOILERPLATE_VERSION') ? (string)BOILERPLATE_VERSION : '';
+    $choices = null;
+    $pendingRecovery = (new UpdateOneClickInstaller())->hasInterruptedUpdate();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'check_for_updates') {
-        $lookupAttempted = true;
-        if (!admin_verify_csrf($_POST['csrf_token'] ?? null)) {
-            $lookupResult = ['status' => 'csrf', 'latest_version' => '', 'release_url' => ''];
-        } else {
-            $lookupResult = (new UpdateReleaseLookup())->check(
-                defined('BOILERPLATE_VERSION') ? (string)BOILERPLATE_VERSION : '', $updateChannel
-            );
-        }
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'set_update_channel') {
-        if (!admin_verify_csrf($_POST['csrf_token'] ?? null)) {
-            admin_set_notice('updates.session_expired', 'error');
-        } elseif (!in_array(($_POST['channel'] ?? null), ['stable', 'beta'], true)) {
-            admin_set_notice('updates.update_failed', 'error');
-        } else {
-            try {
-                $channelSettings->set('update_channel', (string)$_POST['channel'], 0);
-            } catch (Throwable $e) {
-                error_log('Could not save update channel (details withheld).');
-                admin_set_notice('updates.update_failed', 'error');
-            }
-        }
-        admin_redirect('/admin/tools/update');
-    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'prepare_official_update') {
-        if (!admin_verify_csrf($_POST['csrf_token'] ?? null)) {
-            $prepareResult = ['status' => 'csrf', 'install_ready' => false];
-        } else {
-            try {
-                $prepareResult = (new UpdateOfficialReleasePackage())->prepareLatest($updateChannel);
-            } catch (Throwable $e) {
-                error_log('Official release preparation failed (details withheld).');
-                $prepareResult = ['status' => 'download_or_review_failed', 'install_ready' => false];
-            }
-        }
+        $choices = !admin_verify_csrf($_POST['csrf_token'] ?? null)
+            ? ['status' => 'csrf', 'releases' => []]
+            : (new UpdateReleaseChoices())->find($installedVersion);
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['action'] ?? ''),
         ['install_official_update', 'restore_interrupted_update'], true)) {
-        // Bootstrap already verified login and tools.manage. Never accept a URL,
-        // archive path or arbitrary repository supplied by a browser request.
+        // Bootstrap already requires login + tools.manage. All actions are CSRF protected.
         if (!admin_verify_csrf($_POST['csrf_token'] ?? null)) {
             admin_set_notice('updates.session_expired', 'error');
             admin_redirect('/admin/tools/update');
@@ -64,16 +31,39 @@ if ($mode === 'update') {
         $action = (string)$_POST['action'];
         $install = new UpdateOneClickInstaller();
         $prepared = null;
+        $kind = '';
         if ($action === 'install_official_update') {
-            $expected = trim((string)($_POST['expected_version'] ?? ''));
+            $selection = is_string($_POST['release_selection'] ?? null) ? $_POST['release_selection'] : '';
+            if (!preg_match('/^(stable|beta):([0-9]+(?:\.[0-9]+){2,3}(?:-(?:beta|rc)\.[1-9][0-9]*)?)$/D', $selection, $match)) {
+                admin_set_notice('updates.update_failed', 'error');
+                admin_redirect('/admin/tools/update');
+            }
+            [, $kind, $expected] = $match;
             if (!UpdateReleaseVersion::valid($expected)
-                || ($_POST['expected_channel'] ?? '') !== $updateChannel) {
+                || UpdateReleaseVersion::isPrerelease($expected) !== ($kind === 'beta')) {
                 admin_set_notice('updates.update_failed', 'error');
                 admin_redirect('/admin/tools/update');
             }
             try {
-                $prepared = (new UpdateOfficialReleasePackage())->prepareLatest($updateChannel);
+                // Repeat discovery and enforce exact chosen release before touching files.
+                $live = (new UpdateReleaseChoices())->find($installedVersion);
+                $eligible = ($live['status'] ?? '') === 'available';
+                if ($eligible) {
+                    $eligible = false;
+                    foreach ($live['releases'] as $release) {
+                        if ($release['kind'] === $kind && $release['version'] === $expected) {
+                            $eligible = true;
+                            break;
+                        }
+                    }
+                }
+                if (!$eligible) {
+                    admin_set_notice('updates.update_failed', 'error');
+                    admin_redirect('/admin/tools/update');
+                }
+                $prepared = (new UpdateOfficialReleasePackage())->prepareSelected($expected, $kind);
             } catch (Throwable $e) {
+                error_log('Official selected release preparation failed (details withheld).');
                 $prepared = ['status' => 'download_or_review_failed'];
             }
             if (($prepared['status'] ?? '') !== 'prepared_for_review_only'
@@ -82,9 +72,7 @@ if ($mode === 'update') {
                 admin_redirect('/admin/tools/update');
             }
         }
-        // The current HTTP request holds the normal F1c reader lease.
-        // Release only OUR reader, then acquire the existing exclusive lease;
-        // a competing HTTP/CLI worker keeps the update blocked.
+        // Release only this request's reader lease, then require exclusive gate.
         UpdateMaintenanceGate::releaseCurrentHttpReadersForUpdate();
         $gate = new UpdateMaintenanceGate();
         try {
@@ -94,7 +82,7 @@ if ($mode === 'update') {
                 $result = $install->restoreInterrupted();
                 $status = (string)($result['status'] ?? 'recovery_required');
             } else {
-                $result = $install->install((string)$prepared['version'], (string)$prepared['sha256'], $updateChannel);
+                $result = $install->install((string)$prepared['version'], (string)$prepared['sha256'], $kind);
                 $status = (string)($result['status'] ?? 'recovery_required');
             }
         } catch (Throwable $e) {
@@ -114,25 +102,17 @@ if ($mode === 'update') {
         admin_set_notice($notice, in_array($status, ['updated', 'restored'], true) ? 'success' : 'error');
         admin_redirect('/admin/tools/update');
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Unknown actions are rejected. Manual ZIP upload is never accepted.
         http_response_code(400);
         exit;
     } elseif ($_SERVER['REQUEST_METHOD'] !== 'GET') {
         header('Allow: GET, POST', true, 405);
         exit;
     }
-    try {
-        $preparedRelease = (new UpdateOfficialReleasePackage())->preparedStatus($updateChannel);
-    } catch (Throwable $e) {
-        $preparedRelease = ['status' => 'not_prepared', 'install_ready' => false];
-    }
     $report = (new UpdateCompatibilityPreflight())->inspect();
     header('Cache-Control: private, no-store, max-age=0');
     admin_render('tools/update', [
         'user' => $auth->user(), 'activeNav' => 'tools', 'report' => $report,
-        'lookupResult' => $lookupResult, 'lookupAttempted' => $lookupAttempted, 'updateChannel' => $updateChannel,
-        'prepareResult' => $prepareResult, 'preparedRelease' => $preparedRelease,
-        'pendingRecovery' => (new UpdateOneClickInstaller())->hasInterruptedUpdate(),
+        'updateChoices' => $choices, 'pendingRecovery' => $pendingRecovery,
         'updateNotice' => admin_pull_notice(),
     ]);
     exit;

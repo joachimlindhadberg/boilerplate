@@ -1,5 +1,5 @@
 <?php
-/** Beta.2 UI regression. Renders the actual Core update view without HTTP, DB or writes. */
+/** Current UI regression: renders real update view, no network/DB/installer. */
 declare(strict_types=1);
 if (PHP_SAPI !== 'cli') exit(2);
 $root = dirname(__DIR__);
@@ -9,46 +9,48 @@ function admin_e(mixed $value): string { return htmlspecialchars((string)$value,
 function admin_csrf_token(): string { return 'fixture-csrf'; }
 function admin_icon(string $name, string $class = ''): string { return ''; }
 $view = (string)file_get_contents($root . '/public_html/admin/views/tools/update.php');
-$layoutInclude = "require __DIR__ . '/../partials/layout.php';";
-if (substr_count($view, $layoutInclude) !== 1) {
-    fwrite(STDERR, "FAIL: Unexpected view footer\n"); exit(1);
-}
-// The view already captures its own HTML in $bodyHtml. Skip only the surrounding admin layout.
-$view = str_replace($layoutInclude, '', $view);
-$render = static function (?array $notice, ?array $lookup, ?array $prepared = null) use ($view): string {
-    $report = ['version' => '2.5.1-beta.1'];
-    $updateChannel = 'beta';
-    $lookupResult = $lookup;
-    $prepareResult = null;
-    $preparedRelease = $prepared;
-    $pendingRecovery = false;
+$include = "require __DIR__ . '/../partials/layout.php';";
+if (substr_count($view, $include) !== 1) exit(1);
+$view = str_replace($include, '', $view);
+$render = static function (?array $notice, ?array $choices, bool $recovery = false) use ($view): string {
+    $report = ['version' => '2.5.1-beta.2'];
     $updateNotice = $notice;
+    $updateChoices = $choices;
+    $pendingRecovery = $recovery;
     eval('?>' . $view);
     return $bodyHtml;
 };
-$ok = 0; $fail = 0;
-$check = static function (bool $pass, string $label) use (&$ok, &$fail): void {
-    echo ($pass ? 'PASS: ' : 'FAIL: ') . $label . PHP_EOL;
-    $pass ? $ok++ : $fail++;
+$pass = 0; $fail = 0;
+$check = static function (bool $yes, string $label) use (&$pass, &$fail): void {
+    echo ($yes ? 'PASS: ' : 'FAIL: ') . $label . PHP_EOL;
+    $yes ? $pass++ : $fail++;
 };
-$release = ['status'=>'available', 'latest_version'=>'2.5.1-beta.2',
-    'release_url'=>'https://github.com/joachimlindhadberg/boilerplate/releases/tag/v2.5.1-beta.2'];
-$success = $render(['type'=>'success', 'message'=>'Boilerplate CMS updated successfully.'], $release);
-$check(str_contains($success, 'Boilerplate CMS updated successfully.'), 'Successful update shows translated Core notice');
-$check(!str_contains($success, 'updates.update_failed'), 'Success cannot fall back to update failed notice');
-$check(str_contains($success, 'admin-notice--success'), 'Success retains Core success styling');
-$check(substr_count($success, 'updates.available</strong>')===1, 'Available status appears once');
-$check(substr_count($success, 'updates.latest_version')===1, 'Latest version appears once');
-$check(substr_count($success, '2.5.1-beta.2')>=2, 'Latest version and expected submission both match Beta 2');
-$check(str_contains($success, 'updates.update_now') && str_contains($success, 'updates.check'), 'Core Check and Update now actions retained');
-$check(str_contains($success, 'updates.view_release') && str_contains($success, 'rel="noopener noreferrer"'), 'Release link preserved safely');
-$check(str_contains($success, 'name="expected_channel" value="beta"'), 'Beta selection bound to install form');
-$unsafe = $render(['type'=>'error', 'message'=>'<script>alert(1)</script>'], null);
-$check(str_contains($unsafe, '&lt;script&gt;') && !str_contains($unsafe, '<script>'), 'Notice message is HTML-escaped');
-$check(str_contains($unsafe, 'admin-notice--error'), 'Error retains Core error styling');
-$prepared = $render(null, null, ['status'=>'prepared_for_review_only', 'install_ready'=>false, 'version'=>'2.5.1-beta.2']);
-$check(substr_count($prepared, 'updates.available</strong>')===1 && substr_count($prepared, 'updates.latest_version')===1, 'Prepared-only release has one status and version');
-$check(str_contains($prepared, 'updates.update_now') && !str_contains($prepared, 'updates.view_release'), 'Prepared-only release can install without inventing a GitHub link');
-$check(!str_contains($view, '<style') && !str_contains($view, 'style=') && !str_contains($view, '<script'), 'UI remains Core-owned without inline CSS or JS');
-echo "RESULT: $ok PASS / $fail FAIL (rendered UI, no HTTP, MySQL or installation)\n";
+$both = ['status'=>'available','releases'=>[
+    ['kind'=>'stable','version'=>'2.5.2','url'=>'https://github.com/joachimlindhadberg/boilerplate/releases/tag/v2.5.2'],
+    ['kind'=>'beta','version'=>'2.5.3-beta.1','url'=>'https://github.com/joachimlindhadberg/boilerplate/releases/tag/v2.5.3-beta.1'],
+]];
+$html = $render(['type'=>'success','message'=>'Boilerplate CMS has been updated successfully.'], $both);
+$check(str_contains($html, 'Boilerplate CMS has been updated successfully.'), 'Translated success notice shown');
+$check(!str_contains($html, 'updates.update_failed'), 'Success never shows failed message');
+$check(str_contains($html, 'admin-notice--success'), 'Core success styling retained');
+$check(substr_count($html, 'updates.choices_title') === 2, 'One available updates heading and accessible group');
+$check(substr_count($html, 'name="release_selection"') === 2, 'Two radio choices displayed');
+$check(str_contains($html, 'value="stable:2.5.2" checked'), 'Stable preselected');
+$check(str_contains($html, 'value="beta:2.5.3-beta.1"'), 'Newer Beta offered');
+$check(substr_count($html, 'updates.update_selected') === 1, 'One primary update action');
+$check(str_contains($html, 'updates.check'), 'Check button stays visible');
+$check(substr_count($html, 'updates.view_release') === 2 && substr_count($html, 'rel="noopener noreferrer"') === 2, 'Separate safe release links');
+$check(!str_contains($html, 'name="channel"') && !str_contains($html, 'updates.save_channel'), 'Persistent channel UI removed');
+$check(!str_contains($html, 'updates.latest_version'), 'No duplicated latest-version status');
+$invalid = $render(['type'=>'error','message'=>'<script>alert(1)</script>'], null);
+$check(str_contains($invalid, '&lt;script&gt;') && !str_contains($invalid, '<script>'), 'Notices escaped');
+$check(str_contains($invalid, 'admin-notice--error'), 'Core error style retained');
+$check(!str_contains($invalid, 'name="release_selection"'), 'No choice before search');
+$recover = $render(null, $both, true);
+$check(str_contains($recover, 'restore_interrupted_update') && !str_contains($recover, 'name="release_selection"'), 'Recovery suppresses installation');
+$single = $render(null, ['status'=>'available', 'releases'=>[ $both['releases'][1] ]]);
+$check(substr_count($single, 'name="release_selection"')===1 && str_contains($single, 'value="beta:2.5.3-beta.1" checked'), 'Single beta preselected');
+$check(!str_contains($view, '<style') && !str_contains($view, 'style=') && !str_contains($view, '<script'), 'All styling Core-owned');
+echo "RESULT: $pass PASS / $fail FAIL (rendered UI; no network, DB, install)
+";
 exit($fail ? 1 : 0);
