@@ -19,7 +19,7 @@ define('PUBLICPATH', dirname(__DIR__));
 define('ROOTPATH', dirname(PUBLICPATH));
 define('COREPATH', ROOTPATH . '/core');
 define('INCLPATH', PUBLICPATH . '/incl');
-define('BOILERPLATE_VERSION', '2.5.1-beta.1');
+define('BOILERPLATE_VERSION', '2.5.1-beta.2');
 
 /*
 |--------------------------------------------------------------------------

@@ -61,7 +61,7 @@ ob_start();
   <a class="admin-button admin-button--secondary" href="/admin/tools"><?= admin_icon('arrow-left', 'admin-button__icon'); ?><?= admin_e(t('Tilbage til Værktøjer')); ?></a>
 </div>
 <?php if ($updateNotice !== null): ?>
-  <p class="admin-notice <?= ($updateNotice['type'] ?? '') === 'error' ? 'admin-notice--error' : 'admin-notice--success'; ?>" role="status"><?= admin_e(t((string)($updateNotice['key'] ?? 'updates.update_failed'))); ?></p>
+  <p class="admin-notice <?= ($updateNotice['type'] ?? '') === 'error' ? 'admin-notice--error' : 'admin-notice--success'; ?>" role="status"><?= admin_e((string)($updateNotice['message'] ?? '')); ?></p>
 <?php endif; ?>
 <section class="admin-panel admin-tools-section" aria-labelledby="updates-current-title">
   <div class="admin-panel__header admin-tools-section__header">
@@ -87,7 +87,7 @@ ob_start();
       <div>
         <strong><?= admin_e(t($statusTitle)); ?></strong>
         <span><?= admin_e(t($statusDescription)); ?></span>
-        <?php if ($showRelease): ?>
+        <?php if ($showRelease || $preparedOk): ?>
           <span><?= admin_e(t('updates.latest_version')); ?>: <?= admin_e($latest); ?></span>
         <?php endif; ?>
       </div>
@@ -109,8 +109,10 @@ ob_start();
     <?php elseif ($showRelease || $preparedOk): ?>
       <?php $targetVersion = $showRelease ? $latest : (string)$preparedRelease['version']; ?>
       <div class="admin-tools-feature">
-        <div><strong><?= admin_e(t('updates.available')); ?></strong>
-          <span><?= admin_e(t('updates.latest_version')); ?>: <?= admin_e($targetVersion); ?></span>
+        <div>
+          <?php if ($showRelease): ?>
+            <a class="admin-button admin-button--secondary" href="<?= admin_e($releaseUrl); ?>" target="_blank" rel="noopener noreferrer"><?= admin_icon('external', 'admin-button__icon'); ?><?= admin_e(t('updates.view_release')); ?></a>
+          <?php endif; ?>
         </div>
         <form method="post" action="/admin/tools/update" data-official-update-form>
           <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
@@ -120,9 +122,6 @@ ob_start();
           <button type="submit" class="admin-button admin-button--primary"><?= admin_icon('download', 'admin-button__icon'); ?><?= admin_e(t('updates.update_now')); ?></button>
           <p hidden role="status" data-official-update-progress><?= admin_e(t('updates.updating')); ?></p>
         </form>
-        <?php if ($showRelease): ?>
-          <a class="admin-button admin-button--secondary" href="<?= admin_e($releaseUrl); ?>" target="_blank" rel="noopener noreferrer"><?= admin_icon('external', 'admin-button__icon'); ?><?= admin_e(t('updates.view_release')); ?></a>
-        <?php endif; ?>
       </div>
     <?php endif; ?>
     <?php if ($prepareFailed): ?>
