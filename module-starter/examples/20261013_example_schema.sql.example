@@ -1,8 +1,0 @@
--- Example only: supply a dated standalone .sql file for phpMyAdmin.
--- Confirm the selected database and take a backup before importing.
--- Replace the example table name with a module-specific, unique name.
-CREATE TABLE IF NOT EXISTS example_custom_items (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title VARCHAR(255) NOT NULL,
-    PRIMARY KEY (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

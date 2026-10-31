@@ -19,7 +19,7 @@ ob_start();
     <h1><?= admin_e(t('Redirects')); ?></h1>
     <p><?= admin_e(t('Administrér permanente og midlertidige URL-viderestillinger i CMS-kernen.')); ?></p>
   </div>
-  <a class="admin-button admin-button--secondary" href="/admin/vaerktoejer"><?= admin_icon('arrow-left', 'admin-button__icon'); ?><?= admin_e(t('Tilbage til Værktøjer')); ?></a>
+  <a class="admin-button admin-button--secondary" href="/admin/tools"><?= admin_icon('arrow-left', 'admin-button__icon'); ?><?= admin_e(t('Tilbage til Værktøjer')); ?></a>
 </div>
 
 <?php if (!empty($notice)): ?>
@@ -33,9 +33,9 @@ ob_start();
   <section class="admin-panel" aria-labelledby="redirect-form-title">
     <div class="admin-panel__header">
       <h2 id="redirect-form-title"><?= $isEdit ? t('redirects.edit') : t('redirects.new'); ?></h2>
-      <?php if ($isEdit): ?><a class="admin-button" href="/admin/vaerktoejer/redirects"><?= admin_icon('plus', 'admin-button__icon'); ?><?= admin_e(t('Opret nyt')); ?></a><?php endif; ?>
+      <?php if ($isEdit): ?><a class="admin-button" href="/admin/tools/redirects"><?= admin_icon('plus', 'admin-button__icon'); ?><?= admin_e(t('Opret nyt')); ?></a><?php endif; ?>
     </div>
-    <form method="post" action="/admin/vaerktoejer/redirects<?= $isEdit ? '?edit=' . (int)$form['id'] : ''; ?>" class="admin-form-section" data-admin-track-changes>
+    <form method="post" action="/admin/tools/redirects<?= $isEdit ? '?edit=' . (int)$form['id'] : ''; ?>" class="admin-form-section" data-admin-track-changes>
       <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
       <input type="hidden" name="action" value="save_redirect">
       <input type="hidden" name="id" value="<?= (int)($form['id'] ?? 0); ?>">
@@ -71,7 +71,7 @@ ob_start();
 
       <div class="admin-form-actions admin-form-actions--left">
         <button class="admin-button" type="submit"><?= $isEdit ? '' : admin_icon('plus', 'admin-button__icon'); ?><?= admin_e(t($isEdit ? 'redirects.save' : 'redirects.create')); ?></button>
-        <?php if ($isEdit): ?><a class="admin-button admin-button--secondary" href="/admin/vaerktoejer/redirects"><?= admin_e(t('Annuller')); ?></a><?php endif; ?>
+        <?php if ($isEdit): ?><a class="admin-button admin-button--secondary" href="/admin/tools/redirects"><?= admin_e(t('Annuller')); ?></a><?php endif; ?>
       </div>
     </form>
   </section>
@@ -84,7 +84,7 @@ ob_start();
         ['value' => 'inactive', 'label' => t('redirects.filter_inactive'), 'count' => (int)($counts['inactive'] ?? 0), 'url' => admin_redirects_url(['status' => 'inactive', 'page' => null])],
         ['value' => 'automatic', 'label' => t('redirects.filter_automatic'), 'count' => (int)($counts['automatic'] ?? 0), 'url' => admin_redirects_url(['status' => 'automatic', 'page' => null])],
       ], $status, t('ui.filter_redirects')); ?>
-      <form class="admin-list-search" method="get" action="/admin/vaerktoejer/redirects" role="search" data-admin-live-search>
+      <form class="admin-list-search" method="get" action="/admin/tools/redirects" role="search" data-admin-live-search>
         <?php if ($status !== ''): ?><input type="hidden" name="status" value="<?= admin_e($status); ?>"><?php endif; ?>
         <label><span class="sr-only"><?= admin_e(t('Søg redirects')); ?></span><?= admin_icon('search','admin-list-search__icon'); ?><input type="search" name="q" value="<?= admin_e($search); ?>" placeholder="<?= admin_e(t('Søg URL eller side…')); ?>" autocomplete="off"></label>
       
@@ -144,7 +144,7 @@ ob_start();
     'titleId' => 'redirect-list-delete-title',
     'title' => t('redirects.delete'),
     'warning' => t('Handlingen kan ikke fortrydes.'),
-    'action' => '/admin/vaerktoejer/redirects',
+    'action' => '/admin/tools/redirects',
     'csrfToken' => admin_csrf_token(),
     'fields' => [
         'action' => 'delete_redirect',

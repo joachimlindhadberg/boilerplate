@@ -9,7 +9,7 @@
             <strong><?= admin_e(t('backup.site_data_title')); ?></strong>
             <span><?= admin_e(t('backup.site_data_desc')); ?></span>
           </div>
-          <form method="post" action="/admin/vaerktoejer">
+          <form method="post" action="/admin/tools/data">
             <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
             <input type="hidden" name="action" value="site_backup">
             <button class="admin-button" type="submit"><?= admin_e(t('backup.download')); ?></button>
@@ -25,23 +25,11 @@
           <strong><?= admin_e(t('backup.partial_title')); ?></strong>
           <span><?= admin_e(t('backup.partial_desc')); ?></span>
         </div>
-        <form method="post" action="/admin/vaerktoejer">
+        <form method="post" action="/admin/tools/data">
           <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
           <input type="hidden" name="action" value="export">
           <input type="hidden" name="profile" value="content">
           <button class="admin-button admin-button--secondary" type="submit"><?= admin_e(t('backup.partial_download')); ?></button>
-        </form>
-      </div>
-      <div class="admin-export-option">
-        <div>
-          <strong><?= admin_e(t('health_report.export_title')); ?></strong>
-          <span><?= admin_e(t('health_report.export_description')); ?></span>
-          <?php if (!empty($errors['health_report'])): ?><div class="admin-notice admin-notice--error" role="alert"><?= admin_e(t((string)$errors['health_report'])); ?></div><?php endif; ?>
-        </div>
-        <form method="post" action="/admin/vaerktoejer">
-          <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
-          <input type="hidden" name="action" value="health_report">
-          <button class="admin-button admin-button--secondary" type="submit"><?= admin_e(t('health_report.download')); ?></button>
         </form>
       </div>
       <p class="admin-field__help"><?= admin_e(t('backup.restore_note')); ?></p>

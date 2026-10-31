@@ -19,7 +19,7 @@ define('PUBLICPATH', dirname(__DIR__));
 define('ROOTPATH', dirname(PUBLICPATH));
 define('COREPATH', ROOTPATH . '/core');
 define('INCLPATH', PUBLICPATH . '/incl');
-define('BOILERPLATE_VERSION', '2.5.0');
+define('BOILERPLATE_VERSION', '2.5.1-beta.1');
 
 /*
 |--------------------------------------------------------------------------
@@ -47,6 +47,14 @@ if (PHP_SAPI !== 'cli' && !FirstInstall::configured(ROOTPATH)) {
     exit;
 }
 
+
+// F1c: shared read/admission lock for the lifetime of each PHP web request.
+// A future updater must acquire the exclusive counterpart before touching
+// database, uploads or source; new HTTP requests then fail closed with 503.
+// No maintenance toggle or automatic update is activated by this bootstrap.
+if (PHP_SAPI !== 'cli') {
+    UpdateMaintenanceGate::guardHttp(ROOTPATH);
+}
 
 /*
 |--------------------------------------------------------------------------

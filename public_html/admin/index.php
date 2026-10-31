@@ -130,6 +130,29 @@ if ($moduleRoute === '' && $mode === 'nav-badges') {
     exit;
 }
 
+// Dashboard polls this endpoint AFTER rendering, so a slow or unavailable
+// GitHub API never blocks the main admin page. Only tools managers may check.
+if ($moduleRoute === '' && $mode === 'update-notice') {
+    header('Content-Type: application/json; charset=utf-8');
+    header('X-Content-Type-Options: nosniff');
+    header('Cache-Control: private, no-store, max-age=0');
+    if (strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET')) !== 'GET') {
+        http_response_code(405);
+        header('Allow: GET');
+        echo '{"status":"not_available","latest_version":""}';
+        exit;
+    }
+    if (!$auth->can('tools.manage')) {
+        http_response_code(403);
+        echo '{"status":"not_available","latest_version":""}';
+        exit;
+    }
+    $channel = UpdateReleaseVersion::channel((string)(new Settings())->get('update_channel', 'stable'));
+    $notice = UpdateAdminNotification::check((string)BOILERPLATE_VERSION, $_SESSION, null, null, $channel);
+    echo json_encode($notice, JSON_THROW_ON_ERROR);
+    exit;
+}
+
 if ($moduleRoute === '' && $mode === 'change-password') {
     $error = null;
 
@@ -305,6 +328,7 @@ admin_render('dashboard', [
     'activeNav' => 'dashboard',
     'dashboard' => admin_dashboard_data(),
     'dashboardCards' => admin_dashboard_cards_data($auth),
+    'canViewUpdateNotice' => $auth->can('tools.manage'),
     'canViewActivityLog' => $auth->can('tools.manage'),
     'canManageContent' => $canManageContent,
     'canManageSettings' => $auth->can('settings.manage'),

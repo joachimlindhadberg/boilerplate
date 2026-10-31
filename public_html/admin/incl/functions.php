@@ -289,7 +289,7 @@ function admin_nav_items(array $badges = []): array
     }
 
     $items[] = ['label'=>t('Brugere'),'href'=>$canManageUsers?'/admin/brugere':null,'key'=>'users','icon'=>'user','enabled'=>$canManageUsers,'disabled_title'=>t('Kun administratorer kan administrere brugere')];
-    $items[] = ['label'=>t('Værktøjer'),'href'=>$canManageTools?'/admin/vaerktoejer':null,'key'=>'tools','icon'=>'wrench','enabled'=>$canManageTools,'disabled_title'=>t('Kun administratorer kan bruge værktøjer')];
+    $items[] = ['label'=>t('Værktøjer'),'href'=>$canManageTools?'/admin/tools':null,'key'=>'tools','icon'=>'wrench','enabled'=>$canManageTools,'disabled_title'=>t('Kun administratorer kan bruge værktøjer')];
     $items[] = ['label'=>t('Indstillinger'),'href'=>$canManageSettings?'/admin/indstillinger':null,'key'=>'settings','icon'=>'settings','enabled'=>$canManageSettings,'disabled_title'=>t('Kun administratorer kan ændre globale indstillinger')];
 
     // Apply badges only to enabled items; never disclose counts on locked menus.
@@ -1097,7 +1097,7 @@ function admin_redirects_url(array $changes = []): string
         ARRAY_FILTER_USE_BOTH
     );
     $query = http_build_query($params);
-    return '/admin/vaerktoejer/redirects' . ($query !== '' ? '?' . $query : '');
+    return '/admin/tools/redirects' . ($query !== '' ? '?' . $query : '');
 }
 
 function admin_redirect_type_label(int $type): string

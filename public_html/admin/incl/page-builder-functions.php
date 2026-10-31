@@ -58,7 +58,7 @@ function admin_page_builder_block_editor(array $block, string|int $index): strin
 
     ob_start();
     ?>
-    <article class="admin-builder-block admin-page-row<?= $type === 'grid' ? ' admin-builder-block--grid' : ''; ?><?= $type === 'grid' && ($data['layout_version'] ?? '') === 'v2' ? ' admin-page-row--v2-grid' : ''; ?>" data-builder-block data-block-type="<?= $e($type); ?>" draggable="true">
+    <article class="admin-builder-block admin-page-row<?= $type === 'grid' ? ' admin-builder-block--grid' : ''; ?><?= $type === 'grid' && ($data['layout_version'] ?? '') === 'v2' ? ' admin-page-row--v2-grid' : ''; ?>" data-builder-block data-block-type="<?= $e($type); ?>" draggable="false">
       <input type="hidden" name="<?= $e($prefix); ?>[type]" value="<?= $e($type); ?>" data-builder-name="type">
       <input type="hidden" name="<?= $e($prefix); ?>[data][section_id]" value="<?= $e($data['section_id'] ?? ''); ?>" data-builder-section-id>
       <input type="hidden" name="<?= $e($prefix); ?>[data][theme]" value="<?= $e(array_key_exists((string)($data['theme'] ?? ($type === 'hero' ? 'dark' : 'light')), PageBlocks::themes()) ? ($data['theme'] ?? ($type === 'hero' ? 'dark' : 'light')) : 'light'); ?>" data-builder-section-theme>
@@ -227,7 +227,7 @@ function admin_page_builder_grid_child_editor(array $block, string $prefix, bool
     $value = static fn(string $key, string $fallback = ''): string => (string)($data[$key] ?? $fallback);
 
     ob_start(); ?>
-    <article class="admin-grid-child" data-grid-child data-grid-child-type="<?= $e($type); ?>" draggable="true">
+    <article class="admin-grid-child" data-grid-child data-grid-child-type="<?= $e($type); ?>" draggable="false">
       <input type="hidden" name="<?= $e($prefix); ?>[type]" value="<?= $e($type); ?>">
       <header class="admin-grid-child__header">
         <button class="admin-grid-child__drag" type="button" data-grid-child-drag draggable="true" aria-label="<?= admin_e(t('Flyt blok')); ?>">⋮⋮</button>

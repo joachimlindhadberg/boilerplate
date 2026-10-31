@@ -27,54 +27,80 @@ final class AdminTools
 
     public function siteHealth(): array
     {
+        $tr = static fn(string $key, array $args = []): string =>
+            function_exists('t') ? t('site_health.' . $key, $args) : Translator::get('site_health.' . $key, $args);
         $checks = [];
-        $add = static function(array &$target,string $status,string $label,string $detail): void { $target[]=['status'=>$status,'label'=>$label,'detail'=>$detail]; };
-        $add($checks, boilerplate_php_version_supported(PHP_VERSION_ID) ? 'good' : 'error', 'PHP-version', PHP_VERSION . ' (minimum ' . BOILERPLATE_MIN_PHP_VERSION . ')');
-        foreach (['mysqli'=>'MySQLi','fileinfo'=>'Fileinfo','openssl'=>'OpenSSL'] as $ext=>$label) {
-            $add($checks, extension_loaded($ext)?'good':'error', $label, extension_loaded($ext)?'PHP-extension er aktiv.':'PHP-extension mangler.');
+        $add = static function (array &$target, string $status, string $label, string $detail): void {
+            $target[] = ['status' => $status, 'label' => $label, 'detail' => $detail];
+        };
+        $add($checks, boilerplate_php_version_supported(PHP_VERSION_ID) ? 'good' : 'error',
+            $tr('check.php'), $tr('detail.php', ['version' => PHP_VERSION, 'minimum' => BOILERPLATE_MIN_PHP_VERSION]));
+        foreach (['mysqli' => 'MySQLi', 'fileinfo' => 'Fileinfo', 'openssl' => 'OpenSSL'] as $ext => $label) {
+            $add($checks, extension_loaded($ext) ? 'good' : 'error', $label,
+                $tr(extension_loaded($ext) ? 'detail.extension_active' : 'detail.extension_missing'));
         }
         try {
             $pending = array_filter((new MigrationRunner($this->db))->status(),
                 static fn(array $row): bool => ($row['state'] ?? '') !== 'applied');
-            $add($checks, $pending ? 'warning' : 'good', 'Database migrations',
-                $pending ? count($pending) . ' migration(s) require attention. Run the CLI migration tool.' : 'All packaged migrations are registered.');
+            $add($checks, $pending ? 'warning' : 'good', $tr('check.migrations'),
+                $pending ? $tr('detail.migrations_pending', ['count' => count($pending)]) : $tr('detail.migrations_ok'));
         } catch (Throwable $e) {
-            $add($checks, 'error', 'Database migrations', 'Migration status could not be verified.');
+            $add($checks, 'error', $tr('check.migrations'), $tr('detail.migrations_failed'));
         }
         $backupSupport = class_exists(PharData::class) && extension_loaded('zlib');
-        $add($checks, $backupSupport ? 'good' : 'warning', 'Site backup', $backupSupport ? 'Phar og zlib er tilgængelige.' : 'Site backup kræver PHP Phar og zlib.');
-        $add($checks, extension_loaded('mbstring')?'good':'warning', 'Mbstring', extension_loaded('mbstring')?'PHP-extension er aktiv.':'Mbstring anbefales.');
-        try { $ok=(int)$this->db->fetchValue('SELECT 1')===1; $add($checks,$ok?'good':'error','Database',$ok?'Forbindelsen til MySQL virker.':'Database-testen fejlede.'); }
-        catch(Throwable $e){ $add($checks,'error','Database','Forbindelsen kunne ikke verificeres.'); }
-        $uploadDir=PUBLICPATH.'/uploads';
-        $add($checks,is_dir($uploadDir)&&is_writable($uploadDir)?'good':'error','Uploads',is_dir($uploadDir)&&is_writable($uploadDir)?'Upload-mappen er skrivbar.':'Upload-mappen mangler eller er ikke skrivbar.');
-        $env=AppConfig::environment();
-        $add($checks,$env==='production'?'good':'warning','Miljø','APP_ENV er sat til '.$env.'.');
+        $add($checks, $backupSupport ? 'good' : 'warning', $tr('check.backup'),
+            $tr($backupSupport ? 'detail.backup_ok' : 'detail.backup_missing'));
+        $add($checks, extension_loaded('mbstring') ? 'good' : 'warning', 'Mbstring',
+            $tr(extension_loaded('mbstring') ? 'detail.extension_active' : 'detail.mbstring_recommended'));
+        try {
+            $ok = (int)$this->db->fetchValue('SELECT 1') === 1;
+            $add($checks, $ok ? 'good' : 'error', $tr('check.database'),
+                $tr($ok ? 'detail.database_ok' : 'detail.database_failed'));
+        } catch (Throwable $e) {
+            $add($checks, 'error', $tr('check.database'), $tr('detail.database_unavailable'));
+        }
+        $uploadDir = PUBLICPATH . '/uploads';
+        $uploadOk = is_dir($uploadDir) && is_writable($uploadDir);
+        $add($checks, $uploadOk ? 'good' : 'error', $tr('check.uploads'),
+            $tr($uploadOk ? 'detail.uploads_ok' : 'detail.uploads_failed'));
+        $env = AppConfig::environment();
+        $add($checks, $env === 'production' ? 'good' : 'warning', $tr('check.environment'),
+            $tr('detail.environment', ['environment' => $env]));
         $configuredUrl = trim((string)$this->settings->get('site_url', ''));
         $databaseUrl = SiteUrl::normalizeOrigin($configuredUrl);
         $appUrl = AppConfig::appUrl();
         try {
             $selected = SiteUrl::resolve($this->settings);
-            $add($checks, 'good', 'Hjemmeside URL', $selected['url'] . ' (kilde: ' . $selected['source'] . ').');
+            $source = (string)$selected['source'];
+            $sourceLabel = $source === 'database' ? $tr('source.database')
+                : ($source === 'APP_URL' ? 'APP_URL' : ($source === 'request' ? $tr('source.request') : $source));
+            $add($checks, 'good', $tr('check.site_url'),
+                $tr('detail.site_url', ['url' => (string)$selected['url'], 'source' => $sourceLabel]));
             if ($configuredUrl !== '' && $databaseUrl === null) {
-                $add($checks, 'warning', 'Hjemmeside URL indstilling', 'Database-URL er ugyldig. APP_URL bruges om muligt som fallback.');
+                $add($checks, 'warning', $tr('check.site_url_setting'), $tr('detail.site_url_invalid'));
             }
             if ($databaseUrl !== null && $appUrl !== null && $databaseUrl !== $appUrl) {
-                $add($checks, 'warning', 'URL-konfiguration', 'Hjemmeside URL og APP_URL er forskellige; databasens adresse anvendes.');
+                $add($checks, 'warning', $tr('check.url_config'), $tr('detail.url_mismatch'));
             }
             if (AppConfig::isProduction() && !str_starts_with($selected['url'], 'https://')) {
-                $add($checks, 'error', 'HTTPS', 'Den effektive hjemmeside-URL skal bruge HTTPS i production.');
+                $add($checks, 'error', 'HTTPS', $tr('detail.https_required'));
             }
         } catch (RuntimeException $error) {
-            $add($checks, 'error', 'Hjemmeside URL', 'Ingen gyldig hjemmeside-URL eller APP_URL er konfigureret.');
+            $add($checks, 'error', $tr('check.site_url'), $tr('detail.site_url_missing'));
         }
-        $maintenance=(string)$this->settings->get('maintenance_mode','0')==='1';
-        $indexing=(string)$this->settings->get('seo_indexing','1')==='1';
-        $add($checks,$maintenance?'warning':'good','Vedligeholdelse',$maintenance?'Vedligeholdelsestilstand er aktiv.':'Vedligeholdelsestilstand er slået fra.');
-        $add($checks,$indexing?'good':'warning','Søgemaskiner',$indexing?'Indeksering er tilladt.':'Global noindex er aktiv.');
-        $counts=['good'=>0,'warning'=>0,'error'=>0];
-        foreach($checks as $check) $counts[$check['status']]++;
-        return ['checks'=>$checks,'counts'=>$counts,'overall'=>$counts['error']>0?'error':($counts['warning']>0?'warning':'good'),'checked_at'=>date('Y-m-d H:i:s')];
+        $maintenance = (string)$this->settings->get('maintenance_mode', '0') === '1';
+        $indexing = (string)$this->settings->get('seo_indexing', '1') === '1';
+        $add($checks, $maintenance ? 'warning' : 'good', $tr('check.maintenance'),
+            $tr($maintenance ? 'detail.maintenance_on' : 'detail.maintenance_off'));
+        $add($checks, $indexing ? 'good' : 'warning', $tr('check.search_engines'),
+            $tr($indexing ? 'detail.indexing_on' : 'detail.indexing_off'));
+        $counts = ['good' => 0, 'warning' => 0, 'error' => 0];
+        foreach ($checks as $check) $counts[$check['status']]++;
+        return [
+            'checks' => $checks, 'counts' => $counts,
+            'overall' => $counts['error'] > 0 ? 'error' : ($counts['warning'] > 0 ? 'warning' : 'good'),
+            'checked_at' => date('Y-m-d H:i:s'),
+        ];
     }
 
     /** Downloadable read-only diagnostic report, excluding secret configuration and data rows. */

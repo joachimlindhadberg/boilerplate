@@ -14,6 +14,17 @@ if (PHP_SAPI !== 'cli') {
 define('ROOTPATH', dirname(__DIR__, 2));
 require ROOTPATH . '/core/classes/Autoload.php';
 
+// F3d.2b: hold the same F1c shared admission lock as web requests/cron for
+// the entire CLI job, including database/file cleanup. External writers are
+// still outside this cooperative boundary.
+try {
+    $updateWriterAdmission = UpdateCliWriterAdmission::acquire(ROOTPATH);
+} catch (Throwable $ignored) {
+    fwrite(STDERR, "CMS update maintenance gate busy or unavailable; retry later.\n");
+    exit(75);
+}
+
+
 $options = getopt('', ['email:', 'first:', 'last:', 'help']);
 if (isset($options['help'])) {
     echo "Usage: php core/cli/create-admin.php --email=you@example.com --first=First --last=Last\n";

@@ -44,6 +44,20 @@ ob_start();
   </nav>
 </section>
 
+<?php if (!empty($canViewUpdateNotice)): ?>
+<section class="admin-panel admin-dashboard-attention" data-dashboard-update-notice data-update-url="/admin/index.php?mode=update-notice" aria-labelledby="dashboard-update-title" hidden>
+  <div class="admin-panel__header"><h2 id="dashboard-update-title"><?= admin_e(t('updates.available')); ?></h2></div>
+  <div class="admin-dashboard-attention__body">
+    <?= admin_icon('refresh-cw', 'admin-dashboard-attention__icon'); ?>
+    <div>
+      <strong><?= admin_e(t('updates.latest_version')); ?>: <span data-dashboard-update-version></span></strong>
+      <p><?= admin_e(t('updates.available_description')); ?></p>
+      <a class="admin-text-action admin-dashboard-attention__action" href="/admin/tools/update"><?= admin_e(t('updates.open')); ?> <span aria-hidden="true">→</span></a>
+    </div>
+  </div>
+</section>
+<?php endif; ?>
+
 <?php if (is_int($overdueSchedules) && $overdueSchedules > 0): ?>
 <section class="admin-panel admin-dashboard-attention" aria-labelledby="dashboard-attention-title">
   <div class="admin-panel__header"><h2 id="dashboard-attention-title"><?= admin_e(t('dashboard.needs_attention')); ?></h2></div>
@@ -129,7 +143,7 @@ ob_start();
 
 <div class="admin-dashboard-grid admin-dashboard-grid--equal">
 <section class="admin-panel" aria-labelledby="recent-activity-title">
-  <div class="admin-panel__header"><h2 id="recent-activity-title"><?= admin_e(t('activity.recent')); ?></h2><?php if (!empty($canViewActivityLog)): ?><a class="admin-panel__action" href="/admin/vaerktoejer/activity"><?= admin_e(t('activity.view_all')); ?> <span aria-hidden="true">→</span></a><?php endif; ?></div>
+  <div class="admin-panel__header"><h2 id="recent-activity-title"><?= admin_e(t('activity.recent')); ?></h2><?php if (!empty($canViewActivityLog)): ?><a class="admin-panel__action" href="/admin/tools/activity"><?= admin_e(t('activity.view_all')); ?> <span aria-hidden="true">→</span></a><?php endif; ?></div>
   <?php if ($recentActivity): ?>
     <div class="admin-table-wrap"><table class="admin-list-table">
       <thead><tr><th><?= admin_e(t('activity.activity')); ?></th><th><?= admin_e(t('activity.user')); ?></th><th><?= admin_e(t('activity.date_time')); ?></th></tr></thead>

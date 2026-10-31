@@ -2,7 +2,7 @@
     <div class="admin-panel__header admin-tools-section__header"><div><h2 id="tools-import-title"><?= admin_e(t('Importer')); ?></h2><p><?= admin_e(t('Importer en JSON-datafil, som tidligere er eksporteret fra Boilerplate CMS.')); ?></p></div></div>
     <div class="admin-tools-body">
       <?php if (!empty($errors['import'])): ?><div class="admin-notice admin-notice--error" role="alert"><?= admin_e(t((string)$errors['import'])); ?></div><?php endif; ?>
-      <form method="post" action="/admin/vaerktoejer" enctype="multipart/form-data" class="admin-form">
+      <form method="post" action="/admin/tools/data" enctype="multipart/form-data" class="admin-form">
         <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
         <input type="hidden" name="action" value="import">
         <div class="admin-field">
@@ -12,8 +12,8 @@
                  data-upload-types="application/json,text/json"
                  data-upload-extensions=".json"
                  data-upload-max-bytes="10485760"
-                 data-upload-type-error="Vælg en JSON-fil, som er eksporteret fra Boilerplate CMS."
-                 data-upload-size-error="JSON-filen må højst fylde 10 MB."
+                 data-upload-type-error="<?= admin_e(t('tools.import_invalid_type')); ?>"
+                 data-upload-size-error="<?= admin_e(t('tools.import_oversize')); ?>"
                  for="tools-import-file">
             <input class="admin-upload-dropzone__input"
                    id="tools-import-file"

@@ -18,7 +18,8 @@ $bodyHtml = $bodyHtml ?? '';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <title><?= admin_e(t((string)$documentTitle)); ?> · Boilerplate</title>
-  <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-favicon.svg')); ?>" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-favicon-180.png')); ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
@@ -38,7 +39,7 @@ $bodyHtml = $bodyHtml ?? '';
   <div class="admin-layout">
     <aside class="admin-sidebar" id="admin-sidebar" aria-label="<?= admin_e(t('ui.admin_navigation')); ?>">
       <div class="admin-sidebar__header">
-        <a class="admin-brand" href="/admin" aria-label="Boilerplate CMS"><strong><?= admin_e(t('BOILERPLATE')); ?></strong><span><?= admin_e(t('CMS')); ?></span></a>
+        <a class="admin-brand" href="/admin" aria-label="Boilerplate CMS"><img class="admin-brand__logo" src="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-logo-light.png')); ?>" alt="" aria-hidden="true" width="1785" height="270"></a>
         <button class="admin-sidebar__close" type="button" data-admin-sidebar-close aria-label="<?= admin_e(t('ui.close_menu')); ?>">×</button>
       </div>
       <nav class="admin-nav" aria-label="<?= admin_e(t('ui.backend')); ?>"><ul>
@@ -63,7 +64,7 @@ $bodyHtml = $bodyHtml ?? '';
         <div class="admin-topbar__actions">
           <a class="admin-view-site" href="/" target="_blank" rel="noopener"><?= admin_icon('external', 'admin-view-site__icon'); ?><span><?= admin_e(t('Se hjemmeside')); ?></span></a>
           <span class="admin-topbar__separator" aria-hidden="true"></span>
-          <details class="admin-user-menu"><summary><span class="admin-avatar" aria-hidden="true"><?= admin_e($initials); ?></span><span class="admin-user-menu__text"><strong><?= admin_e((string)($user['firstname'] ?? $fullName)); ?></strong><small><?= admin_e($roleLabel); ?></small></span><span class="admin-user-menu__chevron" aria-hidden="true">⌄</span></summary>
+          <details class="admin-user-menu"><summary><span class="admin-avatar" aria-hidden="true"><?= admin_e($initials); ?></span><span class="admin-user-menu__text"><strong><?= admin_e((string)($user['firstname'] ?? $fullName)); ?></strong><small><?= admin_e($roleLabel); ?></small></span><?= admin_icon('chevron-down', 'admin-user-menu__chevron'); ?></summary>
             <div class="admin-user-menu__dropdown"><div class="admin-user-menu__identity"><strong><?= admin_e($fullName !== '' ? $fullName : ($user['email'] ?? '')); ?></strong><span><?= admin_e((string)($user['email'] ?? '')); ?></span></div>
             <form method="post" action="/admin/index.php?mode=set-language" class="admin-user-menu__language">
               <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">

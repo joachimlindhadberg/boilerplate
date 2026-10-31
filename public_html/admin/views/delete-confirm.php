@@ -6,7 +6,7 @@ $firstNameValue = (string)($user['firstname'] ?? '');
 $lastNameValue = (string)($user['lastname'] ?? '');
 $firstInitial = function_exists('mb_substr') ? mb_strtoupper(mb_substr($firstNameValue, 0, 1)) : strtoupper(substr($firstNameValue, 0, 1));
 $lastInitial = function_exists('mb_substr') ? mb_strtoupper(mb_substr($lastNameValue, 0, 1)) : strtoupper(substr($lastNameValue, 0, 1));
-$initials = trim($firstInitial . $lastInitial) ?: 'NF';
+$initials = trim($firstInitial . $lastInitial) ?: 'BP';
 $navItems = admin_nav_items(admin_nav_badges());
 $pageTitle = trim((string)($pageTitle ?? t('Slet permanent'))) ?: t('Slet permanent');
 $entityLabel = trim((string)($entityLabel ?? 'element')) ?: 'element';
@@ -27,7 +27,8 @@ $blockedActionLabel = trim((string)($blockedActionLabel ?? t('Se relationer'))) 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <title><?= admin_e($pageTitle); ?> · Boilerplate</title>
-  <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-favicon.svg')); ?>" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-favicon-180.png')); ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
@@ -41,8 +42,7 @@ $blockedActionLabel = trim((string)($blockedActionLabel ?? t('Se relationer'))) 
     <aside class="admin-sidebar" id="admin-sidebar" aria-label="<?= admin_e(t('ui.admin_navigation')); ?>">
       <div class="admin-sidebar__header">
         <a class="admin-brand" href="/admin" aria-label="Boilerplate CMS">
-          <strong><?= admin_e(t('BOILERPLATE')); ?></strong>
-          <span><?= admin_e(t('CMS')); ?></span>
+          <img class="admin-brand__logo" src="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-logo-light.png')); ?>" alt="" aria-hidden="true" width="1785" height="270">
         </a>
         <button class="admin-sidebar__close" type="button" data-admin-sidebar-close aria-label="<?= admin_e(t('ui.close_menu')); ?>">×</button>
       </div>
@@ -103,7 +103,7 @@ $blockedActionLabel = trim((string)($blockedActionLabel ?? t('Se relationer'))) 
                 <strong><?= admin_e((string)($user['firstname'] ?? $fullName)); ?></strong>
                 <small><?= admin_e($roleLabel); ?></small>
               </span>
-              <span class="admin-user-menu__chevron" aria-hidden="true">⌄</span>
+              <?= admin_icon('chevron-down', 'admin-user-menu__chevron'); ?>
             </summary>
             <div class="admin-user-menu__dropdown">
               <div class="admin-user-menu__identity">

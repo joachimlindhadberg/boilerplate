@@ -8,7 +8,8 @@ $siteName = 'Boilerplate';
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow, noarchive">
   <title><?= admin_e(t('Log ind')); ?> · <?= admin_e($siteName); ?></title>
-  <link rel="icon" href="/assets/images/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-favicon.svg')); ?>" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-favicon-180.png')); ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
@@ -17,6 +18,9 @@ $siteName = 'Boilerplate';
 <body class="nf-admin nf-admin--login">
   <main class="admin-login admin-login--auth" id="main-content">
     <section class="admin-login__panel" aria-labelledby="login-title">
+      <a class="admin-login__brand" href="/" aria-label="Boilerplate CMS">
+        <img class="admin-login__brand-image" src="<?= admin_e(admin_asset('/admin/assets/brand/boilerplate-cms-logo-light.png')); ?>" alt="" aria-hidden="true" width="1785" height="270">
+      </a>
       <div class="admin-login__intro">
         <p class="admin-eyebrow"><?= admin_e(t('Administration')); ?></p>
         <h1 id="login-title"><?= admin_e(t('Log ind')); ?></h1>

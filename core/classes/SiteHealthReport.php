@@ -46,7 +46,7 @@ final class SiteHealthReport
             $level = self::safeStatus($check['status'] ?? 'warning');
             $label = $clean($check['label'] ?? '-');
             $detail = $clean($check['detail'] ?? '-');
-            $lines[] = '[' . strtoupper($level) . '] ' . $label . ': ' . $detail;
+            $lines[] = '[' . $tr('status.' . $level) . '] ' . $label . ': ' . $detail;
             if ($level !== 'good') $advice[] = $label . ': ' . $detail;
         }
         $lines[] = '';
@@ -54,7 +54,7 @@ final class SiteHealthReport
         $lines[] = '[' . $tr('runtime') . ']';
         self::field($lines, 'PHP', PHP_VERSION);
         self::field($lines, 'PHP SAPI', PHP_SAPI);
-        self::field($lines, 'Timezone', date_default_timezone_get());
+        self::field($lines, $tr('label.timezone'), date_default_timezone_get());
         foreach (['memory_limit', 'upload_max_filesize', 'post_max_size', 'max_execution_time'] as $option) {
             self::field($lines, $option, $clean(ini_get($option) ?: '-'));
         }
@@ -63,8 +63,8 @@ final class SiteHealthReport
         }
         self::field($lines, 'OPcache', $yesNo(function_exists('opcache_get_status') && is_array(@opcache_get_status(false))));
         $imageEditor = function_exists('imagecreatetruecolor') || class_exists('Imagick');
-        self::field($lines, 'Image editor (GD or Imagick)', $yesNo($imageEditor));
-        if (!$imageEditor) $advice[] = 'Enable the PHP GD or Imagick extension to generate optimized responsive image sizes. Original uploads still work.';
+        self::field($lines, $tr('label.image_editor'), $yesNo($imageEditor));
+        if (!$imageEditor) $advice[] = $tr('recommend.image_editor');
         $postMax = self::sizeBytes((string)ini_get('post_max_size'));
         if ($postMax > 0 && $postMax < AdminTools::MAX_IMPORT_BYTES + 262144) {
             $advice[] = $tr('recommend.post_max');
@@ -89,32 +89,32 @@ final class SiteHealthReport
 
         $lines[] = '[' . $tr('files') . ']';
         foreach ([
-            'public .htaccess' => defined('PUBLICPATH') ? PUBLICPATH . '/.htaccess' : '',
-            'public uploads' => defined('PUBLICPATH') ? PUBLICPATH . '/uploads' : '',
+            $tr('label.public_htaccess') => defined('PUBLICPATH') ? PUBLICPATH . '/.htaccess' : '',
+            $tr('label.public_uploads') => defined('PUBLICPATH') ? PUBLICPATH . '/uploads' : '',
         ] as $label => $path) {
             if ($path === '') continue;
             if (!file_exists($path)) {
                 self::field($lines, $label, $tr('missing'));
-                if ($label === 'public .htaccess') $advice[] = $tr('recommend.htaccess');
+                if ($label === $tr('label.public_htaccess')) $advice[] = $tr('recommend.htaccess');
                 continue;
             }
             $perms = @fileperms($path);
             $mode = $perms === false ? '-' : substr(sprintf('%04o', $perms & 0777), -4);
             $readable = is_readable($path);
             self::field($lines, $label, $tr('permissions') . ': ' . $mode . '; ' . $tr('readable') . ': ' . $yesNo($readable));
-            if (!$readable && $label === 'public .htaccess') $advice[] = $tr('recommend.htaccess');
+            if (!$readable && $label === $tr('label.public_htaccess')) $advice[] = $tr('recommend.htaccess');
             if (is_dir($path)) self::field($lines, $label . ' (' . $tr('writable') . ')', $yesNo(is_writable($path)));
         }
         // Legacy storage appears only for upgrades/restore; never report its
         // absence as a failure on new installations.
         if (defined('PUBLICPATH') && (file_exists(PUBLICPATH . '/assets/uploads') || is_link(PUBLICPATH . '/assets/uploads'))) {
             $legacy = PUBLICPATH . '/assets/uploads';
-            self::field($lines, 'legacy uploads', is_dir($legacy) && !is_link($legacy) ? $tr('readable') . ': ' . $yesNo(is_readable($legacy)) : $tr('missing'));
+            self::field($lines, $tr('label.legacy_uploads'), is_dir($legacy) && !is_link($legacy) ? $tr('readable') . ': ' . $yesNo(is_readable($legacy)) : $tr('missing'));
             if (!is_dir($legacy) || is_link($legacy) || !is_file($legacy . '/.htaccess') || is_link($legacy . '/.htaccess')
                 || !is_readable($legacy . '/.htaccess') || !is_file(PUBLICPATH . '/uploads/.htaccess')
                 || !is_readable(PUBLICPATH . '/uploads/.htaccess')
                 || !hash_equals((string)hash_file('sha256', PUBLICPATH . '/uploads/.htaccess'), (string)hash_file('sha256', $legacy . '/.htaccess'))) {
-                $advice[] = 'Legacy assets/uploads/ must retain its upload .htaccess protection; do not expose legacy files without it.';
+                $advice[] = $tr('recommend.legacy_uploads');
             }
         }
         if (defined('ROOTPATH') && is_file(ROOTPATH . '/.env')) {
@@ -135,8 +135,8 @@ final class SiteHealthReport
         if ($db !== null) {
             try {
                 self::field($lines, 'MySQL / MariaDB', $clean($db->fetchValue('SELECT VERSION()')));
-                self::field($lines, 'Connection charset', $clean($db->fetchValue('SELECT @@character_set_connection')));
-                self::field($lines, 'Connection collation', $clean($db->fetchValue('SELECT @@collation_connection')));
+                self::field($lines, $tr('label.connection_charset'), $clean($db->fetchValue('SELECT @@character_set_connection')));
+                self::field($lines, $tr('label.connection_collation'), $clean($db->fetchValue('SELECT @@collation_connection')));
                 $tableCount = $db->fetchValue('SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA = DATABASE()');
                 self::field($lines, $tr('table_count'), (int)$tableCount);
                 foreach (['pages', 'page_blocks', 'media', 'modules'] as $table) {

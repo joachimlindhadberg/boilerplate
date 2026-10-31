@@ -21,6 +21,17 @@ if (!extension_loaded('mysqli')) {
 }
 define('ROOTPATH', dirname(__DIR__, 2));
 require_once ROOTPATH . '/core/classes/Autoload.php';
+
+// F3d.2b: hold the same F1c shared admission lock as web requests/cron for
+// the entire CLI job, including database/file cleanup. External writers are
+// still outside this cooperative boundary.
+try {
+    $updateWriterAdmission = UpdateCliWriterAdmission::acquire(ROOTPATH);
+} catch (Throwable $ignored) {
+    fwrite(STDERR, "CMS update maintenance gate busy or unavailable; retry later.\n");
+    exit(75);
+}
+
 try {
     $index = new MediaReferenceIndex(new Db());
     $result = match ($mode) {

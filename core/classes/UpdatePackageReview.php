@@ -157,13 +157,13 @@ final class UpdatePackageReview
                 return $result;
             }
             $init = $zip->getFromIndex($initIndex, 131072);
-            if (!is_string($init) || !preg_match("~define\('BOILERPLATE_VERSION', '([0-9]+(?:\\.[0-9]+){2,3})'\)~", $init, $matches)) {
+            if (!is_string($init) || !preg_match(UpdateReleaseVersion::SOURCE_PATTERN, $init, $matches)) {
                 $add('Target version', 'blocked', 'Cannot identify the target release version.');
                 return $result;
             }
             $target = $matches[1];
             $result['target_version'] = $target;
-            if (!preg_match('/^[0-9]+(?:\.[0-9]+){2,3}$/D', $result['current_version'])
+            if (!UpdateReleaseVersion::valid($result['current_version'])
                 || version_compare($target, $result['current_version'], '<=')) {
                 $add('Target version', 'blocked', 'Target ' . $target . ' is not newer than installed ' . $result['current_version'] . '.');
             } else {
@@ -228,10 +228,10 @@ final class UpdatePackageReview
         $parts = explode('/', rtrim($relative, '/'));
         if (in_array('', $parts, true) || in_array('.', $parts, true) || in_array('..', $parts, true)) return false;
         $path = rtrim($relative, '/');
-        $allowed = ['README.md', 'core', 'database', 'docs', 'modules', 'public_html'];
+        $allowed = ['LICENSE', 'README.md', 'core', 'database', 'docs', 'modules', 'public_html'];
         $top = $parts[0];
         if (!in_array($top, $allowed, true)) return false;
-        if ($top === 'README.md') return $path === 'README.md' && !$isDir;
+        if (in_array($top, ['README.md', 'LICENSE'], true)) return $path === $top && !$isDir;
         if (str_starts_with($path, 'docs/releases') || str_starts_with($path, 'docs/audits')
             || str_starts_with($path, 'public_html/assets/uploads') || str_starts_with($path, 'tests/')
             || preg_match('~(^|/)(?:\.env(?:\..+)?|\.git|\.ds_store|\.svn|node_modules|vendor)(?:/|$)~', strtolower($path))) return false;
@@ -251,7 +251,7 @@ final class UpdatePackageReview
     {
         if (defined('BOILERPLATE_VERSION')) return (string)BOILERPLATE_VERSION;
         $content = @file_get_contents($this->root . '/public_html/incl/init.php');
-        if (is_string($content) && preg_match("~define\('BOILERPLATE_VERSION', '([0-9]+(?:\\.[0-9]+){2,3})'\)~", $content, $matches)) {
+        if (is_string($content) && preg_match(UpdateReleaseVersion::SOURCE_PATTERN, $content, $matches)) {
             return $matches[1];
         }
         return 'unknown';

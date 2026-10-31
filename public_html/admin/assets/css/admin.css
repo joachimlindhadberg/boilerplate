@@ -140,12 +140,12 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
 }
 .admin-login__brand {
   display: block;
-  width: 205px;
-  margin: 0 auto 30px;
-  padding: 15px 18px;
-  background: var(--admin-accent);
+  width: 210px;
+  max-width: 100%;
+  margin: 0 auto 28px;
+  text-decoration: none;
 }
-.admin-login__wordmark { display: block; color: #ffffff; font-size: 15px; font-weight: 600; letter-spacing: .14em; line-height: 1; text-align: center; white-space: nowrap; }
+.admin-login__brand-image { display: block; width: 100%; height: auto; }
 .admin-login__intro { margin-bottom: 24px; }
 .admin-login__intro h1,
 .admin-login__panel > h1 {
@@ -380,25 +380,8 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
   padding: 0 22px 0 30px;
   border-bottom: 1px solid var(--admin-sidebar-border);
 }
-.admin-brand {
-  display: grid;
-  gap: 7px;
-  color: var(--admin-text);
-  text-decoration: none;
-}
-.admin-brand strong {
-  font-size: 12px;
-  line-height: 1;
-  font-weight: 500;
-  letter-spacing: .21em;
-}
-.admin-brand span {
-  color: var(--admin-muted);
-  font-size: 11px;
-  line-height: 1;
-  font-weight: 400;
-  letter-spacing: .16em;
-}
+.admin-brand { display: flex; align-items: center; min-width: 0; text-decoration: none; }
+.admin-brand__logo { display: block; width: 148px; max-width: 100%; height: auto; }
 .admin-sidebar__close {
   display: grid;
   place-items: center;
@@ -541,7 +524,7 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
 .admin-user-menu__text { display: none; line-height: 1.15; }
 .admin-user-menu__text strong { display: block; font-size: 12px; font-weight: 500; }
 .admin-user-menu__text small { display: block; margin-top: 4px; color: var(--admin-muted); font-size: 10px; }
-.admin-user-menu__chevron { display: none; margin-left: 3px; color: #3d3935; font-size: 15px; }
+.admin-user-menu__chevron { display: none; width: 16px; height: 16px; margin-left: 3px; color: var(--admin-muted); flex: 0 0 16px; }
 .admin-user-menu__dropdown {
   position: absolute;
   top: calc(100% + 12px);
@@ -1848,6 +1831,21 @@ body.nf-admin .admin-media-picker-toolbar input:focus-visible {
 
 /* Tools */
 .admin-tools-grid { display: grid; gap: 17px; }
+/* Core Tools overview: one consistent compact card design shared by all tools. */
+.admin-tools-grid--overview { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.admin-tools-card { display: flex; flex-direction: column; min-width: 0; padding: 18px; gap: 16px; }
+.admin-tools-card__heading { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.admin-tools-card__icon { display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; flex: 0 0 38px; color: var(--admin-muted); border: 1px solid var(--admin-border); border-radius: 3px; background: var(--admin-surface); }
+.admin-tools-card__icon svg { display: block; width: 19px; height: 19px; }
+.admin-tools-card__heading > div { flex: 1; min-width: 0; }
+.admin-tools-card__heading h2 { margin: 0; color: var(--admin-text); font-size: 14px; font-weight: 600; line-height: 1.35; }
+.admin-tools-card__heading p { margin: 5px 0 0; color: var(--admin-muted); font-size: 12px; line-height: 1.5; }
+.admin-tools-card__footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: auto; min-height: 32px; }
+.admin-tools-card__footer--action { justify-content: flex-end; }
+.admin-tools-card__status { display: inline-flex; gap: 8px; align-items: center; color: var(--admin-muted); font-size: 11px; line-height: 1.45; }
+.admin-tools-card__status .admin-health-indicator { flex: 0 0 9px; }
+@media (max-width: 850px) { .admin-tools-grid--overview { grid-template-columns: 1fr; } }
+@media (max-width: 560px) { .admin-tools-card { padding: 14px; gap: 14px; } .admin-tools-card__footer { align-items: flex-start; flex-direction: column; } .admin-tools-card__footer .admin-button { width: 100%; justify-content: center; } }
 .admin-tools-section__header { min-height: 66px; align-items: center; }
 .admin-tools-section__header > div { min-width: 0; }
 .admin-tools-section__header p { margin: 5px 0 0; color: var(--admin-muted); font-size: 12px; line-height: 1.45; }

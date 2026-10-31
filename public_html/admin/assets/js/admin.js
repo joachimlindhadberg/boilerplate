@@ -42,6 +42,29 @@
     }).observe(mainNotices, { childList: true, subtree: true });
   }
 
+  // Dashboard-only release notice: keep the page responsive even if GitHub
+  // is unavailable. Interpret only a validated numeric version as text.
+  const updateNotice = document.querySelector('[data-dashboard-update-notice]');
+  if (updateNotice instanceof HTMLElement) {
+    const endpoint = updateNotice.dataset.updateUrl;
+    if (endpoint === '/admin/index.php?mode=update-notice') {
+      fetch(endpoint, {
+        method: 'GET', credentials: 'same-origin', redirect: 'error',
+        headers: { 'Accept': 'application/json' }, cache: 'no-store'
+      }).then((response) => {
+        if (!response.ok) throw new Error('Update notice unavailable');
+        return response.json();
+      }).then((data) => {
+        if (data?.status !== 'available'
+          || typeof data.latest_version !== 'string'
+          || !/^\d+\.\d+\.\d+(?:\.\d+)?$/.test(data.latest_version)) return;
+        const version = updateNotice.querySelector('[data-dashboard-update-version]');
+        if (version) version.textContent = data.latest_version;
+        updateNotice.hidden = false;
+      }).catch(() => { /* An unavailable update service must not interrupt admin UX. */ });
+    }
+  }
+
   // RC5b: Core-owned, per-card metric menu with authenticated AJAX autosave.
   const cardsRoot = document.querySelector('[data-dashboard-cards]');
   if (cardsRoot instanceof HTMLElement) {
@@ -1654,7 +1677,11 @@
       const gridHandle = event.target.closest('[data-grid-child-drag]');
       if (gridHandle) {
         draggedGridChild = gridHandle.closest('[data-grid-child]');
-        if (!draggedGridChild) return;
+        if (!draggedGridChild || !event.dataTransfer) {
+          event.preventDefault();
+          draggedGridChild = null;
+          return;
+        }
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData('text/plain', 'page-builder-grid-child');
         // The grip initiates drag, but the browser must show the entire block.
@@ -1665,9 +1692,18 @@
       }
 
       const handle = event.target.closest('[data-builder-drag]');
-      if (!handle) return;
+      if (!handle) {
+        // Only the explicit grips may start a Page Builder move. Keep content
+        // selection, form controls and images from initiating a native drag.
+        if (event.target.closest('[data-builder-block], [data-grid-child]')) event.preventDefault();
+        return;
+      }
       draggedBlock = handle.closest('[data-builder-block]');
-      if (!draggedBlock) return;
+      if (!draggedBlock || !event.dataTransfer) {
+        event.preventDefault();
+        draggedBlock = null;
+        return;
+      }
       event.dataTransfer.effectAllowed = 'move';
       event.dataTransfer.setData('text/plain', 'page-builder-block');
       // Native preview defaults to the tiny draggable grip. Use the full section instead.
@@ -2066,4 +2102,13 @@
       nodes().forEach(node => openNode(node, true));
     }
   }
+  // Update progress uses the existing Core button/status styles; no view CSS.
+  document.querySelectorAll('[data-official-update-form]').forEach((form) => {
+    form.addEventListener('submit', () => {
+      const button = form.querySelector('button[type="submit"]');
+      const status = form.querySelector('[data-official-update-progress]');
+      if (button) button.disabled = true;
+      if (status) status.hidden = false;
+    });
+  });
 })();

@@ -39,7 +39,7 @@ final class UpdateCompatibilityPreflight
         $version = defined('BOILERPLATE_VERSION') ? (string)BOILERPLATE_VERSION : 'unknown';
         if ($version === 'unknown') {
             $source = @file_get_contents($this->root . '/public_html/incl/init.php');
-            if (is_string($source) && preg_match("~define\('BOILERPLATE_VERSION', '([0-9]+(?:\\.[0-9]+){2,3})'\)~", $source, $matches)) {
+            if (is_string($source) && preg_match(UpdateReleaseVersion::SOURCE_PATTERN, $source, $matches)) {
                 $version = $matches[1];
             }
         }

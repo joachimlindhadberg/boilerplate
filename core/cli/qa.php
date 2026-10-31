@@ -90,7 +90,7 @@ foreach (['uploads|assets/uploads', 'incl(?:/|$)', 'admin/(?:incl|views)'] as $p
 // Read the release number from source without bootstrapping the web application.
 $bootstrapSource = (string)@file_get_contents(ROOTPATH . '/public_html/incl/init.php');
 $versionMatch = [];
-$coreVersion = preg_match("~BOILERPLATE_VERSION', '([0-9]+\\.[0-9]+\\.[0-9]+(?:\\.[0-9]+)?)'~", $bootstrapSource, $versionMatch)
+$coreVersion = preg_match(UpdateReleaseVersion::SOURCE_PATTERN, $bootstrapSource, $versionMatch)
     ? $versionMatch[1] : '';
 $report($coreVersion !== '' ? 'PASS' : 'FAIL', 'CMS version metadata', $coreVersion);
 $moduleDirectories = glob(ROOTPATH . '/modules/*', GLOB_ONLYDIR) ?: [];

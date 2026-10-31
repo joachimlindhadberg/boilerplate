@@ -9532,5 +9532,838 @@
     "de": "Die ZIP-Datei darf höchstens 20 MB groß sein.",
     "sv": "ZIP-filen får vara högst 20 MB.",
     "nb": "ZIP-filen kan ikke overstige 20 MB."
+  },
+  "updates.not_checked_description": {
+    "en": "No check has been performed yet.",
+    "da": "Der er endnu ikke søgt efter opdateringer.",
+    "de": "Es wurde noch nicht nach Updates gesucht.",
+    "sv": "Inga uppdateringar har sökts ännu.",
+    "nb": "Det er ennå ikke søkt etter oppdateringer."
+  },
+  "updates.source_pending_description": {
+    "en": "An official release source has not been connected yet.",
+    "da": "Der er endnu ikke tilsluttet en officiel opdateringskilde.",
+    "de": "Eine offizielle Updatequelle wurde noch nicht eingerichtet.",
+    "sv": "Ingen officiell uppdateringskälla är ansluten ännu.",
+    "nb": "En offisiell oppdateringskilde er ennå ikke tilkoblet."
+  },
+  "updates.up_to_date": {
+    "en": "The system is up to date",
+    "da": "Systemet er ajour",
+    "de": "Das System ist auf dem neuesten Stand",
+    "sv": "Systemet är uppdaterat",
+    "nb": "Systemet er oppdatert"
+  },
+  "updates.up_to_date_description": {
+    "en": "You are using the latest published stable version.",
+    "da": "Du bruger den seneste offentliggjorte stabile version.",
+    "de": "Sie verwenden die neueste stabile Version.",
+    "sv": "Du använder den senaste publicerade stabila versionen.",
+    "nb": "Du bruker den nyeste publiserte stabile versjonen."
+  },
+  "updates.available": {
+    "en": "A new version is available",
+    "da": "En ny version er tilgængelig",
+    "de": "Eine neue Version ist verfügbar",
+    "sv": "En ny version finns tillgänglig",
+    "nb": "En ny versjon er tilgjengelig"
+  },
+  "updates.available_description": {
+    "en": "A newer stable Boilerplate CMS release has been published.",
+    "da": "Der er udgivet en nyere stabil version af Boilerplate CMS.",
+    "de": "Eine neuere stabile Version von Boilerplate CMS wurde veröffentlicht.",
+    "sv": "En nyare stabil version av Boilerplate CMS har publicerats.",
+    "nb": "En nyere stabil versjon av Boilerplate CMS er publisert."
+  },
+  "updates.no_release": {
+    "en": "No stable release published yet",
+    "da": "Der er endnu ingen stabil release",
+    "de": "Noch keine stabile Version veröffentlicht",
+    "sv": "Ingen stabil version har publicerats ännu",
+    "nb": "Ingen stabil versjon er publisert ennå"
+  },
+  "updates.no_release_description": {
+    "en": "The release source has no public stable release. This does not confirm that the CMS is up to date.",
+    "da": "Opdateringskilden har ingen offentlig stabil release. Det betyder ikke, at CMS’et er ajour.",
+    "de": "Die Quelle enthält keine öffentliche stabile Version. Das bestätigt nicht, dass das CMS aktuell ist.",
+    "sv": "Källan saknar en offentlig stabil version. Det bekräftar inte att CMS:et är aktuellt.",
+    "nb": "Kilden har ingen offentlig stabil versjon. Dette bekrefter ikke at CMS-et er oppdatert."
+  },
+  "updates.check_failed": {
+    "en": "Unable to check for updates",
+    "da": "Kunne ikke søge efter opdateringer",
+    "de": "Die Updatesuche ist fehlgeschlagen",
+    "sv": "Det gick inte att söka efter uppdateringar",
+    "nb": "Kunne ikke søke etter oppdateringer"
+  },
+  "updates.check_failed_description": {
+    "en": "The update service could not be reached or returned an invalid response. Try again later.",
+    "da": "Opdateringstjenesten kunne ikke kontaktes eller gav et ugyldigt svar. Prøv igen senere.",
+    "de": "Der Updatedienst konnte nicht erreicht werden oder antwortete ungültig. Versuchen Sie es später erneut.",
+    "sv": "Uppdateringstjänsten kunde inte nås eller gav ett ogiltigt svar. Försök igen senare.",
+    "nb": "Oppdateringstjenesten kunne ikke nås eller svarte ugyldig. Prøv igjen senere."
+  },
+  "updates.session_expired": {
+    "en": "Session expired",
+    "da": "Sessionen er udløbet",
+    "de": "Sitzung abgelaufen",
+    "sv": "Sessionen har gått ut",
+    "nb": "Økten er utløpt"
+  },
+  "updates.session_expired_description": {
+    "en": "Reload the page and try again.",
+    "da": "Genindlæs siden og prøv igen.",
+    "de": "Laden Sie die Seite neu und versuchen Sie es erneut.",
+    "sv": "Ladda om sidan och försök igen.",
+    "nb": "Last inn siden på nytt og prøv igjen."
+  },
+  "updates.latest_version": {
+    "en": "Latest version",
+    "da": "Nyeste version",
+    "de": "Neueste Version",
+    "sv": "Senaste version",
+    "nb": "Nyeste versjon"
+  },
+  "updates.view_release": {
+    "en": "View release",
+    "da": "Se udgivelsen",
+    "de": "Release ansehen",
+    "sv": "Visa versionen",
+    "nb": "Se utgivelsen"
+  },
+  "updates.install_not_available": {
+    "en": "Automatic installation is not available yet. No files or data have been changed.",
+    "da": "Automatisk installation er endnu ikke tilgængelig. Ingen filer eller data er blevet ændret.",
+    "de": "Die automatische Installation ist noch nicht verfügbar. Keine Dateien oder Daten wurden geändert.",
+    "sv": "Automatisk installation är inte tillgänglig än. Inga filer eller data har ändrats.",
+    "nb": "Automatisk installasjon er ikke tilgjengelig ennå. Ingen filer eller data er endret."
+  },
+  "updates.connection_error": {
+    "en": "Cannot connect to GitHub",
+    "da": "Kan ikke oprette forbindelse til GitHub",
+    "de": "Keine Verbindung zu GitHub",
+    "sv": "Kan inte ansluta till GitHub",
+    "nb": "Kan ikke koble til GitHub"
+  },
+  "updates.connection_error_description": {
+    "en": "The CMS could not establish a secure connection to GitHub. Check your server’s internet connection and HTTPS support.",
+    "da": "CMS’et kunne ikke oprette en sikker forbindelse til GitHub. Kontrollér serverens internetforbindelse og HTTPS-understøttelse.",
+    "de": "Das CMS konnte keine sichere Verbindung zu GitHub herstellen. Prüfen Sie Internetverbindung und HTTPS-Unterstützung des Servers.",
+    "sv": "CMS:et kunde inte upprätta en säker anslutning till GitHub. Kontrollera serverns internetanslutning och HTTPS-stöd.",
+    "nb": "CMS-et kunne ikke opprette en sikker tilkobling til GitHub. Kontroller serverens internettforbindelse og HTTPS-støtte."
+  },
+  "updates.github_rejected": {
+    "en": "GitHub rejected the request",
+    "da": "GitHub afviste forespørgslen",
+    "de": "GitHub hat die Anfrage abgelehnt",
+    "sv": "GitHub avvisade förfrågan",
+    "nb": "GitHub avviste forespørselen"
+  },
+  "updates.github_rejected_description": {
+    "en": "GitHub did not allow the request. This may be a temporary API limit. Try again later.",
+    "da": "GitHub tillod ikke forespørgslen. Det kan skyldes en midlertidig API-begrænsning. Prøv igen senere.",
+    "de": "GitHub hat die Anfrage nicht zugelassen. Möglicherweise besteht eine vorübergehende API-Beschränkung.",
+    "sv": "GitHub tillät inte förfrågan. Det kan bero på en tillfällig API-begränsning. Försök senare.",
+    "nb": "GitHub tillot ikke forespørselen. Det kan skyldes en midlertidig API-begrensning. Prøv senere."
+  },
+  "updates.rate_limited": {
+    "en": "GitHub is temporarily limiting requests",
+    "da": "GitHub begrænser midlertidigt forespørgsler",
+    "de": "GitHub begrenzt Anfragen vorübergehend",
+    "sv": "GitHub begränsar tillfälligt förfrågningar",
+    "nb": "GitHub begrenser forespørsler midlertidig"
+  },
+  "updates.rate_limited_description": {
+    "en": "Wait a little and check again.",
+    "da": "Vent lidt, og søg igen.",
+    "de": "Warten Sie etwas und versuchen Sie es erneut.",
+    "sv": "Vänta en stund och försök igen.",
+    "nb": "Vent litt og prøv igjen."
+  },
+  "updates.service_unavailable": {
+    "en": "GitHub is temporarily unavailable",
+    "da": "GitHub er midlertidigt utilgængelig",
+    "de": "GitHub ist vorübergehend nicht erreichbar",
+    "sv": "GitHub är tillfälligt otillgängligt",
+    "nb": "GitHub er midlertidig utilgjengelig"
+  },
+  "updates.service_unavailable_description": {
+    "en": "GitHub returned a server error. Try again later.",
+    "da": "GitHub svarede med en serverfejl. Prøv igen senere.",
+    "de": "GitHub hat einen Serverfehler gemeldet. Versuchen Sie es später erneut.",
+    "sv": "GitHub svarade med ett serverfel. Försök igen senare.",
+    "nb": "GitHub svarte med en serverfeil. Prøv igjen senere."
+  },
+  "updates.invalid_tag": {
+    "en": "The GitHub release has an unsupported version number",
+    "da": "GitHub-releasen har et versionsnummer, der ikke understøttes",
+    "de": "Das GitHub-Release hat eine nicht unterstützte Versionsnummer",
+    "sv": "GitHub-versionen har ett versionsnummer som inte stöds",
+    "nb": "GitHub-utgivelsen har et versjonsnummer som ikke støttes"
+  },
+  "updates.invalid_tag_description": {
+    "en": "Use a stable version tag such as v2.5.0 or 2.5.0. Pre-release tags are not treated as stable updates.",
+    "da": "Brug et stabilt versionstag som v2.5.0 eller 2.5.0. RC- og betaversioner vises ikke som stabile opdateringer.",
+    "de": "Verwenden Sie ein stabiles Tag wie v2.5.0 oder 2.5.0. RC- und Beta-Tags werden nicht als stabil behandelt.",
+    "sv": "Använd en stabil versionstagg som v2.5.0 eller 2.5.0. RC- och betataggar räknas inte som stabila.",
+    "nb": "Bruk en stabil versjonstagg som v2.5.0 eller 2.5.0. RC- og betatagger regnes ikke som stabile."
+  },
+  "updates.invalid_response": {
+    "en": "GitHub returned an unexpected response",
+    "da": "GitHub svarede ikke som forventet",
+    "de": "GitHub hat unerwartet geantwortet",
+    "sv": "GitHub svarade inte som förväntat",
+    "nb": "GitHub svarte ikke som forventet"
+  },
+  "updates.invalid_response_description": {
+    "en": "Could not verify the published release information. Try again later.",
+    "da": "Kunne ikke verificere oplysningerne om releasen. Prøv igen senere.",
+    "de": "Die Release-Informationen konnten nicht überprüft werden. Versuchen Sie es später erneut.",
+    "sv": "Release-informationen kunde inte verifieras. Försök senare.",
+    "nb": "Utgivelsesinformasjonen kunne ikke bekreftes. Prøv igjen senere."
+  },
+  "site_health.title": {
+    "en": "Site Health",
+    "da": "Webstedets sundhed",
+    "de": "Website-Zustand",
+    "sv": "Webbplatsens hälsa",
+    "nb": "Nettstedets helse"
+  },
+  "site_health.summary_description": {
+    "en": "Technical status of this installation.",
+    "da": "Teknisk status for denne installation.",
+    "de": "Technischer Status dieser Installation.",
+    "sv": "Teknisk status för installationen.",
+    "nb": "Teknisk status for installasjonen."
+  },
+  "site_health.view_details": {
+    "en": "View details",
+    "da": "Se detaljer",
+    "de": "Details anzeigen",
+    "sv": "Visa detaljer",
+    "nb": "Vis detaljer"
+  },
+  "site_health.description": {
+    "en": "Review all technical checks and download a detailed report.",
+    "da": "Gennemgå alle tekniske kontroller, og hent en detaljeret rapport.",
+    "de": "Alle technischen Prüfungen anzeigen und einen detaillierten Bericht herunterladen.",
+    "sv": "Granska alla tekniska kontroller och hämta en detaljerad rapport.",
+    "nb": "Se alle tekniske kontroller og last ned en detaljert rapport."
+  },
+  "site_health.checks_title": {
+    "en": "Health checks",
+    "da": "Sundhedskontroller",
+    "de": "Zustandsprüfungen",
+    "sv": "Hälsokontroller",
+    "nb": "Helsekontroller"
+  },
+  "site_health.checks_description": {
+    "en": "Current results for the CMS, server and database.",
+    "da": "Aktuelle resultater for CMS, server og database.",
+    "de": "Aktuelle Ergebnisse für CMS, Server und Datenbank.",
+    "sv": "Aktuella resultat för CMS, server och databas.",
+    "nb": "Gjeldende resultater for CMS, server og database."
+  },
+  "site_health.session_expired": {
+    "en": "Your session has expired. Reload the page and try again.",
+    "da": "Din session er udløbet. Genindlæs siden, og prøv igen.",
+    "de": "Ihre Sitzung ist abgelaufen. Laden Sie die Seite neu und versuchen Sie es erneut.",
+    "sv": "Din session har upphört. Ladda om sidan och försök igen.",
+    "nb": "Økten din er utløpt. Last siden på nytt og prøv igjen."
+  },
+  "site_health.invalid_action": {
+    "en": "Invalid report request.",
+    "da": "Ugyldig anmodning om rapport.",
+    "de": "Ungültige Berichtsanfrage.",
+    "sv": "Ogiltig rapportbegäran.",
+    "nb": "Ugyldig rapportforespørsel."
+  },
+  "site_health.check.php": {
+    "en": "PHP version",
+    "da": "PHP-version",
+    "de": "PHP-Version",
+    "sv": "PHP-version",
+    "nb": "PHP-versjon"
+  },
+  "site_health.detail.php": {
+    "en": "Installed: {version} (minimum: {minimum}).",
+    "da": "Installeret: {version} (minimum: {minimum}).",
+    "de": "Installiert: {version} (Minimum: {minimum}).",
+    "sv": "Installerad: {version} (minst: {minimum}).",
+    "nb": "Installert: {version} (minimum: {minimum})."
+  },
+  "site_health.detail.extension_active": {
+    "en": "PHP extension is enabled.",
+    "da": "PHP-udvidelsen er aktiv.",
+    "de": "PHP-Erweiterung ist aktiviert.",
+    "sv": "PHP-tillägget är aktivt.",
+    "nb": "PHP-utvidelsen er aktiv."
+  },
+  "site_health.detail.extension_missing": {
+    "en": "Required PHP extension is missing.",
+    "da": "Påkrævet PHP-udvidelse mangler.",
+    "de": "Erforderliche PHP-Erweiterung fehlt.",
+    "sv": "Nödvändigt PHP-tillägg saknas.",
+    "nb": "Påkrevd PHP-utvidelse mangler."
+  },
+  "site_health.check.migrations": {
+    "en": "Database migrations",
+    "da": "Databasemigreringer",
+    "de": "Datenbankmigrationen",
+    "sv": "Databasmigreringar",
+    "nb": "Databasemigreringer"
+  },
+  "site_health.detail.migrations_pending": {
+    "en": "{count} migration(s) need attention. Run the migration tool.",
+    "da": "{count} migrering(er) kræver opmærksomhed. Kør migreringsværktøjet.",
+    "de": "{count} Migration(en) erfordern Aufmerksamkeit. Migrationswerkzeug ausführen.",
+    "sv": "{count} migrering(ar) behöver åtgärdas. Kör migreringsverktyget.",
+    "nb": "{count} migrering(er) krever oppfølging. Kjør migreringsverktøyet."
+  },
+  "site_health.detail.migrations_ok": {
+    "en": "All packaged migrations are registered.",
+    "da": "Alle medfølgende migreringer er registreret.",
+    "de": "Alle mitgelieferten Migrationen sind registriert.",
+    "sv": "Alla medföljande migreringar är registrerade.",
+    "nb": "Alle medfølgende migreringer er registrert."
+  },
+  "site_health.detail.migrations_failed": {
+    "en": "Migration status could not be verified.",
+    "da": "Migreringsstatus kunne ikke kontrolleres.",
+    "de": "Migrationsstatus konnte nicht überprüft werden.",
+    "sv": "Migreringsstatus kunde inte verifieras.",
+    "nb": "Migreringsstatus kunne ikke bekreftes."
+  },
+  "site_health.check.backup": {
+    "en": "Site backup",
+    "da": "Webstedsbackup",
+    "de": "Website-Backup",
+    "sv": "Webbplatsbackup",
+    "nb": "Nettstedsbackup"
+  },
+  "site_health.detail.backup_ok": {
+    "en": "PHP Phar and zlib are available.",
+    "da": "PHP Phar og zlib er tilgængelige.",
+    "de": "PHP Phar und zlib sind verfügbar.",
+    "sv": "PHP Phar och zlib är tillgängliga.",
+    "nb": "PHP Phar og zlib er tilgjengelige."
+  },
+  "site_health.detail.backup_missing": {
+    "en": "Site backup requires PHP Phar and zlib.",
+    "da": "Webstedsbackup kræver PHP Phar og zlib.",
+    "de": "Website-Backup erfordert PHP Phar und zlib.",
+    "sv": "Webbplatsbackup kräver PHP Phar och zlib.",
+    "nb": "Nettstedsbackup krever PHP Phar og zlib."
+  },
+  "site_health.detail.mbstring_recommended": {
+    "en": "The PHP mbstring extension is recommended.",
+    "da": "PHP-udvidelsen mbstring anbefales.",
+    "de": "Die PHP-Erweiterung mbstring wird empfohlen.",
+    "sv": "PHP-tillägget mbstring rekommenderas.",
+    "nb": "PHP-utvidelsen mbstring anbefales."
+  },
+  "site_health.check.database": {
+    "en": "Database",
+    "da": "Database",
+    "de": "Datenbank",
+    "sv": "Databas",
+    "nb": "Database"
+  },
+  "site_health.detail.database_ok": {
+    "en": "MySQL connection works.",
+    "da": "Forbindelsen til MySQL fungerer.",
+    "de": "MySQL-Verbindung funktioniert.",
+    "sv": "MySQL-anslutningen fungerar.",
+    "nb": "MySQL-tilkoblingen fungerer."
+  },
+  "site_health.detail.database_failed": {
+    "en": "Database test failed.",
+    "da": "Databasetesten mislykkedes.",
+    "de": "Datenbanktest fehlgeschlagen.",
+    "sv": "Databastestet misslyckades.",
+    "nb": "Databasetesten mislyktes."
+  },
+  "site_health.detail.database_unavailable": {
+    "en": "Database connection could not be verified.",
+    "da": "Databaseforbindelsen kunne ikke verificeres.",
+    "de": "Datenbankverbindung konnte nicht überprüft werden.",
+    "sv": "Databasanslutningen kunde inte verifieras.",
+    "nb": "Databasetilkoblingen kunne ikke bekreftes."
+  },
+  "site_health.check.uploads": {
+    "en": "Uploads",
+    "da": "Uploads",
+    "de": "Uploads",
+    "sv": "Uppladdningar",
+    "nb": "Opplastinger"
+  },
+  "site_health.detail.uploads_ok": {
+    "en": "Upload folder is writable.",
+    "da": "Uploadmappen er skrivbar.",
+    "de": "Upload-Ordner ist beschreibbar.",
+    "sv": "Uppladdningsmappen är skrivbar.",
+    "nb": "Opplastingsmappen er skrivbar."
+  },
+  "site_health.detail.uploads_failed": {
+    "en": "Upload folder is missing or not writable.",
+    "da": "Uploadmappen mangler eller er ikke skrivbar.",
+    "de": "Upload-Ordner fehlt oder ist nicht beschreibbar.",
+    "sv": "Uppladdningsmappen saknas eller är inte skrivbar.",
+    "nb": "Opplastingsmappen mangler eller er ikke skrivbar."
+  },
+  "site_health.check.environment": {
+    "en": "Environment",
+    "da": "Miljø",
+    "de": "Umgebung",
+    "sv": "Miljö",
+    "nb": "Miljø"
+  },
+  "site_health.detail.environment": {
+    "en": "APP_ENV is set to {environment}.",
+    "da": "APP_ENV er sat til {environment}.",
+    "de": "APP_ENV ist auf {environment} gesetzt.",
+    "sv": "APP_ENV är inställt på {environment}.",
+    "nb": "APP_ENV er satt til {environment}."
+  },
+  "site_health.check.site_url": {
+    "en": "Website URL",
+    "da": "Hjemmeside-URL",
+    "de": "Website-URL",
+    "sv": "Webbplatsadress",
+    "nb": "Nettstedets URL"
+  },
+  "site_health.check.site_url_setting": {
+    "en": "Website URL setting",
+    "da": "Indstilling for hjemmeside-URL",
+    "de": "Website-URL-Einstellung",
+    "sv": "Webbplatsadressinställning",
+    "nb": "Innstilling for nettsteds-URL"
+  },
+  "site_health.check.url_config": {
+    "en": "URL configuration",
+    "da": "URL-konfiguration",
+    "de": "URL-Konfiguration",
+    "sv": "URL-konfiguration",
+    "nb": "URL-konfigurasjon"
+  },
+  "site_health.detail.site_url": {
+    "en": "{url} (source: {source}).",
+    "da": "{url} (kilde: {source}).",
+    "de": "{url} (Quelle: {source}).",
+    "sv": "{url} (källa: {source}).",
+    "nb": "{url} (kilde: {source})."
+  },
+  "site_health.source.database": {
+    "en": "database",
+    "da": "database",
+    "de": "Datenbank",
+    "sv": "databas",
+    "nb": "database"
+  },
+  "site_health.source.request": {
+    "en": "current request",
+    "da": "aktuel forespørgsel",
+    "de": "aktuelle Anfrage",
+    "sv": "aktuell begäran",
+    "nb": "gjeldende forespørsel"
+  },
+  "site_health.detail.site_url_invalid": {
+    "en": "The database URL is invalid. APP_URL is used as a fallback when possible.",
+    "da": "Database-URL er ugyldig. APP_URL bruges som fallback, hvis muligt.",
+    "de": "Datenbank-URL ist ungültig. APP_URL wird nach Möglichkeit als Ersatz verwendet.",
+    "sv": "Databasens URL är ogiltig. APP_URL används som reserv om möjligt.",
+    "nb": "Database-URL-en er ugyldig. APP_URL brukes som reserve når det er mulig."
+  },
+  "site_health.detail.url_mismatch": {
+    "en": "Website URL and APP_URL differ; the database value is used.",
+    "da": "Hjemmeside-URL og APP_URL er forskellige; databasens adresse anvendes.",
+    "de": "Website-URL und APP_URL unterscheiden sich; der Datenbankwert wird verwendet.",
+    "sv": "Webbplatsadressen och APP_URL skiljer sig; databasvärdet används.",
+    "nb": "Nettstedets URL og APP_URL er forskjellige; databaseverdien brukes."
+  },
+  "site_health.detail.https_required": {
+    "en": "The effective website URL must use HTTPS in production.",
+    "da": "Den effektive hjemmeside-URL skal bruge HTTPS i produktion.",
+    "de": "Die effektive Website-URL muss in Produktion HTTPS verwenden.",
+    "sv": "Webbplatsadressen måste använda HTTPS i produktion.",
+    "nb": "Nettstedets URL må bruke HTTPS i produksjon."
+  },
+  "site_health.detail.site_url_missing": {
+    "en": "No valid website URL or APP_URL is configured.",
+    "da": "Der er ikke konfigureret en gyldig hjemmeside-URL eller APP_URL.",
+    "de": "Keine gültige Website-URL oder APP_URL konfiguriert.",
+    "sv": "Ingen giltig webbplatsadress eller APP_URL är konfigurerad.",
+    "nb": "Ingen gyldig nettsteds-URL eller APP_URL er konfigurert."
+  },
+  "site_health.check.maintenance": {
+    "en": "Maintenance",
+    "da": "Vedligeholdelse",
+    "de": "Wartung",
+    "sv": "Underhåll",
+    "nb": "Vedlikehold"
+  },
+  "site_health.detail.maintenance_on": {
+    "en": "Maintenance mode is enabled.",
+    "da": "Vedligeholdelsestilstand er aktiv.",
+    "de": "Wartungsmodus ist aktiviert.",
+    "sv": "Underhållsläget är aktivt.",
+    "nb": "Vedlikeholdsmodus er aktivert."
+  },
+  "site_health.detail.maintenance_off": {
+    "en": "Maintenance mode is disabled.",
+    "da": "Vedligeholdelsestilstand er slået fra.",
+    "de": "Wartungsmodus ist deaktiviert.",
+    "sv": "Underhållsläget är avstängt.",
+    "nb": "Vedlikeholdsmodus er deaktivert."
+  },
+  "site_health.check.search_engines": {
+    "en": "Search engines",
+    "da": "Søgemaskiner",
+    "de": "Suchmaschinen",
+    "sv": "Sökmotorer",
+    "nb": "Søkemotorer"
+  },
+  "site_health.detail.indexing_on": {
+    "en": "Search engine indexing is allowed.",
+    "da": "Indeksering er tilladt.",
+    "de": "Suchmaschinenindexierung ist erlaubt.",
+    "sv": "Sökmotorindexering är tillåten.",
+    "nb": "Indeksering er tillatt."
+  },
+  "site_health.detail.indexing_off": {
+    "en": "Global noindex is enabled.",
+    "da": "Global noindex er aktiv.",
+    "de": "Globales noindex ist aktiviert.",
+    "sv": "Global noindex är aktiverat.",
+    "nb": "Global noindex er aktivert."
+  },
+  "health_report.label.timezone": {
+    "en": "Timezone",
+    "da": "Tidszone",
+    "de": "Zeitzone",
+    "sv": "Tidszon",
+    "nb": "Tidssone"
+  },
+  "health_report.label.image_editor": {
+    "en": "Image editor (GD or Imagick)",
+    "da": "Billedbehandling (GD eller Imagick)",
+    "de": "Bildverarbeitung (GD oder Imagick)",
+    "sv": "Bildredigerare (GD eller Imagick)",
+    "nb": "Bilderedigering (GD eller Imagick)"
+  },
+  "health_report.label.connection_charset": {
+    "en": "Connection charset",
+    "da": "Forbindelsens tegnsæt",
+    "de": "Verbindungszeichensatz",
+    "sv": "Anslutningens teckenuppsättning",
+    "nb": "Tegnsett for tilkobling"
+  },
+  "health_report.label.connection_collation": {
+    "en": "Connection collation",
+    "da": "Forbindelsens sortering",
+    "de": "Verbindungskollation",
+    "sv": "Anslutningens kollation",
+    "nb": "Kollasjon for tilkobling"
+  },
+  "health_report.label.legacy_uploads": {
+    "en": "Legacy uploads",
+    "da": "Ældre uploadmappe",
+    "de": "Alte Uploads",
+    "sv": "Äldre uppladdningsmapp",
+    "nb": "Eldre opplastingsmappe"
+  },
+  "health_report.label.public_uploads": {
+    "en": "Public uploads",
+    "da": "Offentlige uploads",
+    "de": "Öffentliche Uploads",
+    "sv": "Publika uppladdningar",
+    "nb": "Offentlige opplastinger"
+  },
+  "health_report.label.public_htaccess": {
+    "en": "Public .htaccess",
+    "da": "Offentlig .htaccess",
+    "de": "Öffentliche .htaccess",
+    "sv": "Publik .htaccess",
+    "nb": "Offentlig .htaccess"
+  },
+  "health_report.recommend.image_editor": {
+    "en": "Enable PHP GD or Imagick to generate optimized responsive image sizes. Original uploads still work.",
+    "da": "Aktivér PHP GD eller Imagick for at generere optimerede responsive billedstørrelser. Originale uploads fungerer stadig.",
+    "de": "PHP GD oder Imagick aktivieren, um optimierte responsive Bildgrößen zu erzeugen. Original-Uploads funktionieren weiterhin.",
+    "sv": "Aktivera PHP GD eller Imagick för att skapa optimerade responsiva bildstorlekar. Originaluppladdningar fungerar fortfarande.",
+    "nb": "Aktiver PHP GD eller Imagick for å lage optimaliserte responsive bildestørrelser. Opprinnelige opplastinger fungerer fortsatt."
+  },
+  "health_report.recommend.legacy_uploads": {
+    "en": "Keep .htaccess protection on the legacy assets/uploads folder; do not expose its files.",
+    "da": "Behold .htaccess-beskyttelsen på den ældre assets/uploads-mappe; filerne må ikke eksponeres.",
+    "de": "Den Schutz durch .htaccess für den alten Ordner assets/uploads beibehalten; Dateien nicht öffentlich zugänglich machen.",
+    "sv": "Behåll .htaccess-skyddet för den äldre mappen assets/uploads; exponera inte dess filer.",
+    "nb": "Behold .htaccess-beskyttelsen for den eldre mappen assets/uploads; ikke eksponer filene."
+  },
+  "tools.overview_description": {
+    "en": "Manage website tools and maintenance.",
+    "da": "Administrer værktøjer og vedligeholdelse af dit website.",
+    "de": "Verwalten Sie Website-Werkzeuge und Wartung.",
+    "sv": "Hantera verktyg och underhåll för webbplatsen.",
+    "nb": "Administrer verktøy og vedlikehold av nettstedet."
+  },
+  "tools.redirects_description": {
+    "en": "Manage URL redirects.",
+    "da": "Administrer URL-viderestillinger.",
+    "de": "URL-Weiterleitungen verwalten.",
+    "sv": "Hantera URL-omdirigeringar.",
+    "nb": "Administrer URL-viderekoblinger."
+  },
+  "tools.updates_description": {
+    "en": "Check and manage CMS updates.",
+    "da": "Kontrollér og administrer CMS-opdateringer.",
+    "de": "CMS-Updates prüfen und verwalten.",
+    "sv": "Kontrollera och hantera CMS-uppdateringar.",
+    "nb": "Kontroller og administrer CMS-oppdateringer."
+  },
+  "tools.data_title": {
+    "en": "Data Management",
+    "da": "Datahåndtering",
+    "de": "Datenverwaltung",
+    "sv": "Datahantering",
+    "nb": "Databehandling"
+  },
+  "tools.data_description": {
+    "en": "Import, export and back up data.",
+    "da": "Importér, eksportér og sikkerhedskopiér data.",
+    "de": "Daten importieren, exportieren und sichern.",
+    "sv": "Importera, exportera och säkerhetskopiera data.",
+    "nb": "Importer, eksporter og sikkerhetskopier data."
+  },
+  "tools.data_page_description": {
+    "en": "Import or export content, or download a database and media backup.",
+    "da": "Importér eller eksportér indhold, eller hent backup af database og medier.",
+    "de": "Inhalte importieren oder exportieren sowie Datenbank- und Medien-Backups herunterladen.",
+    "sv": "Importera eller exportera innehåll eller hämta säkerhetskopia av databas och medier.",
+    "nb": "Importer eller eksporter innhold, eller last ned sikkerhetskopi av database og medier."
+  },
+  "tools.manage": {
+    "en": "Manage",
+    "da": "Administrer",
+    "de": "Verwalten",
+    "sv": "Hantera",
+    "nb": "Administrer"
+  },
+  "tools.manage_data": {
+    "en": "Manage data",
+    "da": "Administrer data",
+    "de": "Daten verwalten",
+    "sv": "Hantera data",
+    "nb": "Administrer data"
+  },
+  "tools.session_expired": {
+    "en": "Your session has expired. Reload the page and try again.",
+    "da": "Din session er udløbet. Genindlæs siden, og prøv igen.",
+    "de": "Ihre Sitzung ist abgelaufen. Laden Sie die Seite neu und versuchen Sie es erneut.",
+    "sv": "Din session har gått ut. Ladda om sidan och försök igen.",
+    "nb": "Økten er utløpt. Last inn siden på nytt og prøv igjen."
+  },
+  "tools.import_confirm_required": {
+    "en": "Confirm that you understand how imported data merges with existing records.",
+    "da": "Bekræft, at du forstår, hvordan importerede data flettes med eksisterende poster.",
+    "de": "Bestätigen Sie, dass importierte Daten mit vorhandenen Einträgen zusammengeführt werden.",
+    "sv": "Bekräfta att du förstår hur importerad data slås samman med befintliga poster.",
+    "nb": "Bekreft at du forstår hvordan importerte data flettes med eksisterende oppføringer."
+  },
+  "tools.import_invalid_json": {
+    "en": "The JSON file is invalid or damaged.",
+    "da": "JSON-filen er ugyldig eller beskadiget.",
+    "de": "Die JSON-Datei ist ungültig oder beschädigt.",
+    "sv": "JSON-filen är ogiltig eller skadad.",
+    "nb": "JSON-filen er ugyldig eller skadet."
+  },
+  "tools.import_invalid_type": {
+    "en": "Select a JSON file exported from Boilerplate CMS.",
+    "da": "Vælg en JSON-fil, der er eksporteret fra Boilerplate CMS.",
+    "de": "Wählen Sie eine aus Boilerplate CMS exportierte JSON-Datei.",
+    "sv": "Välj en JSON-fil som exporterats från Boilerplate CMS.",
+    "nb": "Velg en JSON-fil eksportert fra Boilerplate CMS."
+  },
+  "tools.import_oversize": {
+    "en": "The JSON file must not exceed 10 MB.",
+    "da": "JSON-filen må højst fylde 10 MB.",
+    "de": "Die JSON-Datei darf höchstens 10 MB groß sein.",
+    "sv": "JSON-filen får vara högst 10 MB.",
+    "nb": "JSON-filen kan ikke være større enn 10 MB."
+  },
+  "tools.export_failed": {
+    "en": "The export could not be created. Try again.",
+    "da": "Eksporten kunne ikke oprettes. Prøv igen.",
+    "de": "Der Export konnte nicht erstellt werden. Versuchen Sie es erneut.",
+    "sv": "Exporten kunde inte skapas. Försök igen.",
+    "nb": "Eksporten kunne ikke opprettes. Prøv igjen."
+  },
+  "tools.redirect_updated": {
+    "en": "Redirect updated.",
+    "da": "Redirectet er opdateret.",
+    "de": "Weiterleitung aktualisiert.",
+    "sv": "Omdirigeringen har uppdaterats.",
+    "nb": "Viderekoblingen er oppdatert."
+  },
+  "updates.prepare_button": {
+    "en": "Download and verify update",
+    "da": "Hent og verificér opdatering",
+    "de": "Update herunterladen und prüfen",
+    "sv": "Ladda ned och verifiera uppdatering",
+    "nb": "Last ned og verifiser oppdatering"
+  },
+  "updates.prepared_title": {
+    "en": "Update package prepared",
+    "da": "Opdateringspakken er klar",
+    "de": "Update-Paket vorbereitet",
+    "sv": "Uppdateringspaketet är förberett",
+    "nb": "Oppdateringspakken er klargjort"
+  },
+  "updates.prepared_description": {
+    "en": "The official release was verified and stored privately. Installation has not started.",
+    "da": "Den officielle udgivelse er verificeret og gemt privat. Installationen er ikke startet.",
+    "de": "Die offizielle Version wurde geprüft und privat gespeichert. Die Installation wurde nicht gestartet.",
+    "sv": "Den officiella versionen har verifierats och sparats privat. Installationen har inte startat.",
+    "nb": "Den offisielle utgivelsen er verifisert og lagret privat. Installasjonen er ikke startet."
+  },
+  "updates.prepare_failed": {
+    "en": "The update could not be prepared securely. No installation was started.",
+    "da": "Opdateringen kunne ikke forberedes sikkert. Ingen installation er startet.",
+    "de": "Das Update konnte nicht sicher vorbereitet werden. Es wurde keine Installation gestartet.",
+    "sv": "Uppdateringen kunde inte förberedas säkert. Ingen installation har startat.",
+    "nb": "Oppdateringen kunne ikke klargjøres sikkert. Ingen installasjon er startet."
+  },
+  "updates.update_now": {
+    "en": "Update now",
+    "da": "Opdatér nu",
+    "de": "Jetzt aktualisieren",
+    "sv": "Uppdatera nu",
+    "nb": "Oppdater nå"
+  },
+  "updates.updating": {
+    "en": "Updating Boilerplate CMS...",
+    "da": "Opdaterer Boilerplate CMS...",
+    "de": "Boilerplate CMS wird aktualisiert...",
+    "sv": "Uppdaterar Boilerplate CMS...",
+    "nb": "Oppdaterer Boilerplate CMS..."
+  },
+  "updates.update_success": {
+    "en": "Boilerplate CMS has been updated successfully.",
+    "da": "Boilerplate CMS er nu opdateret.",
+    "de": "Boilerplate CMS wurde erfolgreich aktualisiert.",
+    "sv": "Boilerplate CMS har uppdaterats.",
+    "nb": "Boilerplate CMS er oppdatert."
+  },
+  "updates.update_restored": {
+    "en": "The update stopped. Previous CMS files were restored.",
+    "da": "Opdateringen blev afbrudt. De tidligere CMS-filer er gendannet.",
+    "de": "Update abgebrochen. Vorherige CMS-Dateien wurden wiederhergestellt.",
+    "sv": "Uppdateringen avbröts. Tidigare CMS-filer har återställts.",
+    "nb": "Oppdateringen ble avbrutt. Tidligere CMS-filer er gjenopprettet."
+  },
+  "updates.update_migrations_blocked": {
+    "en": "This update needs a database upgrade and cannot be installed automatically yet. No CMS files or data were changed.",
+    "da": "Denne opdatering kræver databaseændringer og kan endnu ikke installeres automatisk. Ingen CMS-filer eller data blev ændret.",
+    "de": "Dieses Update erfordert Datenbankänderungen und kann noch nicht automatisch installiert werden.",
+    "sv": "Den här uppdateringen kräver databasändringar och kan ännu inte installeras automatiskt.",
+    "nb": "Denne oppdateringen krever databaseendringer og kan ennå ikke installeres automatisk."
+  },
+  "updates.update_busy": {
+    "en": "Another request is still active. Please try the update again.",
+    "da": "En anden handling er stadig aktiv. Prøv opdateringen igen.",
+    "de": "Eine andere Anfrage ist noch aktiv. Bitte erneut versuchen.",
+    "sv": "En annan åtgärd pågår. Försök igen.",
+    "nb": "En annen handling pågår. Prøv igjen."
+  },
+  "updates.update_recovery_required": {
+    "en": "The previous update needs recovery before continuing.",
+    "da": "Den forrige opdatering kræver gendannelse, før du kan fortsætte.",
+    "de": "Das vorige Update muss vor dem Fortfahren wiederhergestellt werden.",
+    "sv": "Den föregående uppdateringen måste återställas innan du fortsätter.",
+    "nb": "Den forrige oppdateringen må gjenopprettes før du fortsetter."
+  },
+  "updates.update_failed": {
+    "en": "The update could not be completed. No success has been recorded.",
+    "da": "Opdateringen kunne ikke gennemføres.",
+    "de": "Das Update konnte nicht abgeschlossen werden.",
+    "sv": "Uppdateringen kunde inte slutföras.",
+    "nb": "Oppdateringen kunne ikke fullføres."
+  },
+  "updates.restore_button": {
+    "en": "Restore previous CMS files",
+    "da": "Gendan tidligere CMS-filer",
+    "de": "Vorherige CMS-Dateien wiederherstellen",
+    "sv": "Återställ tidigare CMS-filer",
+    "nb": "Gjenopprett tidligere CMS-filer"
+  },
+  "updates.channel": {
+    "en": "Update channel",
+    "da": "Opdateringskanal",
+    "de": "Update-Kanal",
+    "sv": "Uppdateringskanal",
+    "nb": "Oppdateringskanal"
+  },
+  "updates.channel_description": {
+    "en": "Choose which official releases to receive.",
+    "da": "Vælg hvilke officielle versioner der må findes.",
+    "de": "Wählen Sie, welche offiziellen Versionen angezeigt werden.",
+    "sv": "Välj vilka officiella versioner som får visas.",
+    "nb": "Velg hvilke offisielle versjoner som skal vises."
+  },
+  "updates.channel_stable": {
+    "en": "Stable (recommended)",
+    "da": "Stable (anbefalet)",
+    "de": "Stabil (empfohlen)",
+    "sv": "Stabil (rekommenderas)",
+    "nb": "Stabil (anbefalt)"
+  },
+  "updates.channel_beta": {
+    "en": "Beta (early access)",
+    "da": "Beta (tidlig adgang)",
+    "de": "Beta (Vorabzugang)",
+    "sv": "Beta (tidig åtkomst)",
+    "nb": "Beta (tidlig tilgang)"
+  },
+  "updates.beta_caution": {
+    "en": "Beta versions may contain bugs. Do not use them on production websites without a verified backup.",
+    "da": "Betaversioner kan indeholde fejl. Brug dem ikke på produktionssider uden en verificeret backup.",
+    "de": "Betaversionen können Fehler enthalten. Nicht ohne geprüftes Backup auf produktiven Websites einsetzen.",
+    "sv": "Betaversioner kan innehålla fel. Använd dem inte på produktionswebbplatser utan verifierad backup.",
+    "nb": "Betaversjoner kan inneholde feil. Ikke bruk dem på produksjonsnettsteder uten verifisert sikkerhetskopi."
+  },
+  "updates.save_channel": {
+    "en": "Save channel",
+    "da": "Gem kanal",
+    "de": "Kanal speichern",
+    "sv": "Spara kanal",
+    "nb": "Lagre kanal"
+  },
+  "updates.no_beta_release": {
+    "en": "No supported release published yet",
+    "da": "Ingen understøttet version udgivet endnu",
+    "de": "Noch keine unterstützte Version veröffentlicht",
+    "sv": "Ingen version som stöds har publicerats än",
+    "nb": "Ingen støttet versjon er publisert ennå"
+  },
+  "updates.no_beta_release_description": {
+    "en": "No public stable, beta or release-candidate version is available.",
+    "da": "Der findes ingen offentlig stabil-, beta- eller release candidate-version.",
+    "de": "Keine öffentliche stabile, Beta- oder Release-Candidate-Version verfügbar.",
+    "sv": "Ingen offentlig stabil-, beta- eller release candidate-version finns.",
+    "nb": "Ingen offentlig stabil-, beta- eller release candidate-versjon er tilgjengelig."
+  },
+  "updates.up_to_date_beta_description": {
+    "en": "No newer stable, beta or release-candidate version was found.",
+    "da": "Ingen nyere stabil-, beta- eller release candidate-version blev fundet.",
+    "de": "Keine neuere stabile, Beta- oder Release-Candidate-Version gefunden.",
+    "sv": "Ingen nyare stabil-, beta- eller release candidate-version hittades.",
+    "nb": "Ingen nyere stabil-, beta- eller release candidate-versjon ble funnet."
+  },
+  "updates.available_beta_description": {
+    "en": "A newer official stable or preview release has been published.",
+    "da": "Der er udgivet en nyere officiel stabil- eller prøveversion.",
+    "de": "Eine neuere offizielle stabile oder Vorabversion wurde veröffentlicht.",
+    "sv": "En nyare officiell stabil- eller förhandsversion har publicerats.",
+    "nb": "En nyere offisiell stabil eller forhåndsversjon er publisert."
   }
 }
