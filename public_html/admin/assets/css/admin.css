@@ -3022,3 +3022,40 @@ body.nf-admin .admin-gallery-settings .admin-toggle { min-width:0; }
 .admin-update-option__details strong { color: var(--admin-text); font-size: 12px; font-weight: 600; }
 .admin-update-option__details span { color: var(--admin-muted); font-size: 11px; line-height: 1.5; }
 .admin-update-option > a { font-size: 11px; white-space: nowrap; }
+
+/* Page Builder section settings — schematic preview in Core UI only.
+   The real frontend colors and widths remain theme-owned. */
+body.nf-admin .admin-page-section-preview {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:108px;
+  padding:16px 12px;
+  border:1px solid var(--admin-border);
+  border-radius:var(--admin-radius);
+  background:#fff;
+  color:#262626;
+  transition:background-color .15s ease,color .15s ease;
+}
+body.nf-admin .admin-page-section-preview[data-theme="soft"] { background:#f6f4f2; }
+body.nf-admin .admin-page-section-preview[data-theme="dark"] { background:#262626; color:#fff; }
+body.nf-admin .admin-page-section-preview__content {
+  display:grid;
+  align-content:center;
+  gap:8px;
+  width:72%;
+  max-width:100%;
+  min-height:52px;
+  transition:width .15s ease;
+}
+body.nf-admin .admin-page-section-preview[data-width="narrow"] .admin-page-section-preview__content { width:42%; }
+body.nf-admin .admin-page-section-preview[data-width="wide"] .admin-page-section-preview__content { width:90%; }
+body.nf-admin .admin-page-section-preview[data-width="full"] .admin-page-section-preview__content { width:100%; }
+body.nf-admin .admin-page-section-preview__heading,
+body.nf-admin .admin-page-section-preview__line { display:block; height:7px; border-radius:2px; background:currentColor; opacity:.27; }
+body.nf-admin .admin-page-section-preview__heading { height:10px; width:57%; opacity:.65; }
+body.nf-admin .admin-page-section-preview__line--short { width:76%; }
+@media (prefers-reduced-motion:reduce) {
+  body.nf-admin .admin-page-section-preview,
+  body.nf-admin .admin-page-section-preview__content { transition:none; }
+}

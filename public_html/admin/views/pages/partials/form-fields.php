@@ -131,6 +131,14 @@ ob_start();
       <div class="admin-field" data-page-section-gap-field hidden><label for="page-section-gap"><?= admin_e(t('Afstand')); ?></label><select id="page-section-gap" data-page-section-gap><?php foreach (PageBlocks::gridGaps() as $gap=>$name): ?><option value="<?= admin_e($gap); ?>"><?= admin_e(t($name)); ?></option><?php endforeach; ?></select></div>
 
       <div class="admin-field"><label for="page-section-theme"><?= admin_e(t('page_builder_v2.color_theme')); ?></label><select id="page-section-theme" data-page-section-theme><?php foreach (PageBlocks::themes() as $theme=>$name): ?><option value="<?= admin_e($theme); ?>"><?= admin_e(t('page_builder_v2.theme_' . $theme)); ?></option><?php endforeach; ?></select></div>
+      <!-- Read-only schematic feedback. The frontend theme still owns actual colors and widths. -->
+      <div class="admin-page-section-preview" data-page-section-preview data-theme="light" data-width="standard" aria-hidden="true">
+        <div class="admin-page-section-preview__content">
+          <span class="admin-page-section-preview__heading"></span>
+          <span class="admin-page-section-preview__line"></span>
+          <span class="admin-page-section-preview__line admin-page-section-preview__line--short"></span>
+        </div>
+      </div>
     </div>
     <div class="admin-modal__footer"><button class="admin-button admin-button--secondary" type="button" data-modal-close><?= admin_e(t('Annuller')); ?></button><button class="admin-button" type="button" data-page-section-save><?= admin_e(t('page_builder_v2.save_settings')); ?></button></div>
   </div>

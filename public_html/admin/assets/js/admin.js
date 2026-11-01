@@ -1294,6 +1294,15 @@
     const sectionDialog = document.querySelector('[data-page-section-settings-dialog]');
     const sectionWidth = sectionDialog?.querySelector('[data-page-section-width]');
     const sectionTheme = sectionDialog?.querySelector('[data-page-section-theme]');
+    const sectionPreview = sectionDialog?.querySelector('[data-page-section-preview]');
+    // Schematic feedback only. Do not mutate saved fields until Save is pressed.
+    const updateSectionPreview = () => {
+      if (!sectionPreview || !sectionTheme || !sectionWidth) return;
+      sectionPreview.dataset.theme = ['light', 'soft', 'dark'].includes(sectionTheme.value) ? sectionTheme.value : 'light';
+      sectionPreview.dataset.width = ['narrow', 'standard', 'wide', 'full'].includes(sectionWidth.value) ? sectionWidth.value : 'standard';
+    };
+    sectionWidth?.addEventListener('change', updateSectionPreview);
+    sectionTheme?.addEventListener('change', updateSectionPreview);
     const sectionVisibility = sectionDialog?.querySelector('[data-page-section-visibility]');
     const sectionVisibilityState = sectionVisibility?.closest('.admin-toggle')?.querySelector('[data-admin-toggle-state]');
     const syncSectionVisibility = () => {
@@ -1490,6 +1499,7 @@
           settingsReturnFocus = sectionSettingsButton;
           sectionWidth.value = widthInput.value;
           sectionTheme.value = themeInput.value;
+          updateSectionPreview();
           sectionVisibility.checked = statusInput.value !== 'hidden';
           syncSectionVisibility();
           const gapInput = row.querySelector('[data-grid-gap]');
