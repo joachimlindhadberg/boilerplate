@@ -94,6 +94,7 @@ final class UpdateOneClickInstaller
                 if (!mkdir($work . '/' . $folder, 0700)) throw new RuntimeException('Cannot create update staging directory.');
             }
             $seen = [];
+            $archiveFiles = [];
             for ($i = 0; $i < $zip->numFiles; $i++) {
                 $stat = $zip->statIndex($i);
                 if (!is_array($stat) || !is_string($stat['name'] ?? null)) {
@@ -109,6 +110,7 @@ final class UpdateOneClickInstaller
                 $key = strtolower($relative);
                 if (isset($seen[$key])) throw new RuntimeException('Duplicate archive member.');
                 $seen[$key] = true;
+                $archiveFiles[$relative] = $i;
                 $dest = $this->destination($relative);
                 if ($relative === 'public_html/.user.ini' && (!is_file($dest)
                     || !hash_equals((string)@hash_file('sha256', $dest),
@@ -136,6 +138,23 @@ final class UpdateOneClickInstaller
                 }
                 $plan[] = ['path' => $relative, 'old' => $oldHash, 'new' => $newHash];
             }
+            // Only explicitly published, hash-matched CMS PHP files may be
+            // retired. Never diff the installed tree or touch unexpected files.
+            foreach (UpdateRetiredFilePlan::fromZip($zip, $archiveFiles) as $relative => $expectedOld) {
+                $dest = $this->destination($relative);
+                if (!is_file($dest)) continue; // Already absent; no deletion needed.
+                $actualOld = hash_file('sha256', $dest);
+                if (!is_string($actualOld) || !hash_equals($expectedOld, $actualOld)) {
+                    throw new RuntimeException('Retired code differs from the approved old release.');
+                }
+                $oldPath = $this->workPath($work, 'old', $relative);
+                $this->copyPrivate($dest, $oldPath);
+                if (!hash_equals($expectedOld, (string)hash_file('sha256', $oldPath))) {
+                    throw new RuntimeException('Retired code changed during staging.');
+                }
+                $plan[] = ['path' => $relative, 'old' => $expectedOld, 'new' => null];
+            }
+            if (count($plan) > 1500) throw new RuntimeException('Update plan is too large for recovery.');
             if (!$plan) return ['status' => 'unsupported_release', 'version' => ''];
             // No target write before the full, private, verified recovery bundle exists.
             $backup = (new UpdateRecoveryBundle($this->root))->create();
@@ -150,13 +169,24 @@ final class UpdateOneClickInstaller
                 $dest = $this->destination($file['path']);
                 $actual = is_file($dest) ? hash_file('sha256', $dest) : null;
                 if ($actual !== $file['old']) throw new RuntimeException('Installed file changed during preparation.');
-                $this->replace($this->workPath($work, 'new', $file['path']), $dest, $file['new']);
+                if ($file['new'] === null) {
+                    // A deletion is journaled and privately backed up before
+                    // unlink; a changed/symlinked target is refused.
+                    if (is_link($dest) || !is_file($dest) || !unlink($dest)) {
+                        throw new RuntimeException('Cannot safely retire code file.');
+                    }
+                } else {
+                    $this->replace($this->workPath($work, 'new', $file['path']), $dest, $file['new']);
+                }
             }
             $init = @file_get_contents($this->root . '/public_html/incl/init.php');
             if (!is_string($init) || !preg_match(UpdateReleaseVersion::SOURCE_PATTERN, $init, $m)
                 || $m[1] !== $expectedVersion) throw new RuntimeException('Version verification failed.');
             foreach ($plan as $file) {
-                if (!hash_equals($file['new'], (string)@hash_file('sha256', $this->destination($file['path'])))) {
+                $dest = $this->destination($file['path']);
+                if ($file['new'] === null) {
+                    if (is_file($dest) || is_link($dest)) throw new RuntimeException('Retired code was not removed.');
+                } elseif (!hash_equals($file['new'], (string)@hash_file('sha256', $dest))) {
                     throw new RuntimeException('Final file verification failed.');
                 }
             }
@@ -236,9 +266,12 @@ final class UpdateOneClickInstaller
     {
         foreach (array_reverse($plan) as $file) {
             if (!is_array($file) || !is_string($file['path'] ?? null)
-                || !array_key_exists('old', $file) || (!is_string($file['old']) && $file['old'] !== null)
-                || !is_string($file['new'] ?? null)
-                || !preg_match('/^[a-f0-9]{64}$/D', $file['new'])
+                || !array_key_exists('old', $file) || !array_key_exists('new', $file)
+                || (!is_string($file['old']) && $file['old'] !== null)
+                || (!is_string($file['new'] ?? null) && ($file['new'] ?? null) !== null)
+                || (is_string($file['new']) && !preg_match('/^[a-f0-9]{64}$/D', $file['new']))
+                || ($file['new'] === null && ($file['old'] === null
+                    || !UpdateRetiredFilePlan::isOwnedCodePath($file['path'])))
                 || (is_string($file['old']) && !preg_match('/^[a-f0-9]{64}$/D', $file['old']))) {
                 throw new RuntimeException('Invalid recovery plan entry.');
             }

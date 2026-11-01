@@ -70,6 +70,7 @@ final class UpdateRecoveryBundle
         return 0;
     }
 }
+require dirname(__DIR__) . '/core/classes/UpdateRetiredFilePlan.php';
 require dirname(__DIR__) . '/core/classes/UpdateReleaseVersion.php';
 require dirname(__DIR__) . '/core/classes/UpdateOneClickInstaller.php';
 require dirname(__DIR__) . '/core/classes/UpdateMaintenanceGate.php';
@@ -180,6 +181,90 @@ try {
     check($installer->install('2.5.3-beta.1', $betaSha, 'beta')['status'] === 'updated', 'beta installation reuses code-only installer');
     check(file_get_contents($root . '/public_html/incl/init.php') === $previewInit, 'installed beta version is recorded exactly');
     $betaGate->release();
+
+    // A release may retire ONLY a specifically declared, hash-matched CMS file.
+    // Unlisted files and user uploads remain untouched.
+    $legacy = 'public_html/admin/views/obsolete-example.php';
+    $legacyOld = "<?php\n// Old official CMS view.\n";
+    $unlisted = 'public_html/admin/views/custom-unlisted.php';
+    $userUpload = 'public_html/uploads/user-original.jpg';
+    writeFixture($root . '/' . $legacy, $legacyOld);
+    writeFixture($root . '/' . $unlisted, "<?php\n// Must remain.\n");
+    writeFixture($root . '/' . $userUpload, 'user-owned-bytes');
+    $retire = json_encode(['schema' => 1, 'retire' => [
+        ['path' => $legacy, 'sha256' => hash('sha256', $legacyOld)],
+    ]], JSON_THROW_ON_ERROR);
+    $nextInit = "<?php\ndefine('BOILERPLATE_VERSION', '2.5.3-beta.2');\n";
+    $retireSha = fakeStage($root, '2.5.3-beta.2', [
+        'public_html/incl/init.php' => $nextInit,
+        UpdateRetiredFilePlan::MEMBER => $retire,
+    ]);
+    check($installer->install('2.5.3-beta.2', $retireSha, 'beta')['status'] === 'updated',
+        'explicit hash-matched retirement succeeds');
+    check(!file_exists($root . '/' . $legacy), 'retired old CMS PHP file removed');
+    check(is_file($root . '/' . $unlisted), 'unlisted PHP file not deleted');
+    check(file_get_contents($root . '/' . $userUpload) === 'user-owned-bytes',
+        'user upload remains unmodified');
+    check(!$installer->hasInterruptedUpdate(), 'retirement commit leaves no pending journal');
+
+    // Simulate a process crash AFTER unlink using its private journal and
+    // copied old file. The unchanged rollback engine must restore it.
+    $deletedWork = $root . '/storage/update-recovery/.one-click-pending-' . str_repeat('b', 32);
+    mkdir($deletedWork, 0700);
+    writeFixture($deletedWork . '/old/' . $legacy, $legacyOld);
+    writeFixture($deletedWork . '/manifest.json', json_encode([
+        'format' => 'boilerplate-one-click-journal-v1', 'version' => '2.5.3-beta.2',
+        'archive_sha256' => $retireSha, 'backup_id' => 'recovery-test-fixture',
+        'plan' => [['path' => $legacy, 'old' => hash('sha256', $legacyOld), 'new' => null]],
+    ], JSON_THROW_ON_ERROR));
+    check($installer->restoreInterrupted()['status'] === 'restored',
+        'interrupted retired-file deletion is recoverable');
+    check(file_get_contents($root . '/' . $legacy) === $legacyOld,
+        'retired file restored byte-identically');
+
+    // A local modification of the old file must fail BEFORE ANY live writes.
+    writeFixture($root . '/' . $legacy, $legacyOld . '// locally changed');
+    $blockedInit = "<?php\ndefine('BOILERPLATE_VERSION', '2.5.3-beta.3');\n";
+    $blockedSha = fakeStage($root, '2.5.3-beta.3', [
+        'public_html/incl/init.php' => $blockedInit,
+        UpdateRetiredFilePlan::MEMBER => $retire,
+    ]);
+    check($installer->install('2.5.3-beta.3', $blockedSha, 'beta')['status'] === 'failed_before_changes',
+        'modified retired code fails before target changes');
+    check(file_get_contents($root . '/public_html/incl/init.php') === $nextInit,
+        'failed retirement leaves version unchanged');
+    check(str_contains(file_get_contents($root . '/' . $legacy), 'locally changed'),
+        'failed retirement preserves customized file');
+    check(!$installer->hasInterruptedUpdate(), 'failed preparation leaves no pending journal');
+
+    // Invalid, protected, duplicate and data paths fail closed at manifest review.
+    foreach (['public_html/uploads/secret.php', '../private.php',
+        'core/classes/UpdateOneClickInstaller.php', 'modules/custom/admin/view.php'] as $badPath) {
+        $bad = json_encode(['schema' => 1, 'retire' => [
+            ['path' => $badPath, 'sha256' => str_repeat('a', 64)],
+        ]], JSON_THROW_ON_ERROR);
+        try {
+            UpdateRetiredFilePlan::parse($bad, [UpdateRetiredFilePlan::MEMBER]);
+            check(false, 'unsafe retirement rejected: ' . $badPath);
+        } catch (RuntimeException $expected) {
+            check(true, 'unsafe retirement rejected: ' . $badPath);
+        }
+    }
+    try {
+        UpdateRetiredFilePlan::parse($retire, [$legacy, UpdateRetiredFilePlan::MEMBER]);
+        check(false, 'cannot retire file still in new ZIP');
+    } catch (RuntimeException $expected) {
+        check(true, 'cannot retire file still in new ZIP');
+    }
+    try {
+        UpdateRetiredFilePlan::parse(json_encode(['schema' => 1, 'retire' => [
+            ['path' => $legacy, 'sha256' => str_repeat('a', 64)],
+            ['path' => strtoupper($legacy), 'sha256' => str_repeat('a', 64)],
+        ]]), [UpdateRetiredFilePlan::MEMBER]);
+        check(false, 'case-colliding retirement rejected');
+    } catch (RuntimeException $expected) {
+        check(true, 'case-colliding retirement rejected');
+    }
     echo "RESULT: $checks PASS / 0 FAIL (" . ($GLOBALS['nativeZip'] ? 'native ZipArchive' : 'stub ZipArchive') . ", synthetic backup, NO MySQL)\n";
 } finally {
     deleteFixture($root);

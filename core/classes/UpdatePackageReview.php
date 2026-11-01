@@ -115,6 +115,15 @@ final class UpdatePackageReview
                 }
             }
             $result['files'] = count($files);
+            // Explicit retirement data must be present and safe BEFORE a release
+            // can be staged. Nothing is deleted during this read-only inspection.
+            try {
+                $retire = UpdateRetiredFilePlan::fromZip($zip, $files);
+            } catch (Throwable $e) {
+                $add('Retired CMS files', 'blocked', 'Invalid or missing explicit retirement instructions.');
+                return $result;
+            }
+            $add('Retired CMS files', 'good', count($retire) . ' explicitly declared code retirement(s).');
             // The official distribution contains public_html/.user.ini for
             // PHP upload limits. It is not a secret file, but alterations to
             // its host-level PHP directives require a separate manual review.
