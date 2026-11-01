@@ -845,6 +845,9 @@
     let pendingColumn = null;
     let chooserReturnFocus = null;
     let blockChoiceCommitted = false;
+    let insertAfterBlock = null;
+    let layoutReturnFocus = null;
+    let layoutChoiceCommitted = false;
     const translatePage = (key) => window.cmsTranslate(key);
     // Core SVG chevron indicates whether the inline block editor can expand or collapse.
     const syncBlockToggle = (button, expanded) => {
@@ -1114,7 +1117,7 @@
       summary.textContent = child.dataset.gridChildType === 'image' ? 'Intet billede valgt' : 'Ingen overskrift endnu';
     };
 
-    const addBlock = (type) => {
+    const addBlock = (type, afterBlock = null) => {
       if (!list) return null;
       if (blocks().length >= 60) {
         window.adminNotify(translatePage('page_builder_v2.limit'));
@@ -1123,8 +1126,12 @@
       const template = builderForm.querySelector(`template[data-builder-template="${CSS.escape(type)}"]`);
       if (!template) return null;
       const index = blocks().length;
-      list.insertAdjacentHTML('beforeend', template.innerHTML.replaceAll('__INDEX__', String(index)));
-      const added = blocks().at(-1);
+      const html = template.innerHTML.replaceAll('__INDEX__', String(index));
+      // Keep rows as direct siblings: existing drag, keyboard sort and reindex remain intact.
+      const anchor = afterBlock?.parentElement === list ? afterBlock : null;
+      if (anchor) anchor.insertAdjacentHTML('afterend', html);
+      else list.insertAdjacentHTML('beforeend', html);
+      const added = anchor ? anchor.nextElementSibling : blocks().at(-1);
       newGalleryDefaults(added);
       reindex();
       if (!['grid', 'grid-1', 'grid-3', 'grid-4', 'grid-5', 'grid-6'].includes(type)) {
@@ -1149,27 +1156,40 @@
       blockDialog?.querySelector('[data-page-block-choices]:not([hidden]) [data-page-block-choice]')?.focus();
     };
 
-    addButton?.addEventListener('click', () => {
-      chooserReturnFocus = addButton;
+    const showLayoutChoices = (trigger, afterBlock = null) => {
+      insertAfterBlock = afterBlock?.parentElement === list ? afterBlock : null;
+      layoutReturnFocus = trigger;
+      layoutChoiceCommitted = false;
       openDialog(layoutDialog);
       layoutDialog?.querySelector('[data-page-add-section], [data-page-add-layout]')?.focus();
+    };
+    addButton?.addEventListener('click', () => showLayoutChoices(addButton));
+    // Delegation also works for newly created rows. No additional modal or data model.
+    builderForm.addEventListener('click', (event) => {
+      const insert = event.target.closest('[data-builder-insert-after]');
+      if (!insert || !list?.contains(insert)) return;
+      const anchor = insert.closest('[data-builder-block]');
+      if (anchor?.parentElement === list) showLayoutChoices(insert, anchor);
     });
     layoutDialog?.addEventListener('click', (event) => {
       const section = event.target.closest('[data-page-add-section]');
-      if (section) {
-        const type = section.dataset.pageAddSection;
-        closeDialog(layoutDialog);
-        // Section types already use the persistent top-level PageBlocks model.
-        addBlock(type);
-        return;
-      }
       const choice = event.target.closest('[data-page-add-layout]');
-      if (!choice) return;
-      closeDialog(layoutDialog);
-      // All six layouts create persistable empty V2 rows immediately.
+      if (!section && !choice) return;
       const templates = { '100': 'grid-1', '50': 'grid', '33': 'grid-3', '25': 'grid-4', '20': 'grid-5', '16': 'grid-6' };
-      const template = templates[choice.dataset.pageAddLayout];
-      if (template) addBlock(template);
+      const type = section ? section.dataset.pageAddSection : templates[choice.dataset.pageAddLayout];
+      if (!type) return;
+      const anchor = insertAfterBlock;
+      layoutChoiceCommitted = true;
+      closeDialog(layoutDialog);
+      addBlock(type, anchor);
+    });
+    layoutDialog?.addEventListener('close', () => {
+      insertAfterBlock = null;
+      if (!layoutChoiceCommitted && layoutReturnFocus?.isConnected) {
+        layoutReturnFocus.focus({ preventScroll: true });
+      }
+      layoutReturnFocus = null;
+      layoutChoiceCommitted = false;
     });
     blockDialog?.addEventListener('click', (event) => {
       const choice = event.target.closest('[data-page-block-choice]');

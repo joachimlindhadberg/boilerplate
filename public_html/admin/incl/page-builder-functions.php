@@ -112,6 +112,13 @@ function admin_page_builder_block_editor(array $block, string|int $index): strin
         <?php endif; ?>
         <?php if ($type !== 'grid'): ?></div></div><?php endif; ?>
       </div>
+      <!-- Contextual insertion stays inside the row, preserving drag-sort siblings. -->
+      <div class="admin-page-row__insert-wrap">
+        <button type="button" class="admin-page-row__insert-after" data-builder-insert-after aria-label="<?= admin_e(t('page_builder_v2.insert_after')); ?>" title="<?= admin_e(t('page_builder_v2.insert_after')); ?>">
+          <?= admin_icon('plus', 'admin-page-row__insert-icon'); ?>
+          <span><?= admin_e(t('page_builder_v2.insert_here')); ?></span>
+        </button>
+      </div>
     </article>
     <?php
     return ob_get_clean();

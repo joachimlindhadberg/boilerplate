@@ -7762,6 +7762,20 @@
     "sv": "Lägg till en rad för att komma igång.",
     "nb": "Legg til en rad for å komme i gang."
   },
+  "page_builder_v2.insert_after": {
+    "da": "Indsæt sektion efter denne",
+    "en": "Insert section after this",
+    "de": "Abschnitt danach einfügen",
+    "sv": "Infoga sektion efter denna",
+    "nb": "Sett inn seksjon etter denne"
+  },
+  "page_builder_v2.insert_here": {
+    "da": "Indsæt her",
+    "en": "Insert here",
+    "de": "Hier einfügen",
+    "sv": "Infoga här",
+    "nb": "Sett inn her"
+  },
   "page_builder_v2.add_content": {
     "da": "Klik her for at tilføje indhold",
     "en": "Click here to add content",

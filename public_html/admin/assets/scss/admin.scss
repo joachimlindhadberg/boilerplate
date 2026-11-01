@@ -3059,3 +3059,31 @@ body.nf-admin .admin-page-section-preview__line--short { width:76%; }
   body.nf-admin .admin-page-section-preview,
   body.nf-admin .admin-page-section-preview__content { transition:none; }
 }
+
+/* Page Builder QA2: hover/focus/touch insertion point, without extra sort siblings. */
+body.nf-admin .admin-page-row { position:relative; }
+body.nf-admin .admin-page-row__insert-wrap { position:relative; z-index:2; height:0; display:flex; justify-content:center; }
+body.nf-admin .admin-page-row__insert-after {
+  position:absolute; top:-12px; display:inline-flex; align-items:center; gap:5px;
+  min-height:24px; padding:2px 10px; border:1px solid var(--admin-border);
+  border-radius:var(--admin-radius); background:var(--admin-surface); color:var(--admin-muted);
+  font:inherit; font-size:11px; line-height:1.2; cursor:pointer;
+  opacity:0; pointer-events:none; transition:opacity .12s ease;
+}
+body.nf-admin .admin-page-row__insert-icon { width:12px; height:12px; flex-shrink:0; }
+body.nf-admin .admin-page-row:hover .admin-page-row__insert-after,
+body.nf-admin .admin-page-row:focus-within .admin-page-row__insert-after,
+body.nf-admin .admin-page-row__insert-after:focus-visible { opacity:1; pointer-events:auto; }
+body.nf-admin .admin-page-row__insert-after:hover,
+body.nf-admin .admin-page-row__insert-after:focus-visible {
+  border-color:var(--admin-accent); color:var(--admin-accent); background:var(--admin-surface-soft);
+  outline-offset:2px;
+}
+/* The existing bottom Add Content control already covers the final position. */
+body.nf-admin [data-builder-list] > [data-builder-block]:last-child [data-builder-insert-after] { display:none; }
+@media (hover:none) {
+  body.nf-admin .admin-page-row__insert-after { opacity:1; pointer-events:auto; }
+}
+@media (prefers-reduced-motion:reduce) {
+  body.nf-admin .admin-page-row__insert-after { transition:none; }
+}
