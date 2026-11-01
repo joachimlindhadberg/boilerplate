@@ -1,24 +1,34 @@
-# Boilerplate CMS 2.5.0 — Release candidate
+# Boilerplate CMS 2.5.1-beta.5 — Preview release
 
-A modular, PHP/MySQL website CMS with browser-based first-time setup, Page Builder, Forms, Gallery and administration. **This is a QA/release candidate, not an approved public Stable release.**
+Boilerplate CMS is an open-source PHP/MySQL CMS with a browser-based first-time installer, Page Builder, Forms, Gallery, and a minimalist administration interface.
 
-## Read this first
+**Release status:** `2.5.1-beta.5` is a **Beta / Pre-release**, not an approved public Stable release. Local tests have passed, but real shared-hosting deployment and production recovery are not yet verified.
 
-- **New installation:** [Installation guide](docs/deployment/INSTALLATION.md).
-- **Server requirements:** [Hosting requirements](docs/deployment/HOSTING-REQUIREMENTS.md).
-- **Existing website / upgrade:** [Update and rollback policy](docs/deployment/UPDATING.md) and [Safe Update Workflow – internal package review](docs/deployment/SAFE-UPDATE-WORKFLOW.md). **Do not use the first-time installer to update an existing website.**
-- **Release status:** [V2.5.0 go-live checklist](docs/deployment/V2.5.0-GO-LIVE-GATE.md).
+## Getting started
 
-A compatible host must allow the *document root* to point to `public_html/` while the application (`core/`, `modules/`, `database/`, `storage/`, `.env`) stays in its **private parent directory**. Never expose the entire CMS source as a public document root.
+- **Fresh installation:** [Installation guide](docs/deployment/INSTALLATION.md)
+- **Hosting requirements:** [Hosting requirements](docs/deployment/HOSTING-REQUIREMENTS.md)
+- **Existing installation:** [Updates and rollback](docs/deployment/UPDATING.md). Do **not** run the first-time installer to upgrade an existing site.
+- **Historical 2.5.0 readiness assessment:** [V2.5.0 go-live gate](docs/deployment/V2.5.0-GO-LIVE-GATE.md). This is an archived assessment, not the current Beta 5 release status.
 
-The first-run wizard is **keyless**. On a publicly accessible, uninstalled site, the first person to complete it can create the administrator account. Restrict access to a **new, isolated test site** through the host until setup is complete. HTTPS and a dedicated **empty** MySQL database are required for public setup.
+## Installation and security
 
-## Scope of this release candidate
+The web server's document root must point to `public_html/`. Keep `core/`, `modules/`, `database/`, `storage/`, and `.env` outside the public document root. Never expose the whole project directory as a website.
 
-This package is based on the owner's locally accepted **QA1 4A.6.9i3** source, dated 25 October 2026. Source/package checks are not a certification for all hosting providers. No live site was modified in packaging. Software version remains `2.5.0`.
+The first-run installer is **keyless**. On an uninstalled public site, an unauthorized first visitor could create the administrator account. Restrict access to the new site until initial setup is complete. Use HTTPS and a dedicated empty MySQL database for public installation.
 
-**License:** This source package includes the GNU General Public License version 3 in `LICENSE`, consistent with the project's existing official GitHub repository license declaration. Review third-party assets and their notices separately before a public stable release.
+## Updates
 
-## 31 October 2026 source cleanup candidate
+Under **Tools → Updates**, click **Check for updates**. If newer official releases are available, select the desired version from the release list and choose **Update selected version**. There is no persistent update-channel setting on this page. A Beta / RC release is identified as a preview.
 
-The development archive keeps full tests, module-starter and F3 rehearsal evidence. The distribution archive excludes development-only tests and rehearsal helpers, and ships no local `.env`, log files, installer locks or database/media contents. A distribution candidate ZIP is **not** an automatic upgrade payload and must **not** be unpacked over an installed website. See `docs/deployment/RELEASE-CANDIDATE-2026-10-31.md`.
+The current One-Click Update is limited to **file-only releases without new database migrations**. It uses a private recovery snapshot and protected installation flow. Releases containing new migrations are refused. A release can explicitly retire a known old CMS file only if its expected SHA-256 matches; arbitrary files and user uploads are not automatically deleted.
+
+An official GitHub release must contain a matching uploaded `Boilerplate-CMS-v<version>.zip` asset. Do not extract a new distribution ZIP over an existing website manually. See the [update policy](docs/deployment/UPDATING.md) for limitations and recovery guidance.
+
+## QA scope and distribution
+
+The Beta 4 → Beta 5 file-only update was completed successfully in the local browser environment; Core QA showed 39 PASS / 0 FAIL, and three recovery bundles remained with no interrupted journal. File-retirement and rollback behavior passed isolated synthetic tests; **no real file was retired by Beta 5**. These results do not certify production hosting, live database-migration upgrades or disaster recovery on another host.
+
+The distribution excludes local `.env` secrets, user uploads, private storage, logs, and development-only tests. Back up code, configuration, database and uploads as appropriate before upgrading.
+
+**License:** GNU GPL version 3. See `LICENSE`. Review third-party assets and their notices independently before a Stable release.
