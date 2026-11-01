@@ -555,6 +555,14 @@ class ModuleManager
             return null;
         }
 
+        // Public JavaScript must follow the same confirmed-version boundary as
+        // bootActiveModules(). An unconfirmed module update must not expose new
+        // executable browser code while the module's PHP is held back.
+        $installedVersion = (string)($rows[$slug]['installed_version'] ?? '');
+        if ($installedVersion !== '' && version_compare((string)$module['version'], $installedVersion, '!=')) {
+            return null;
+        }
+
         $assetBase = realpath($this->modulesPath . DIRECTORY_SEPARATOR . $slug . DIRECTORY_SEPARATOR . 'assets');
         if ($assetBase === false || !is_dir($assetBase)) {
             return null;
