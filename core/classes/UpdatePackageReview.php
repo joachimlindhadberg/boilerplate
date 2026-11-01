@@ -204,6 +204,36 @@ final class UpdatePackageReview
             $result['new_migrations'] = $new;
             $add('Migration history', $changed ? 'blocked' : ($new ? 'review' : 'good'),
                 $changed . ' missing/changed historical migration(s); ' . $new . ' new migration(s).');
+            // Historical SQL files and the first-install schema are not run by
+            // MigrationRunner. A file-only update must never silently change
+            // these database sources; a database-aware upgrade requires its
+            // own separately verified migration/restore procedure.
+            $installedSql = $this->currentDatabaseSourceHashes();
+            $releaseSql = [];
+            foreach ($files as $name => $index) {
+                if (!self::isDatabaseSource($name)) continue;
+                $info = $zip->statIndex($index);
+                if (!is_array($info) || !isset($info['size'])
+                    || (int)$info['size'] < 0 || (int)$info['size'] > self::MAX_MIGRATION_BYTES) {
+                    $add('Database SQL sources', 'blocked', 'Oversized or unreadable SQL source.');
+                    return $result;
+                }
+                $content = $zip->getFromIndex($index, self::MAX_MIGRATION_BYTES);
+                if (!is_string($content) || strlen($content) !== (int)$info['size']) {
+                    $add('Database SQL sources', 'blocked', 'Unreadable SQL source.');
+                    return $result;
+                }
+                $releaseSql[$name] = hash('sha256', $content);
+            }
+            $changedSql = 0;
+            foreach ($installedSql as $name => $digest) {
+                if (!isset($releaseSql[$name]) || !hash_equals($digest, $releaseSql[$name])) {
+                    $changedSql++;
+                }
+            }
+            $addedSql = count(array_diff_key($releaseSql, $installedSql));
+            $add('Database SQL sources', ($changedSql || $addedSql) ? 'blocked' : 'good',
+                $changedSql . ' missing/changed installed source(s); ' . $addedSql . ' new SQL source(s).');
             // A well-formed ZIP is not proof of authentic/untampered software.
             $add('Publisher authenticity', 'review', 'No trusted signature or authenticated release manifest is verified.');
             $add('Backup and rollback', 'review', 'No full backup, staging upgrade or rollback has been verified.');
@@ -281,6 +311,42 @@ final class UpdatePackageReview
             }
         }
         return $result;
+    }
+
+    /** @return array<string,string> SHA-256 values for protected SQL sources */
+    private function currentDatabaseSourceHashes(): array
+    {
+        $directory = $this->root . '/database/migrations';
+        $schema = $this->root . '/database/install/empty-schema.sql';
+        if (!is_dir($directory) || is_link($directory)
+            || !is_file($schema) || is_link($schema)
+            || is_link($this->root . '/database/install')) {
+            throw new RuntimeException('Installed database SQL sources are missing or unsafe.');
+        }
+        $paths = glob($directory . '/*');
+        if ($paths === false) throw new RuntimeException('Cannot inspect installed SQL migrations.');
+        $paths[] = $schema;
+        $result = [];
+        foreach ($paths as $path) {
+            if (!self::isDatabaseSource(substr($path, strlen($this->root) + 1))) continue;
+            if (!is_file($path) || is_link($path)) {
+                throw new RuntimeException('Unsafe installed database SQL source.');
+            }
+            $size = filesize($path);
+            if (!is_int($size) || $size < 0 || $size > self::MAX_MIGRATION_BYTES) {
+                throw new RuntimeException('Oversized installed database SQL source.');
+            }
+            $digest = hash_file('sha256', $path);
+            if (!is_string($digest)) throw new RuntimeException('Cannot hash installed database SQL source.');
+            $result[substr($path, strlen($this->root) + 1)] = $digest;
+        }
+        return $result;
+    }
+
+    private static function isDatabaseSource(string $path): bool
+    {
+        return $path === 'database/install/empty-schema.sql'
+            || (bool)preg_match('~^database/migrations/[^/]+\.sql$~iD', $path);
     }
 
     private static function isMigration(string $path): bool
