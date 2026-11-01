@@ -75,7 +75,7 @@ final class SiteBackup
                 'contents' => $contents,
                 'contains_sensitive_data' => true,
                 'excludes' => ['.env', 'application code', 'private logs', 'unregistered directories'],
-                'restore' => 'Fresh empty database only; see docs/releases/BACKUP-MEDIA-V2.3.6.md',
+                'restore' => 'Manual restore to an EMPTY database only; guide: https://github.com/joachimlindhadberg/boilerplate/blob/main/docs/deployment/SITE-BACKUP-RESTORE.md',
             ];
             $manifestFile = $work . '/manifest.json';
             if (file_put_contents($manifestFile, json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)) === false) {
