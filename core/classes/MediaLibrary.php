@@ -352,10 +352,15 @@ class MediaLibrary
 
         $base = pathinfo($originalName, PATHINFO_FILENAME);
         $safeBase = $this->safeFileBase($base);
-        $storedName = $safeBase . '-' . bin2hex(random_bytes(5)) . '.' . $definition['extension'];
+        $storedName = $this->uniqueStoredName($absoluteDir, $safeBase, $definition['extension']);
         $relativePath = $relativeDir . '/' . $storedName;
         $absolutePath = $absoluteDir . '/' . $storedName;
 
+        // Do not overwrite an existing upload if the target changes after name selection.
+        // A 128-bit random suffix makes concurrent filename collisions impractical.
+        if (self::pathOccupied($absolutePath)) {
+            throw new RuntimeException('Uploadens filnavn er allerede i brug. Prøv igen.');
+        }
         if (!move_uploaded_file($tmp, $absolutePath)) {
             throw new RuntimeException('Filen kunne ikke gemmes på serveren.');
         }
@@ -491,6 +496,23 @@ class MediaLibrary
             return null;
         }
         return PUBLICPATH . '/' . $relative;
+    }
+
+    /** Allocate a filename without overwriting an existing file or symlink. */
+    private function uniqueStoredName(string $directory, string $safeBase, string $extension): string
+    {
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            $name = $safeBase . '-' . bin2hex(random_bytes(16)) . '.' . $extension;
+            if (!self::pathOccupied($directory . '/' . $name)) {
+                return $name;
+            }
+        }
+        throw new RuntimeException('Kunne ikke oprette et unikt filnavn til uploaden.');
+    }
+
+    private static function pathOccupied(string $path): bool
+    {
+        return file_exists($path) || is_link($path);
     }
 
     private function safeFileBase(string $value): string
