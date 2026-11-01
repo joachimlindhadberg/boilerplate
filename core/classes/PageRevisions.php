@@ -113,7 +113,7 @@ class PageRevisions
      * Restore a revision as a new version. Never delete or overwrite old revisions.
      * Shared Db + disabled inner transactions guarantee all-or-nothing updates.
      */
-    public function restore(int $pageId, int $revisionId, ?int $userId): int
+    public function restore(int $pageId, int $revisionId, ?int $userId, string $actorRole): int
     {
         $this->db->beginTransaction();
         try {
@@ -124,6 +124,9 @@ class PageRevisions
             if (!$revision) throw new RuntimeException('Den valgte version findes ikke for denne side.');
             $desired = $revision['data'];
             $previous = $this->snapshot($pageId);
+            if (!LegacyHtmlPolicy::canRestore($previous['page'], $desired['page'], $actorRole)) {
+                throw new RuntimeException('Denne version kræver administratorrettigheder til Legacy HTML.');
+            }
             if ($this->count($pageId) === 0) {
                 $this->record($pageId, $userId, 'baseline', $previous);
             } else {

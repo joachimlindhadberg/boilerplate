@@ -71,6 +71,11 @@ if ($mode === 'new') {
             $form = $payload['form'];
             $builderBlocks = $builderResult['blocks'];
             $errors = $payload['errors'];
+            try {
+                $payload['data'] = LegacyHtmlPolicy::prepareSave($payload['data'], null, (string)($auth->role() ?? ''));
+            } catch (InvalidArgumentException $e) {
+                $errors['form'] = $e->getMessage();
+            }
             if (!empty($builderResult['errors'])) {
                 $errors['builder'] = implode(' ', $builderResult['errors']);
             }
@@ -133,6 +138,11 @@ if ($mode === 'edit') {
         admin_render('not-found', ['user' => $auth->user()]);
         exit;
     }
+    if (!LegacyHtmlPolicy::canEditPage($page, (string)($auth->role() ?? ''))) {
+        http_response_code(403);
+        admin_render('forbidden', ['user' => $auth->user()]);
+        exit;
+    }
     $isSystem = Pages::isSystemSlug((string)$page['page_slug']);
     $parents = $pagesModel->getParentOptions($id);
     $errors = [];
@@ -151,6 +161,11 @@ if ($mode === 'edit') {
             $form = $payload['form'];
             $builderBlocks = $builderResult['blocks'];
             $errors = $payload['errors'];
+            try {
+                $payload['data'] = LegacyHtmlPolicy::prepareSave($payload['data'], $page, (string)($auth->role() ?? ''));
+            } catch (InvalidArgumentException $e) {
+                $errors['form'] = $e->getMessage();
+            }
             if (!empty($builderResult['errors'])) {
                 $errors['builder'] = implode(' ', $builderResult['errors']);
             }
@@ -237,7 +252,7 @@ if ($mode === 'history' || $mode === 'revision' || $mode === 'restore') {
         }
         $revisionId = max(0, (int)($_POST['revision_id'] ?? 0));
         try {
-            $revisionsModel->restore($id, $revisionId, (int)($auth->user()['id'] ?? 0));
+            $revisionsModel->restore($id, $revisionId, (int)($auth->user()['id'] ?? 0), (string)($auth->role() ?? ''));
             admin_log_activity('restored', 'page', $id, (string)$page['page_title']);
             admin_set_notice('Versionen er gendannet. Den tidligere aktuelle version er bevaret i historikken.');
             admin_redirect('/admin/sider?mode=history&id=' . $id);

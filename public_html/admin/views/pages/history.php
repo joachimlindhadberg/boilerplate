@@ -11,7 +11,7 @@ ob_start();
 <div class="admin-detail-back"><a class="admin-back-link" href="/admin/sider?mode=view&amp;id=<?= $id; ?>"><?= admin_icon('arrow-left', 'admin-back-link__icon'); ?><?= admin_e(t('Tilbage til siden')); ?></a></div>
 <div class="admin-page-titlebar admin-page-titlebar--split">
   <div><h1><?= admin_e(t('Versionshistorik')); ?></h1><p><?= admin_e((string)($pageRecord['page_title'] ?? t('Side'))); ?> · Tidligere gemte versioner af sideindhold og Page Builder.</p></div>
-  <a class="admin-button admin-button--secondary" href="/admin/sider?mode=edit&amp;id=<?= $id; ?>"><?= admin_e(t('Rediger side')); ?></a>
+  <?php if (LegacyHtmlPolicy::canEditPage($pageRecord, (string)($user['role'] ?? ''))): ?><a class="admin-button admin-button--secondary" href="/admin/sider?mode=edit&amp;id=<?= $id; ?>"><?= admin_e(t('Rediger side')); ?></a><?php endif; ?>
 </div>
 <?php if (!empty($notice)): ?><div class="admin-notice admin-notice--<?= admin_e((string)($notice['type'] ?? 'success')); ?>" role="status"><?= admin_e((string)($notice['message'] ?? '')); ?></div><?php endif; ?>
 <section class="admin-panel" aria-labelledby="revision-list-title">

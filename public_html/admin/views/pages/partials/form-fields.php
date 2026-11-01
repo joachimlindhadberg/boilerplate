@@ -8,6 +8,7 @@ $isEdit = !empty($isEdit);
 $isSystem = !empty($isSystem);
 $pageId = (int)($pageRecord['id'] ?? 0);
 $contentMode = (($form['content_mode'] ?? 'builder') === 'legacy') ? 'legacy' : 'builder';
+$canUnfilteredHtml = LegacyHtmlPolicy::canUseRawHtml((string)($user['role'] ?? ''));
 $fieldError = static fn(string $key): string => t((string)($errors[$key] ?? ''));
 $definitions = PageBlocks::definitions();
 $pageTemplates = PageTemplateCatalog::all();
@@ -40,7 +41,7 @@ ob_start();
           <div class="admin-content-mode" role="group" aria-labelledby="content-mode-label">
             <div><strong id="content-mode-label"><?= admin_e(t('Editor')); ?></strong><span><?= admin_e(t('Vælg hvordan denne sides indhold rendres.')); ?></span></div>
             <label><input type="radio" name="content_mode" value="builder" <?= $contentMode === 'builder' ? 'checked' : ''; ?> data-content-mode> <?= admin_e(t('Page Builder')); ?></label>
-            <label><input type="radio" name="content_mode" value="legacy" <?= $contentMode === 'legacy' ? 'checked' : ''; ?> data-content-mode> <?= admin_e(t('Legacy HTML')); ?></label>
+            <?php if ($canUnfilteredHtml): ?><label><input type="radio" name="content_mode" value="legacy" <?= $contentMode === 'legacy' ? 'checked' : ''; ?> data-content-mode> <?= admin_e(t('Legacy HTML')); ?></label><?php endif; ?>
           </div>
 
           <div class="admin-builder-mode" data-builder-mode="builder" <?= $contentMode !== 'builder' ? 'hidden' : ''; ?>>
@@ -61,10 +62,12 @@ ob_start();
             <p class="admin-builder-note"><?= admin_e(t('page_builder_v2.compat_note')); ?></p>
           </div>
 
+          <?php if ($canUnfilteredHtml): ?>
           <div class="admin-builder-mode admin-page-content-editor" data-builder-mode="legacy" <?= $contentMode !== 'legacy' ? 'hidden' : ''; ?>>
             <div class="admin-notice admin-notice--info"><strong>Legacy HTML:</strong> <?= admin_e(t('notice.legacy_html_help')); ?></div>
             <div class="admin-field"><label for="page-content"><?= admin_e(t('HTML / komponenter')); ?></label><textarea id="page-content" name="page_content" rows="24" spellcheck="false"><?= admin_e($form['page_content'] ?? ''); ?></textarea></div>
           </div>
+          <?php endif; ?>
         </div>
       </section>
 

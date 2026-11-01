@@ -32,14 +32,16 @@ $longDiff = static function (string $heading, string $before, string $after) use
 $oldBlocksJson = json_encode($oldBlocks, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
 $nowBlocksJson = json_encode($nowBlocks, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE);
 $changed = ($old !== $now || $oldBlocks !== $nowBlocks);
+$canEditPage = LegacyHtmlPolicy::canEditPage($pageRecord, (string)($user['role'] ?? ''));
+$canRestore = LegacyHtmlPolicy::canRestore($now, $old, (string)($user['role'] ?? ''));
 ob_start();
 ?>
 <div class="admin-detail-back"><a class="admin-back-link" href="/admin/sider?mode=history&amp;id=<?= $id; ?>"><?= admin_icon('arrow-left', 'admin-back-link__icon'); ?><?= admin_e(t('Tilbage til versionshistorik')); ?></a></div>
 <div class="admin-page-titlebar admin-page-titlebar--split">
   <div><h1>Version <?= $number; ?></h1><p><?= admin_e((string)($pageRecord['page_title'] ?? t('Side'))); ?> · <?= admin_e(date('d.m.Y H:i', strtotime((string)$revision['created_at']))); ?></p></div>
   <div class="admin-page-actions">
-    <a class="admin-button admin-button--secondary" href="/admin/sider?mode=edit&amp;id=<?= $id; ?>"><?= admin_e(t('Rediger side')); ?></a>
-    <?php if ($changed): ?><button type="button" class="admin-button" data-admin-open-delete="page-revision-restore"><?= admin_e(t('Gendan denne version')); ?></button><?php endif; ?>
+    <?php if ($canEditPage): ?><a class="admin-button admin-button--secondary" href="/admin/sider?mode=edit&amp;id=<?= $id; ?>"><?= admin_e(t('Rediger side')); ?></a><?php endif; ?>
+    <?php if ($changed && $canRestore): ?><button type="button" class="admin-button" data-admin-open-delete="page-revision-restore"><?= admin_e(t('Gendan denne version')); ?></button><?php endif; ?>
   </div>
 </div>
 <?php if (!$changed): ?><div class="admin-notice" role="status"><?= admin_e(t('Denne version svarer til sidens nuværende indhold.')); ?></div><?php endif; ?>
@@ -53,7 +55,7 @@ ob_start();
 </section>
 <?php $longDiff('HTML-indhold', (string)($old['page_content'] ?? ''), (string)($now['page_content'] ?? '')); ?>
 <?php $longDiff('Page Builder-data', (string)$oldBlocksJson, (string)$nowBlocksJson); ?>
-<?php if ($changed): ?>
+<?php if ($changed && $canRestore): ?>
 <dialog class="admin-modal admin-modal--sm" data-admin-modal id="page-revision-restore" aria-labelledby="revision-restore-title">
   <form method="post" class="admin-modal__surface" action="/admin/sider?mode=restore&amp;id=<?= $id; ?>">
     <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">

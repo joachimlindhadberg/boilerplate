@@ -56,7 +56,7 @@ ob_start();
         <td><?= !empty($item['updated']) ? admin_e(date('d.m.Y H:i', strtotime((string)$item['updated']))) : '—'; ?></td>
         <td class="admin-list-table__actions"><?= AdminListUI::actionGroup([
           ['icon' => 'eye', 'label' => t('Se side'), 'url' => '/admin/sider?mode=view&id=' . $id],
-          ['icon' => 'edit', 'label' => t('Rediger'), 'url' => '/admin/sider?mode=edit&id=' . $id],
+          ...(LegacyHtmlPolicy::canEditPage($item, (string)($user['role'] ?? '')) ? [['icon' => 'edit', 'label' => t('Rediger'), 'url' => '/admin/sider?mode=edit&id=' . $id]] : []),
           ['type' => 'button', 'icon' => 'delete', 'label' => $canDelete ? t('Slet side') : t($isSystem ? 'pages.cannot_delete_system' : 'pages.cannot_delete_children'), 'tone' => 'danger', 'attributes' => [
             'data-admin-open-delete' => 'page-list-delete-dialog',
             'data-page-delete-id' => (string)$id,

@@ -34,7 +34,7 @@ ob_start();
   </div>
   <div class="admin-page-actions">
     <a class="admin-button admin-button--secondary" href="<?= admin_e($url); ?>" target="_blank" rel="noopener noreferrer"><?= admin_icon('external', 'admin-button__icon'); ?><?= admin_e(t('Se side')); ?></a>
-    <a class="admin-button" href="/admin/sider?mode=edit&amp;id=<?= $id; ?>"><?= admin_icon('edit', 'admin-button__icon'); ?><?= admin_e(t('Rediger')); ?></a>
+    <?php if (LegacyHtmlPolicy::canEditPage($pageRecord, (string)($user['role'] ?? ''))): ?><a class="admin-button" href="/admin/sider?mode=edit&amp;id=<?= $id; ?>"><?= admin_icon('edit', 'admin-button__icon'); ?><?= admin_e(t('Rediger')); ?></a><?php endif; ?>
   </div>
 </header>
 <?php if (!empty($notice)): ?><div class="admin-notice admin-notice--<?= admin_e((string)($notice['type'] ?? 'success')); ?>" role="status"><?= admin_e((string)($notice['message'] ?? '')); ?></div><?php endif; ?>

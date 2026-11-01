@@ -12,6 +12,7 @@ final class CapabilityRegistry
     private const CORE = [
         'admin.access' => ['admin', 'editor'],
         'content.manage' => ['admin', 'editor'],
+        'content.html.unfiltered' => ['admin'],
         'media.manage' => ['admin', 'editor'],
         'modules.manage' => ['admin'],
         'users.manage' => ['admin'],
