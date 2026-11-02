@@ -2556,7 +2556,8 @@ body.nf-admin .forms-builder [hidden] { display:none !important; }
 /* V2.4.4x – Page Builder V2 UI; shared Core-admin presentation. */
 .admin-page-builder-panel .admin-panel__header--builder { display:flex; justify-content:space-between; gap:12px; align-items:center; }
 .admin-page-builder-panel .admin-panel__header--builder .admin-button { flex-shrink:0; }
-.admin-page-builder-panel .admin-builder-list { gap:10px; }
+/* Reserve a genuine insertion lane between Page Builder sections: 8 + 28 + 8px. */
+.admin-page-builder-panel .admin-builder-list { gap:44px; }
 .admin-page-row { container-type:inline-size; }
 .admin-page-row .admin-builder-block__header { background:var(--admin-surface-soft); }
 .admin-page-row__heading { display:grid; min-width:0; gap:3px; }
@@ -3012,8 +3013,9 @@ body.nf-admin .admin-gallery-settings__options { display:grid; gap:12px; min-wid
 body.nf-admin .admin-gallery-settings .admin-form-row { min-width:0; }
 body.nf-admin .admin-gallery-settings .admin-toggle { min-width:0; }
 
-/* Updates: Core-owned compact release picker. */
-.admin-update-options { display: grid; border: 1px solid var(--admin-border); border-radius: 4px; overflow: hidden; }
+/* Updates: use the Core content spacing and radius for the release selection flow. */
+.admin-tools-body > form[data-official-update-form] { display:grid; gap:16px; }
+.admin-update-options { display: grid; border: 1px solid var(--admin-border); border-radius: var(--admin-radius); overflow: hidden; }
 .admin-update-option { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px 18px; padding: 13px 15px; border-bottom: 1px solid var(--admin-border); }
 .admin-update-option:last-child { border-bottom: 0; }
 .admin-update-option__choice { display: flex; align-items: flex-start; gap: 12px; min-width: 0; flex: 1 1 240px; cursor: pointer; }
@@ -3064,8 +3066,8 @@ body.nf-admin .admin-page-section-preview__line--short { width:76%; }
 body.nf-admin .admin-page-row { position:relative; }
 body.nf-admin .admin-page-row__insert-wrap { position:relative; z-index:2; height:0; display:flex; justify-content:center; }
 body.nf-admin .admin-page-row__insert-after {
-  position:absolute; top:-12px; display:inline-flex; align-items:center; gap:5px;
-  min-height:24px; padding:2px 10px; border:1px solid var(--admin-border);
+  position:absolute; top:8px; display:inline-flex; align-items:center; gap:5px;
+  min-height:28px; padding:2px 10px; border:1px solid var(--admin-border);
   border-radius:var(--admin-radius); background:var(--admin-surface); color:var(--admin-muted);
   font:inherit; font-size:11px; line-height:1.2; cursor:pointer;
   opacity:0; pointer-events:none; transition:opacity .12s ease;
