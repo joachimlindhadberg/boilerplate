@@ -170,27 +170,61 @@ final class GalleryRepository
         return ['ok' => true, 'message' => 'Galleriet er slettet.'];
     }
 
+    /**
+     * Page Builder usage counts for the visible gallery list (one DB scan).
+     * The deletion guard still independently rechecks references on POST.
+     *
+     * @param array<int,int> $ids
+     * @return array<int,int>
+     */
+    public function pageBuilderUsageCounts(array $ids): array
+    {
+        $components = [];
+        foreach ($ids as $id) {
+            $id = (int)$id;
+            if ($id > 0) $components[$id] = 'gallery:gallery-' . $id;
+        }
+        if ($components === []) return [];
+
+        $usage = PageComponentUsage::findMany($this->db, array_values($components));
+        $counts = [];
+        foreach ($components as $id => $component) {
+            $counts[$id] = (int)($usage[$component]['count'] ?? 0);
+        }
+        return $counts;
+    }
+
+
+    /**
+     * Resolve referenced Page Builder page IDs to display names in one read-only query.
+     * The caller must pass IDs reported by pageBuilderUsage() (the deletion guard).
+     * Limit only the display list, never the usage count or deletion protection.
+     *
+     * @param array<int,int> $pageIds
+     * @return array<int,array<string,mixed>>
+     */
+    public function referencedPageSummaries(array $pageIds, int $limit = 20): array
+    {
+        $ids = [];
+        foreach ($pageIds as $id) {
+            $id = (int)$id;
+            if ($id > 0) $ids[$id] = $id;
+        }
+        if ($ids === []) return [];
+        $ids = array_slice(array_values($ids), 0, max(1, min(20, $limit)));
+        $placeholders = implode(', ', array_fill(0, count($ids), '?'));
+        return $this->db->fetchArray(
+            'SELECT id, page_title, content_mode FROM pages WHERE id IN (' . $placeholders . ') ORDER BY page_title ASC, id ASC',
+            $ids
+        );
+    }
+
     /** @return array{count:int,page_ids:array<int,int>} */
     public function pageBuilderUsage(int $galleryId): array
     {
         if ($galleryId < 1) return ['count' => 0, 'page_ids' => []];
-        $needle = 'gallery:gallery-' . $galleryId;
-        $pageIds = [];
-        foreach ($this->db->fetchArray('SELECT page_id, block_data FROM page_blocks') as $row) {
-            $data = json_decode((string)($row['block_data'] ?? ''), true);
-            if (is_array($data) && $this->containsComponent($data, $needle)) {
-                $pageIds[(int)$row['page_id']] = true;
-            }
-        }
-        return ['count' => count($pageIds), 'page_ids' => array_keys($pageIds)];
-    }
-
-    private function containsComponent(array $data, string $needle): bool
-    {
-        foreach ($data as $key => $value) {
-            if ($key === 'component' && (string)$value === $needle) return true;
-            if (is_array($value) && $this->containsComponent($value, $needle)) return true;
-        }
-        return false;
+        // Preserve Gallery's historical full scan: it must find every saved
+        // placement, including hidden sections and legacy serialized blocks.
+        return PageComponentUsage::find($this->db, 'gallery:gallery-' . $galleryId, true);
     }
 }

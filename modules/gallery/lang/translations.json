@@ -245,11 +245,11 @@
     "nb": "Dra for å flytte bildet. Alt + pil opp/ned flytter med tastaturet."
   },
   "gallery_remove_image": {
-    "da": "Fjern billede",
-    "en": "Remove image",
-    "de": "Bild entfernen",
-    "sv": "Ta bort bild",
-    "nb": "Fjern bilde"
+    "en": "Remove from gallery",
+    "da": "Fjern fra galleri",
+    "de": "Aus Galerie entfernen",
+    "sv": "Ta bort från galleriet",
+    "nb": "Fjern fra galleri"
   },
   "gallery_remove_confirm": {
     "da": "Fjern billedet fra galleriet? Billedet forbliver i Medier.",
@@ -397,5 +397,75 @@
     "de": "Diashow abspielen",
     "sv": "Starta bildspel",
     "nb": "Spill av bildefremvisning"
+  },
+  "gallery_description_help": {
+    "en": "Optional internal note. Not displayed on the website.",
+    "da": "Valgfri intern note. Vises ikke på hjemmesiden.",
+    "de": "Optionale interne Notiz. Wird nicht auf der Website angezeigt.",
+    "sv": "Valfri intern anteckning. Visas inte på webbplatsen.",
+    "nb": "Valgfritt internt notat. Vises ikke på nettstedet."
+  },
+  "gallery_used_one": {
+    "en": "Currently used on 1 page.",
+    "da": "Bruges aktuelt på 1 side.",
+    "de": "Wird derzeit auf 1 Seite verwendet.",
+    "sv": "Används för närvarande på 1 sida.",
+    "nb": "Brukes for øyeblikket på 1 side."
+  },
+  "gallery_used_many": {
+    "en": "Currently used on {count} pages.",
+    "da": "Bruges aktuelt på {count} sider.",
+    "de": "Wird derzeit auf {count} Seiten verwendet.",
+    "sv": "Används för närvarande på {count} sidor.",
+    "nb": "Brukes for øyeblikket på {count} sider."
+  },
+  "gallery_unused": {
+    "en": "Not used on any pages yet.",
+    "da": "Bruges endnu ikke på nogen sider.",
+    "de": "Wird noch auf keiner Seite verwendet.",
+    "sv": "Används ännu inte på någon sida.",
+    "nb": "Brukes ennå ikke på noen sider."
+  },
+  "gallery_add_to_page": {
+    "en": "To use this gallery, add a Dynamic component in Page Builder and select:",
+    "da": "For at bruge galleriet skal du tilføje en dynamisk komponent i Page Builder og vælge:",
+    "de": "Um diese Galerie zu verwenden, fügen Sie im Page Builder eine dynamische Komponente hinzu und wählen Sie:",
+    "sv": "För att använda galleriet lägger du till en dynamisk komponent i Page Builder och väljer:",
+    "nb": "For å bruke galleriet legger du til en dynamisk komponent i Page Builder og velger:"
+  },
+  "gallery_additional_pages": {
+    "en": "And {count} more pages.",
+    "da": "Og {count} sider mere.",
+    "de": "Und {count} weitere Seiten.",
+    "sv": "Och {count} sidor till.",
+    "nb": "Og {count} sider til."
+  },
+  "gallery_untitled_page": {
+    "en": "Untitled page",
+    "da": "Side uden titel",
+    "de": "Seite ohne Titel",
+    "sv": "Sida utan titel",
+    "nb": "Side uten tittel"
+  },
+  "gallery_images_remain": {
+    "en": "Images in Media will not be deleted.",
+    "da": "Billederne i Medier bliver ikke slettet.",
+    "de": "Bilder in der Mediathek werden nicht gelöscht.",
+    "sv": "Bilderna i Media tas inte bort.",
+    "nb": "Bildene i Medier blir ikke slettet."
+  },
+  "gallery_media_picker_error": {
+    "en": "Could not load Media. Please try again.",
+    "da": "Mediebiblioteket kunne ikke indlæses. Prøv igen.",
+    "de": "Die Mediathek konnte nicht geladen werden. Bitte erneut versuchen.",
+    "sv": "Det gick inte att läsa in Media. Försök igen.",
+    "nb": "Kunne ikke laste inn Medier. Prøv igjen."
+  },
+  "gallery_additional_page": {
+    "en": "And 1 more page.",
+    "da": "Og 1 side mere.",
+    "de": "Und 1 weitere Seite.",
+    "sv": "Och 1 sida till.",
+    "nb": "Og 1 side til."
   }
 }

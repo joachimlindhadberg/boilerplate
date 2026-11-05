@@ -21,34 +21,11 @@ class PageBlocks
 
     public static function definitions(): array
     {
+        // New Page Builder workflow: one section container, content inside columns.
         return [
-            'hero' => [
-                'label' => 'Hero',
-                'description' => 'Stor sideintro med valgfrit baggrundsbillede.',
-            ],
-            'intro' => [
-                'label' => 'Intro',
-                'description' => 'Kicker, overskrift og introduktion i to kolonner.',
-            ],
-            'text' => [
-                'label' => 'Tekstsektion',
-                'description' => 'Kontrolleret tekstsektion med valgfri overskrift.',
-            ],
-            'text_image' => [
-                'label' => 'Tekst + billede',
-                'description' => 'Tekst og billede i et responsivt split-layout.',
-            ],
-            'cta' => [
-                'label' => 'CTA',
-                'description' => 'Kort call-to-action med én kontrolleret knap.',
-            ],
-            'component' => [
-                'label' => 'Dynamisk komponent',
-                'description' => 'Indsæt en godkendt dynamisk komponent fra databasen.',
-            ],
             'grid' => [
-                'label' => 'Grid / kolonner',
-                'description' => '2–6 responsive kolonner med indhold i hver kolonne.',
+                'label' => 'Sektion',
+                'description' => 'Sektion med 1–6 kolonner og indhold i hver kolonne.',
             ],
         ];
     }
@@ -265,7 +242,7 @@ class PageBlocks
             // Never regenerate IDs during frontend rendering.
             $clean['section_id'] = self::uniqueSectionId($data['section_id'] ?? null, $usedSectionIds);
             // One consistent top-level setting for all sections, including Hero and Grid.
-            $clean['theme'] = self::normalTheme((string)($data['theme'] ?? ($type === 'hero' ? 'dark' : 'light')));
+            $clean['theme'] = self::normalTheme((string)($data['theme'] ?? 'light'));
             $clean['container_width'] = self::normalContainerWidth((string)($data['container_width'] ?? 'standard'));
             $blocks[] = ['type' => $type, 'status' => $status, 'data' => $clean];
         }
@@ -295,84 +272,9 @@ class PageBlocks
 
     private static function normalizeTopLevelData(string $type, array $data, int $position, array &$errors): array
     {
-        $text = static fn(array $source, string $key, int $max = 5000): string => self::trimmed($source[$key] ?? '', $max);
-        $theme = static fn(array $source): string => self::normalTheme((string)($source['theme'] ?? 'light'));
-
-        switch ($type) {
-            case 'hero':
-                $clean = [
-                    'kicker' => $text($data, 'kicker', 160),
-                    'title' => $text($data, 'title', 255),
-                    'lead' => $text($data, 'lead', 1200),
-                    'image_id' => max(0, (int)($data['image_id'] ?? 0)),
-                    'image_path' => self::safePath($text($data, 'image_path', 500)),
-                    'primary_label' => $text($data, 'primary_label', 80),
-                    'primary_url' => self::safeUrl($text($data, 'primary_url', 500)),
-                    'secondary_label' => $text($data, 'secondary_label', 80),
-                    'secondary_url' => self::safeUrl($text($data, 'secondary_url', 500)),
-                ];
-                if ($clean['title'] === '') {
-                    $errors[] = 'Hero-sektionen på placering ' . ($position + 1) . ' mangler en overskrift.';
-                }
-                return $clean;
-
-            case 'intro':
-                return [
-                    'kicker' => $text($data, 'kicker', 160),
-                    'title' => $text($data, 'title', 255),
-                    'body' => $text($data, 'body', 12000),
-                    'theme' => $theme($data),
-                ];
-
-            case 'text':
-                return [
-                    'kicker' => $text($data, 'kicker', 160),
-                    'title' => $text($data, 'title', 255),
-                    'body' => $text($data, 'body', 16000),
-                    'theme' => $theme($data),
-                    'layout' => (($data['layout'] ?? 'split') === 'stacked') ? 'stacked' : 'split',
-                ];
-
-            case 'text_image':
-                return [
-                    'kicker' => $text($data, 'kicker', 160),
-                    'title' => $text($data, 'title', 255),
-                    'body' => $text($data, 'body', 12000),
-                    'image_id' => max(0, (int)($data['image_id'] ?? 0)),
-                    'image_path' => self::safePath($text($data, 'image_path', 500)),
-                    'image_alt' => $text($data, 'image_alt', 255),
-                    'image_side' => (($data['image_side'] ?? 'right') === 'left') ? 'left' : 'right',
-                    'theme' => $theme($data),
-                ];
-
-            case 'cta':
-                return [
-                    'kicker' => $text($data, 'kicker', 160),
-                    'title' => $text($data, 'title', 255),
-                    'body' => $text($data, 'body', 3000),
-                    'button_label' => $text($data, 'button_label', 80),
-                    'button_url' => self::safeUrl($text($data, 'button_url', 500)),
-                    'theme' => $theme($data),
-                ];
-
-            case 'component':
-                $component = self::normalComponent((string)($data['component'] ?? ''));
-                if ($component === '') {
-                    $errors[] = 'Dynamisk komponent på placering ' . ($position + 1) . ' er ikke gyldig.';
-                }
-                return [
-                    'kicker' => $text($data, 'kicker', 160),
-                    'title' => $text($data, 'title', 255),
-                    'component' => $component,
-                    'theme' => $theme($data),
-                    ...self::galleryDisplaySettings($component, $data),
-                ];
-
-            case 'grid':
-                return self::normalizeGridData($data, $position, $errors);
-        }
-
-        return [];
+        // Only grid/section is accepted as a top-level type; legacy types are
+        // rejected by normalizeSubmitted, not silently removed from saved data.
+        return $type === 'grid' ? self::normalizeGridData($data, $position, $errors) : [];
     }
 
     private static function normalizeGridData(array $data, int $position, array &$errors): array
@@ -440,13 +342,49 @@ class PageBlocks
             $columns[] = ['blocks' => $cleanChildren];
         }
 
+        $variant = ($data['section_variant'] ?? 'standard') === 'hero' ? 'hero' : 'standard';
+        $dedicatedHero = $variant === 'hero' && ($data['hero_layout'] ?? '') === 'dedicated';
+        if ($dedicatedHero) {
+            // A forged or stale POST must never silently throw away old column content.
+            foreach ($columnsRaw as $column) {
+                if (is_array($column) && !empty($column['blocks'])) {
+                    $errors[] = 'Hero-sektionen indeholder kolonneblokke. Bevar det eksisterende layout, før du ændrer typen.';
+                    break;
+                }
+            }
+        }
+        $hero = [];
+        if ($variant === 'hero') {
+            $height = (string)($data['hero_height'] ?? 'large');
+            $hero = [
+                'section_variant' => 'hero',
+                'hero_image_id' => max(0, (int)($data['hero_image_id'] ?? 0)),
+                'hero_image_path' => self::safePath(self::trimmed($data['hero_image_path'] ?? '', 500)),
+                'hero_height' => in_array($height, ['auto', 'large', 'screen'], true) ? $height : 'large',
+                'hero_overlay' => ($data['hero_overlay'] ?? '1') === '0' ? '0' : '1',
+                'hero_overlay_opacity' => max(0, min(80, (int)($data['hero_overlay_opacity'] ?? 40))),
+                'hero_parallax' => ($data['hero_parallax'] ?? '0') === '1' ? '1' : '0',
+            ];
+            if ($dedicatedHero) {
+                // Data in the existing section JSON; no database migration.
+                $hero += [
+                    'hero_layout' => 'dedicated',
+                    'hero_title' => self::trimmed($data['hero_title'] ?? '', 255),
+                    'hero_subtitle' => self::trimmed($data['hero_subtitle'] ?? '', 255),
+                    'hero_body' => self::trimmed($data['hero_body'] ?? '', 3000),
+                    'hero_button_label' => self::trimmed($data['hero_button_label'] ?? '', 80),
+                    'hero_button_url' => self::safeUrl(self::trimmed($data['hero_button_url'] ?? '', 500)),
+                ];
+            }
+        }
+
         $clean = [
             'theme' => self::normalTheme((string)($data['theme'] ?? 'light')),
             'column_count' => $count,
             'preset' => $preset,
             'gap' => $gap,
             'columns' => $columns,
-        ];
+        ] + $hero;
         // Explicitly marked equal-width 1–6 column rows use V2 markup.
         // Legacy grids (2–6 columns, including asymmetric layouts) remain untouched.
         if ($isV2 && $count >= 1 && $count <= self::MAX_GRID_COLUMNS && $preset === 'equal') {

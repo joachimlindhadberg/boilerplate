@@ -182,10 +182,10 @@ if (array_intersect(['name', 'submit_label', 'success_message', 'success_redirec
         <div class="admin-form-section">
           <?php if ((int)$deleteDependencies['submissions'] > 0): ?>
             <p><?= admin_e(t('forms:Formularen har gemte indsendelser. Slet dem først, eller deaktivér formularen.')); ?></p>
-            <span class="admin-button admin-button--danger is-disabled" aria-disabled="true"><?= admin_e(t('forms:Slet formular')); ?></span>
+            <button class="admin-button admin-button--danger" type="button" disabled><?= admin_e(t('forms:Slet formular')); ?></button>
           <?php elseif ((int)$deleteDependencies['pages'] > 0): ?>
             <p><?= admin_e(t('forms:Formularen bruges i Page Builder. Fjern den fra siderne først.')); ?></p>
-            <span class="admin-button admin-button--danger is-disabled" aria-disabled="true"><?= admin_e(t('forms:Slet formular')); ?></span>
+            <button class="admin-button admin-button--danger" type="button" disabled><?= admin_e(t('forms:Slet formular')); ?></button>
           <?php else: ?>
             <p><?= admin_e(t('forms:Slet formularen og dens felter permanent.')); ?></p>
             <button class="admin-button admin-button--danger" type="button" data-admin-open-delete="forms-delete-dialog"><?= admin_e(t('forms:Slet formular')); ?></button>

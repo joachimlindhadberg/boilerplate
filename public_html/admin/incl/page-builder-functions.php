@@ -6,7 +6,10 @@ function admin_page_builder_blocks_from_records(array $records): array
     $blocks = [];
     foreach ($records as $record) {
         $type = (string)($record['block_type'] ?? '');
-        if (!array_key_exists($type, PageBlocks::definitions())) continue;
+        if (!array_key_exists($type, PageBlocks::definitions())) {
+            // Never discard persisted content from an old page on the next save.
+            throw new RuntimeException('Denne side indeholder en ældre Page Builder-sektion. Tag backup og migrér siden før redigering.');
+        }
         $blocks[] = [
             'type' => $type,
             'status' => (($record['status'] ?? 'active') === 'hidden') ? 'hidden' : 'active',
@@ -41,33 +44,85 @@ function admin_page_builder_media_field(string $prefix, array $data, string $lab
     <?php return ob_get_clean();
 }
 
+/** Dedicated Hero fields live in the same section JSON; not in generic grid children. */
+function admin_page_builder_hero_content_editor(string $prefix, array $data): string
+{
+    $e = static fn(mixed $v): string => admin_e((string)$v);
+    $fields = [
+        ['hero_title', 'page_builder_v2.hero_title', 255],
+        ['hero_subtitle', 'page_builder_v2.hero_subtitle', 255],
+    ];
+    ob_start(); ?>
+    <div class="admin-page-row__component" data-page-hero-content>
+      <div class="admin-page-row__component-header">
+        <div class="admin-grid-child__identity">
+          <span class="admin-grid-child__type-icon" aria-hidden="true"><?= admin_icon('type', 'admin-grid-child__type-svg'); ?></span>
+          <div class="admin-grid-child__heading">
+            <strong><?= $e(t('page_builder_v2.hero_content')); ?></strong>
+            <span data-page-hero-summary><?= $e(trim((string)($data['hero_title'] ?? '')) ?: t('page_builder_v2.hero_title')); ?></span>
+          </div>
+        </div>
+        <?= admin_icon_action_button('chevron-down', t('page_builder_v2.expand_block'), ['data-page-hero-toggle' => '1', 'aria-expanded' => 'false']); ?>
+      </div>
+      <div class="admin-page-row__fields" data-page-hero-fields hidden>
+        <?php foreach ($fields as [$key, $translation, $max]): ?>
+          <div class="admin-field"><label><?= $e(t($translation)); ?></label>
+            <input name="<?= $e($prefix); ?>[data][<?= $key; ?>]" value="<?= $e($data[$key] ?? ''); ?>" maxlength="<?= $max; ?>" <?= $key === 'hero_title' ? 'data-builder-hero-title data-builder-summary-source' : ''; ?>>
+          </div>
+        <?php endforeach; ?>
+        <div class="admin-field"><label><?= $e(t('page_builder_v2.hero_description')); ?></label>
+          <textarea name="<?= $e($prefix); ?>[data][hero_body]" rows="3" maxlength="3000"><?= $e($data['hero_body'] ?? ''); ?></textarea>
+        </div>
+        <div class="admin-form-row">
+          <div class="admin-field"><label><?= $e(t('page_builder_v2.hero_button_label')); ?></label>
+            <input name="<?= $e($prefix); ?>[data][hero_button_label]" maxlength="80" value="<?= $e($data['hero_button_label'] ?? ''); ?>">
+          </div>
+          <div class="admin-field"><label><?= $e(t('page_builder_v2.hero_button_url')); ?></label>
+            <input name="<?= $e($prefix); ?>[data][hero_button_url]" maxlength="500" value="<?= $e($data['hero_button_url'] ?? ''); ?>" placeholder="/kontakt">
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php return ob_get_clean();
+}
+
 function admin_page_builder_block_editor(array $block, string|int $index): string
 {
-    $type = (string)($block['type'] ?? 'text');
+    $type = (string)($block['type'] ?? 'grid');
     $definitions = PageBlocks::definitions();
-    if (!isset($definitions[$type])) $type = 'text';
+    if (!isset($definitions[$type])) throw new InvalidArgumentException('Unsupported top-level section.');
     $definition = $definitions[$type];
     $status = (($block['status'] ?? 'active') === 'hidden') ? 'hidden' : 'active';
     $data = is_array($block['data'] ?? null) ? $block['data'] : [];
     $prefix = 'blocks[' . $index . ']';
-    $v2Grid = $type === 'grid' && ($data['layout_version'] ?? '') === 'v2' && ($data['preset'] ?? 'equal') === 'equal';
-    $count = $type === 'grid' ? max($v2Grid ? 1 : 2, min(6, (int)($data['column_count'] ?? 2))) : 1;
+    $isHero = $type === 'grid' && ($data['section_variant'] ?? 'standard') === 'hero';
+    $dedicatedHero = $isHero && ($data['hero_layout'] ?? '') === 'dedicated';
+    $v2Grid = $type === 'grid' && !$dedicatedHero && ($data['layout_version'] ?? '') === 'v2' && ($data['preset'] ?? 'equal') === 'equal';
+    $count = $type === 'grid' ? max($v2Grid ? 1 : 2, min(6, (int)($data['column_count'] ?? 1))) : 1;
     $layoutLabel = ($type !== 'grid' ? 1 : $count) . ' ' . t(($type !== 'grid' || $count === 1) ? 'Kolonne' : 'page_builder_v2.columns');
     $e = static fn(mixed $v): string => admin_e((string)$v);
     $value = static fn(string $key, string $fallback = ''): string => (string)($data[$key] ?? $fallback);
 
     ob_start();
     ?>
-    <article class="admin-builder-block admin-page-row<?= $type === 'grid' ? ' admin-builder-block--grid' : ''; ?><?= $type === 'grid' && ($data['layout_version'] ?? '') === 'v2' ? ' admin-page-row--v2-grid' : ''; ?>" data-builder-block data-block-type="<?= $e($type); ?>" draggable="false">
+    <article class="admin-builder-block admin-page-row<?= $type === 'grid' ? ' admin-builder-block--grid' : ''; ?><?= $v2Grid ? ' admin-page-row--v2-grid' : ''; ?><?= $dedicatedHero ? ' admin-page-row--dedicated-hero' : ''; ?>" data-builder-block data-block-type="<?= $e($type); ?>" draggable="false">
       <input type="hidden" name="<?= $e($prefix); ?>[type]" value="<?= $e($type); ?>" data-builder-name="type">
       <input type="hidden" name="<?= $e($prefix); ?>[data][section_id]" value="<?= $e($data['section_id'] ?? ''); ?>" data-builder-section-id>
       <input type="hidden" name="<?= $e($prefix); ?>[data][theme]" value="<?= $e(array_key_exists((string)($data['theme'] ?? ($type === 'hero' ? 'dark' : 'light')), PageBlocks::themes()) ? ($data['theme'] ?? ($type === 'hero' ? 'dark' : 'light')) : 'light'); ?>" data-builder-section-theme>
       <input type="hidden" name="<?= $e($prefix); ?>[data][container_width]" value="<?= $e(PageBlocks::normalContainerWidth((string)($data['container_width'] ?? 'standard'))); ?>" data-builder-section-width>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][section_variant]" value="<?= $isHero ? 'hero' : 'standard'; ?>" data-builder-section-variant>
+      <?php if ($dedicatedHero): ?><input type="hidden" name="<?= $e($prefix); ?>[data][hero_layout]" value="dedicated" data-builder-hero-layout><input type="hidden" name="<?= $e($prefix); ?>[data][column_count]" value="1"><?php endif; ?>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][hero_image_id]" value="<?= $isHero ? max(0, (int)($data['hero_image_id'] ?? 0)) : 0; ?>" data-builder-hero-image-id <?= $isHero ? '' : 'disabled'; ?>>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][hero_image_path]" value="<?= $isHero ? $e($data['hero_image_path'] ?? '') : ''; ?>" data-builder-hero-image-path <?= $isHero ? '' : 'disabled'; ?>>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][hero_height]" value="<?= $e($data['hero_height'] ?? 'large'); ?>" data-builder-hero-height <?= $isHero ? '' : 'disabled'; ?>>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][hero_overlay]" value="<?= $e($data['hero_overlay'] ?? '1'); ?>" data-builder-hero-overlay <?= $isHero ? '' : 'disabled'; ?>>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][hero_overlay_opacity]" value="<?= max(0, min(80, (int)($data['hero_overlay_opacity'] ?? 40))); ?>" data-builder-hero-opacity <?= $isHero ? '' : 'disabled'; ?>>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][hero_parallax]" value="<?= $e($data['hero_parallax'] ?? '0'); ?>" data-builder-hero-parallax <?= $isHero ? '' : 'disabled'; ?>>
       <?php if ($type === 'grid' && ($data['layout_version'] ?? '') === 'v2'): ?><input type="hidden" name="<?= $e($prefix); ?>[data][layout_version]" value="v2"><?php endif; ?>
       <input type="hidden" name="<?= $e($prefix); ?>[status]" value="<?= $e($status); ?>" data-builder-name="status" data-builder-section-status>
       <header class="admin-builder-block__header">
-        <button class="admin-builder-drag" type="button" data-builder-drag draggable="true" aria-label="<?= admin_e(t('page_builder_v2.move_row')); ?>" title="<?= admin_e(t('Træk for at flytte')); ?>">⋮⋮</button>
-        <div class="admin-page-row__heading"><strong><?= admin_e(t($type === 'grid' ? 'Row' : 'page_builder_v2.section_heading')); ?></strong><span class="admin-page-row__layout" data-page-layout-label><?= $e($layoutLabel); ?></span><span class="admin-page-row__hidden-label" data-page-section-hidden-label <?= $status === 'hidden' ? '' : 'hidden'; ?>><?= admin_e(t('Skjult')); ?></span></div>
+        <button class="admin-builder-drag" type="button" data-builder-drag draggable="true" aria-label="<?= admin_e(t('page_builder_v2.move_row')); ?>" title="<?= admin_e(t('Træk for at flytte')); ?>"><?= admin_icon('grip', 'admin-builder-drag__icon'); ?></button>
+        <div class="admin-page-row__heading"><strong><?= admin_e(t($isHero ? 'page_builder_v2.hero_section' : 'page_builder_v2.section_heading')); ?></strong><?php if (!$dedicatedHero): ?><span class="admin-page-row__layout" data-page-layout-label><?= $e($layoutLabel); ?></span><?php endif; ?><span class="admin-page-row__hidden-label" data-page-section-hidden-label <?= $status === 'hidden' ? '' : 'hidden'; ?>><?= admin_e(t('Skjult')); ?></span></div>
         <div class="admin-builder-block__actions admin-page-row__actions">
           <button type="button" data-builder-up class="admin-page-row__keyboard-sort" aria-label="<?= admin_e(t('Flyt op')); ?>" title="<?= admin_e(t('Flyt op')); ?>">↑</button><button type="button" data-builder-down class="admin-page-row__keyboard-sort" aria-label="<?= admin_e(t('Flyt ned')); ?>" title="<?= admin_e(t('Flyt ned')); ?>">↓</button>
           <?= admin_icon_action_button('settings', t('page_builder_v2.section_settings'), ['data-page-section-settings' => '1']); ?>
@@ -75,48 +130,18 @@ function admin_page_builder_block_editor(array $block, string|int $index): strin
         </div>
       </header>
       <div class="admin-builder-block__body">
-        <?php if ($type !== 'grid'): ?>
-        <div class="admin-page-row__component">
-          <div class="admin-page-row__component-header"><div><strong><?= $e(t((string)$definition['label'])); ?></strong><span data-builder-summary><?= $e(admin_page_builder_summary($type, $data)); ?></span></div><?= admin_icon_action_button('chevron-down', t('page_builder_v2.expand_block'), ['data-page-row-toggle' => '1', 'aria-expanded' => 'false']); ?></div>
-          <div class="admin-page-row__fields" data-page-row-fields hidden>
-        <?php endif; ?>
-        <?php if ($type === 'hero'): ?>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Kicker')); ?></label><input data-builder-summary-source name="<?= $e($prefix); ?>[data][kicker]" value="<?= $e($value('kicker')); ?>"></div><div class="admin-field"><label><?= admin_e(t('Overskrift *')); ?></label><input data-builder-summary-source name="<?= $e($prefix); ?>[data][title]" value="<?= $e($value('title')); ?>"></div></div>
-          <div class="admin-field"><label><?= admin_e(t('Lead')); ?></label><textarea name="<?= $e($prefix); ?>[data][lead]" rows="3"><?= $e($value('lead')); ?></textarea></div>
-          <?= admin_page_builder_media_field($prefix, $data, 'Baggrundsbillede'); ?>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Primær knap · tekst')); ?></label><input name="<?= $e($prefix); ?>[data][primary_label]" value="<?= $e($value('primary_label')); ?>"></div><div class="admin-field"><label><?= admin_e(t('Primær knap · URL')); ?></label><input name="<?= $e($prefix); ?>[data][primary_url]" value="<?= $e($value('primary_url')); ?>" placeholder="/kontakt"></div></div>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Sekundært link · tekst')); ?></label><input name="<?= $e($prefix); ?>[data][secondary_label]" value="<?= $e($value('secondary_label')); ?>"></div><div class="admin-field"><label><?= admin_e(t('Sekundært link · URL')); ?></label><input name="<?= $e($prefix); ?>[data][secondary_url]" value="<?= $e($value('secondary_url')); ?>"></div></div>
-        <?php elseif ($type === 'intro'): ?>
-          <?= admin_page_builder_common_heading_fields($prefix, $data); ?>
-          <div class="admin-field"><label><?= admin_e(t('Tekst')); ?></label><textarea name="<?= $e($prefix); ?>[data][body]" rows="7"><?= $e($value('body')); ?></textarea><p class="admin-field__help"><?= admin_e(t('Blank linje starter et nyt afsnit.')); ?></p></div>
-        <?php elseif ($type === 'text'): ?>
-          <?= admin_page_builder_common_heading_fields($prefix, $data); ?>
-          <div class="admin-field"><label><?= admin_e(t('Tekst')); ?></label><textarea name="<?= $e($prefix); ?>[data][body]" rows="8"><?= $e($value('body')); ?></textarea><p class="admin-field__help"><?= admin_e(t('Blank linje starter et nyt afsnit.')); ?></p></div>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Layout')); ?></label><select name="<?= $e($prefix); ?>[data][layout]"><option value="split" <?= $value('layout','split') === 'split' ? 'selected' : ''; ?>><?= admin_e(t('Split')); ?></option><option value="stacked" <?= $value('layout') === 'stacked' ? 'selected' : ''; ?>><?= admin_e(t('Stablet')); ?></option></select></div></div>
-        <?php elseif ($type === 'text_image'): ?>
-          <?= admin_page_builder_common_heading_fields($prefix, $data); ?>
-          <div class="admin-field"><label><?= admin_e(t('Tekst')); ?></label><textarea name="<?= $e($prefix); ?>[data][body]" rows="7"><?= $e($value('body')); ?></textarea></div>
-          <div class="admin-form-row"><?= admin_page_builder_media_field($prefix, $data, 'Billede'); ?><div class="admin-field"><label><?= admin_e(t('Alt-tekst')); ?></label><input name="<?= $e($prefix); ?>[data][image_alt]" value="<?= $e($value('image_alt')); ?>" data-media-picker-alt></div></div>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Billedplacering')); ?></label><select name="<?= $e($prefix); ?>[data][image_side]"><option value="right" <?= $value('image_side','right') === 'right' ? 'selected' : ''; ?>><?= admin_e(t('Højre')); ?></option><option value="left" <?= $value('image_side') === 'left' ? 'selected' : ''; ?>><?= admin_e(t('Venstre')); ?></option></select></div></div>
-        <?php elseif ($type === 'cta'): ?>
-          <?= admin_page_builder_common_heading_fields($prefix, $data); ?>
-          <div class="admin-field"><label><?= admin_e(t('Kort tekst')); ?></label><textarea name="<?= $e($prefix); ?>[data][body]" rows="4"><?= $e($value('body')); ?></textarea></div>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Knaptekst')); ?></label><input name="<?= $e($prefix); ?>[data][button_label]" value="<?= $e($value('button_label')); ?>"></div><div class="admin-field"><label><?= admin_e(t('Knap-URL')); ?></label><input name="<?= $e($prefix); ?>[data][button_url]" value="<?= $e($value('button_url')); ?>" placeholder="/kontakt"></div></div>
-        <?php elseif ($type === 'component'): ?>
-          <?= admin_page_builder_common_heading_fields($prefix, $data); ?>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('dynamisk komponent')); ?></label><select name="<?= $e($prefix); ?>[data][component]" data-builder-component><?php foreach (PageBlocks::componentOptions() as $component=>$label): ?><option value="<?= $e($component); ?>" <?= $value('component') === $component ? 'selected' : ''; ?>><?= $e($label); ?></option><?php endforeach; ?></select></div></div>
-          <?= admin_page_builder_gallery_fields($prefix, $data); ?>
-        <?php elseif ($type === 'grid'): ?>
+        <?php if ($dedicatedHero): ?>
+          <?= admin_page_builder_hero_content_editor($prefix, $data); ?>
+        <?php else: ?>
           <div class="admin-page-row__grid-summary" data-builder-summary><?= $e(admin_page_builder_summary($type, $data)); ?></div>
           <?= admin_page_builder_grid_editor($prefix, $data); ?>
         <?php endif; ?>
-        <?php if ($type !== 'grid'): ?></div></div><?php endif; ?>
       </div>
       <!-- Contextual insertion stays inside the row, preserving drag-sort siblings. -->
       <div class="admin-page-row__insert-wrap">
         <button type="button" class="admin-page-row__insert-after" data-builder-insert-after aria-label="<?= admin_e(t('page_builder_v2.insert_after')); ?>" title="<?= admin_e(t('page_builder_v2.insert_after')); ?>">
           <?= admin_icon('plus', 'admin-page-row__insert-icon'); ?>
-          <span><?= admin_e(t('page_builder_v2.insert_here')); ?></span>
+          <span><?= admin_e(t('page_builder_v2.add_section')); ?></span>
         </button>
       </div>
     </article>
@@ -185,7 +210,7 @@ function admin_page_builder_grid_editor(string $prefix, array $data): string
 {
     $e = static fn(mixed $v): string => admin_e((string)$v);
     $v2Grid = ($data['layout_version'] ?? '') === 'v2' && ($data['preset'] ?? 'equal') === 'equal';
-    $count = max($v2Grid ? 1 : 2, min(6, (int)($data['column_count'] ?? 2)));
+    $count = max($v2Grid ? 1 : 2, min(6, (int)($data['column_count'] ?? 1)));
     $preset = (string)($data['preset'] ?? 'equal');
     $gap = (string)($data['gap'] ?? 'normal');
     $theme = (string)($data['theme'] ?? 'light');
@@ -211,11 +236,10 @@ function admin_page_builder_grid_editor(string $prefix, array $data): string
             <?php foreach ($children as $childIndex=>$child): ?><?= admin_page_builder_grid_child_editor($child, $prefix . '[data][columns]['.$columnIndex.'][blocks]['.$childIndex.']', $v2Grid); ?><?php endforeach; ?>
           </div>
           <?php if (!$v2Grid): ?><div class="admin-grid-column__empty" data-grid-column-empty <?= $children ? 'hidden' : ''; ?>><?= admin_e(t('Træk indhold hertil eller tilføj en blok.')); ?></div><?php endif; ?>
-          <div class="admin-grid-column__add"><select class="sr-only" data-grid-child-type aria-label="<?= admin_e(t('Bloktype')); ?>"><?php foreach (PageBlocks::gridChildDefinitions() as $childType=>$definition): ?><option value="<?= $e($childType); ?>"><?= $e($definition['label']); ?></option><?php endforeach; ?></select><button class="<?= $v2Grid ? 'admin-grid-add-block' : 'admin-button admin-button--secondary admin-button--compact'; ?>" type="button" data-grid-child-add <?= $v2Grid && $children ? 'hidden' : ''; ?>><?= $v2Grid ? '<span aria-hidden="true">+</span>' : ''; ?><?= admin_e(t('page_builder_v2.add_block')); ?></button></div>
+          <div class="admin-grid-column__add"><select class="sr-only" data-grid-child-type aria-label="<?= admin_e(t('Bloktype')); ?>"><?php foreach (PageBlocks::gridChildDefinitions() as $childType=>$definition): ?><option value="<?= $e($childType); ?>"><?= $e($definition['label']); ?></option><?php endforeach; ?></select><button class="<?= $v2Grid ? 'admin-grid-add-block' : 'admin-button admin-button--secondary admin-button--compact'; ?>" type="button" data-grid-child-add><?= $v2Grid ? admin_icon('plus', 'admin-grid-add-block__icon') : ''; ?><?= admin_e(t('page_builder_v2.add_content_inside')); ?></button></div>
         </section>
       <?php endforeach; ?>
     </div>
-    <div class="admin-grid-note"><strong><?= admin_e(t('Grid-regel:')); ?></strong> Indholdsblokke kan flyttes mellem kolonner. Grid inde i Grid er bevidst slået fra, så responsive layouts forbliver stabile.</div>
     <?php foreach (PageBlocks::gridChildDefinitions() as $childType=>$definition): ?>
       <template data-grid-child-template="<?= $e($childType); ?>"><?= admin_page_builder_grid_child_editor(['type'=>$childType,'status'=>'active','data'=>[]], 'blocks[__TOP_INDEX__][data][columns][__COLUMN_INDEX__][blocks][__CHILD_INDEX__]', $v2Grid); ?></template>
     <?php endforeach; ?>
@@ -228,6 +252,11 @@ function admin_page_builder_grid_child_editor(array $block, string $prefix, bool
     $type = (string)($block['type'] ?? 'text');
     if (!isset($definitions[$type])) $type = 'text';
     $definition = $definitions[$type];
+    // BP-MULTI-BLOCKS-QA1: every icon is rendered through the Core registry.
+    $childIcon = match ($type) {
+        'text' => 'type', 'image' => 'image', 'text_image' => 'layers',
+        'cta' => 'link', 'component' => 'puzzle', default => 'file',
+    };
     $status = (($block['status'] ?? 'active') === 'hidden') ? 'hidden' : 'active';
     $data = is_array($block['data'] ?? null) ? $block['data'] : [];
     $e = static fn(mixed $v): string => admin_e((string)$v);
@@ -237,10 +266,10 @@ function admin_page_builder_grid_child_editor(array $block, string $prefix, bool
     <article class="admin-grid-child" data-grid-child data-grid-child-type="<?= $e($type); ?>" draggable="false">
       <input type="hidden" name="<?= $e($prefix); ?>[type]" value="<?= $e($type); ?>">
       <header class="admin-grid-child__header">
-        <button class="admin-grid-child__drag" type="button" data-grid-child-drag draggable="true" aria-label="<?= admin_e(t('Flyt blok')); ?>">⋮⋮</button>
-        <div><strong><?= $e($definition['label']); ?></strong><span data-grid-child-summary><?= $e(admin_page_builder_grid_child_summary($type, $data)); ?></span></div>
+        <button class="admin-grid-child__drag" type="button" data-grid-child-drag draggable="true" aria-label="<?= admin_e(t('Flyt blok')); ?>"><?= admin_icon('grip', 'admin-grid-child__drag-icon'); ?></button>
+        <div class="admin-grid-child__identity"><span class="admin-grid-child__type-icon" aria-hidden="true"><?= admin_icon($childIcon, 'admin-grid-child__type-svg'); ?></span><div class="admin-grid-child__heading"><strong><?= $e($definition['label']); ?></strong><span data-grid-child-summary><?= $e(admin_page_builder_grid_child_summary($type, $data)); ?></span></div></div>
 
-        <div class="admin-grid-child__actions"><?= admin_icon_action_button('chevron-down', t('page_builder_v2.expand_block'), ['data-page-child-toggle' => '1', 'aria-expanded' => 'false']); ?><button type="button" data-grid-child-up aria-label="<?= admin_e(t('Flyt op')); ?>">↑</button><button type="button" data-grid-child-down aria-label="<?= admin_e(t('Flyt ned')); ?>">↓</button><?= admin_icon_action_button('delete', t('page_builder_v2.delete_block'), ['data-grid-child-remove' => '1'], 'danger'); ?></div>
+        <div class="admin-grid-child__actions"><?= admin_icon_action_button('chevron-down', t('page_builder_v2.expand_block'), ['data-page-child-toggle' => '1', 'aria-expanded' => 'false']); ?><button type="button" data-grid-child-up aria-label="<?= admin_e(t('Flyt op')); ?>"><?= admin_icon('arrow-up'); ?></button><button type="button" data-grid-child-down aria-label="<?= admin_e(t('Flyt ned')); ?>"><?= admin_icon('arrow-down'); ?></button><?= admin_icon_action_button('delete', t('page_builder_v2.delete_block'), ['data-grid-child-remove' => '1'], 'danger'); ?></div>
       </header>
       <div class="admin-grid-child__body" data-page-child-fields hidden>
         <input type="hidden" name="<?= $e($prefix); ?>[status]" value="<?= $e($status); ?>" data-page-child-status>
@@ -290,22 +319,6 @@ function admin_page_builder_grid_child_summary(string $type, array $data): strin
     return $title !== '' ? $title : ($kicker !== '' ? $kicker : 'Ingen overskrift endnu');
 }
 
-function admin_page_builder_common_heading_fields(string $prefix, array $data): string
-{
-    $e = static fn(mixed $v): string => admin_e((string)$v);
-    ob_start(); ?>
-    <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Kicker')); ?></label><input data-builder-summary-source name="<?= $e($prefix); ?>[data][kicker]" value="<?= $e($data['kicker'] ?? ''); ?>"></div><div class="admin-field"><label><?= admin_e(t('Overskrift')); ?></label><input data-builder-summary-source name="<?= $e($prefix); ?>[data][title]" value="<?= $e($data['title'] ?? ''); ?>"></div></div>
-    <?php return ob_get_clean();
-}
-
-function admin_page_builder_theme_field(string $prefix, string $selected, bool $bare = false): string
-{
-    $e = static fn(mixed $v): string => admin_e((string)$v);
-    ob_start(); ?>
-    <div class="admin-field"><label><?= admin_e(t('Tema')); ?></label><select name="<?= $e($prefix); ?>[data][theme]"><?php foreach (PageBlocks::themes() as $value=>$label): ?><option value="<?= $e($value); ?>" <?= $selected === $value ? 'selected' : ''; ?>><?= $e($label); ?></option><?php endforeach; ?></select></div>
-    <?php return ob_get_clean();
-}
-
 function admin_page_builder_summary(string $type, array $data): string
 {
     $title = trim((string)($data['title'] ?? ''));
@@ -315,7 +328,7 @@ function admin_page_builder_summary(string $type, array $data): string
         return PageBlocks::componentOptions()[$component] ?? 'Vælg komponent';
     }
     if ($type === 'grid') {
-        $count = max(2, min(6, (int)($data['column_count'] ?? 2)));
+        $count = max(1, min(6, (int)($data['column_count'] ?? 1)));
         $preset = (string)($data['preset'] ?? 'equal');
         $presetLabel = PageBlocks::gridPresets($count)[$preset] ?? PageBlocks::gridPresets($count)['equal'];
         return $count . ' kolonner · ' . $presetLabel;

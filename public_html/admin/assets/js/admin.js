@@ -837,17 +837,26 @@
     const modeInputs = [...builderForm.querySelectorAll('[data-content-mode]')];
     const modePanels = [...builderForm.querySelectorAll('[data-builder-mode]')];
     const list = builderForm.querySelector('[data-builder-list]');
-    const empty = builderForm.querySelector('[data-builder-empty]');
     const addButton = builderForm.querySelector('[data-builder-add]');
-    const layoutDialog = document.querySelector('[data-page-layout-dialog]');
     const blockDialog = document.querySelector('[data-page-block-dialog]');
-    const templatesDialog = document.querySelector('[data-page-templates-dialog]');
+    const sectionChoiceDialog = document.querySelector('[data-page-section-choice-dialog]');
+    let pendingSectionAfter = null;
+    let sectionChoiceReturnFocus = null;
+    const showSectionChoices = (after = null, returnFocus = null) => {
+      pendingSectionAfter = after;
+      sectionChoiceReturnFocus = returnFocus;
+      openDialog(sectionChoiceDialog);
+      sectionChoiceDialog?.querySelector('[data-page-section-choice]')?.focus();
+    };
+    sectionChoiceDialog?.addEventListener('close', () => {
+      pendingSectionAfter = null;
+      if (sectionChoiceReturnFocus?.isConnected) sectionChoiceReturnFocus.focus({ preventScroll: true });
+      sectionChoiceReturnFocus = null;
+    });
     let pendingColumn = null;
+    let pendingAfterChild = null; // BP-MULTI-BLOCKS-QA1: contextual insertion
     let chooserReturnFocus = null;
     let blockChoiceCommitted = false;
-    let insertAfterBlock = null;
-    let layoutReturnFocus = null;
-    let layoutChoiceCommitted = false;
     const translatePage = (key) => window.cmsTranslate(key);
     // Core SVG chevron indicates whether the inline block editor can expand or collapse.
     const syncBlockToggle = (button, expanded) => {
@@ -859,6 +868,8 @@
     };
     let draggedBlock = null;
     let draggedGridChild = null;
+    let gridDragOrigin = null;
+    let gridDropCommitted = false;
 
     const mediaPickerDialog = document.querySelector('[data-media-picker-dialog]');
     const mediaPickerGrid = mediaPickerDialog?.querySelector('[data-media-picker-grid]');
@@ -999,7 +1010,7 @@
       if (!column) return;
       column.dataset.gridColumnIndex = String(index);
       const label = column.querySelector('[data-grid-column-label]');
-      if (label) label.textContent = `Kolonne ${index + 1}`;
+      if (label) label.textContent = `${window.cmsTranslate('Kolonne')} ${index + 1}`;
       const children = gridChildren(column);
       const count = column.querySelector('.admin-grid-column__header > span');
       if (count) count.textContent = `${children.length} ${children.length === 1 ? window.cmsTranslate('blok') : window.cmsTranslate('blokke')}`;
@@ -1008,7 +1019,8 @@
       const row = column.closest('[data-builder-block]');
       const chooser = column.querySelector('[data-grid-child-add]');
       if (chooser && row?.classList.contains('admin-page-row--v2-grid')) {
-        chooser.hidden = children.length >= 1;
+        chooser.hidden = children.length >= 12;
+        column.querySelectorAll('[data-grid-child-insert-after]').forEach((button) => { button.hidden = children.length >= 12; });
       }
     };
 
@@ -1025,6 +1037,12 @@
             const label = visibility.closest('label');
             if (label) label.htmlFor = id;
           }
+          child.querySelectorAll('[id^="gallery-fullscreen-"], [id^="gallery-autoplay-"]').forEach((input) => {
+            const oldId = input.id;
+            const id = `${oldId.startsWith('gallery-fullscreen-') ? 'gallery-fullscreen' : 'gallery-autoplay'}-${topIndex}-${columnIndex}-${childIndex}`;
+            input.id = id;
+            child.querySelectorAll('label[for]').forEach((label) => { if (label.htmlFor === oldId) label.htmlFor = id; });
+          });
           child.querySelectorAll('[name]').forEach((field) => {
             field.name = field.name
               .replace(/blocks\[[^\]]+\]/, `blocks[${topIndex}]`)
@@ -1049,7 +1067,6 @@
         });
         if (block.dataset.blockType === 'grid') reindexGrid(block, index);
       });
-      if (empty) empty.hidden = blocks().length > 0;
     };
 
     const syncGalleryFields = (scope) => {
@@ -1134,62 +1151,33 @@
       const added = anchor ? anchor.nextElementSibling : blocks().at(-1);
       newGalleryDefaults(added);
       reindex();
-      if (!['grid', 'grid-1', 'grid-3', 'grid-4', 'grid-5', 'grid-6'].includes(type)) {
-        const toggle = added?.querySelector('[data-page-row-toggle]');
-        const fields = added?.querySelector('[data-page-row-fields]');
-        if (fields) fields.hidden = false;
-        syncBlockToggle(toggle, true);
-        fields?.querySelector('input:not([type=hidden]), textarea, select')?.focus();
-      } else {
-        added?.querySelector('[data-grid-child-add]')?.focus();
-      }
+      (added?.querySelector('[data-page-hero-toggle]') || added?.querySelector('[data-grid-child-add]'))?.focus();
       added?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
       return added;
     };
 
-    const showBlockChoices = (column = null) => {
+    const showBlockChoices = (column) => {
+      if (!column) return;
       pendingColumn = column;
-      blockDialog?.querySelectorAll('[data-page-block-choices]').forEach((group) => {
-        group.hidden = group.dataset.pageBlockChoices !== (column ? 'child' : 'top');
-      });
       openDialog(blockDialog);
-      blockDialog?.querySelector('[data-page-block-choices]:not([hidden]) [data-page-block-choice]')?.focus();
+      blockDialog?.querySelector('[data-page-block-choice]')?.focus();
     };
-
-    const showLayoutChoices = (trigger, afterBlock = null) => {
-      insertAfterBlock = afterBlock?.parentElement === list ? afterBlock : null;
-      layoutReturnFocus = trigger;
-      layoutChoiceCommitted = false;
-      openDialog(layoutDialog);
-      layoutDialog?.querySelector('[data-page-add-section], [data-page-add-layout]')?.focus();
-    };
-    addButton?.addEventListener('click', () => showLayoutChoices(addButton));
-    // Delegation also works for newly created rows. No additional modal or data model.
+    // Section chooser is the same Core modal for the main and inline Add section buttons.
+    addButton?.addEventListener('click', () => showSectionChoices(null, addButton));
     builderForm.addEventListener('click', (event) => {
       const insert = event.target.closest('[data-builder-insert-after]');
       if (!insert || !list?.contains(insert)) return;
       const anchor = insert.closest('[data-builder-block]');
-      if (anchor?.parentElement === list) showLayoutChoices(insert, anchor);
+      if (anchor?.parentElement === list) showSectionChoices(anchor, insert);
     });
-    layoutDialog?.addEventListener('click', (event) => {
-      const section = event.target.closest('[data-page-add-section]');
-      const choice = event.target.closest('[data-page-add-layout]');
-      if (!section && !choice) return;
-      const templates = { '100': 'grid-1', '50': 'grid', '33': 'grid-3', '25': 'grid-4', '20': 'grid-5', '16': 'grid-6' };
-      const type = section ? section.dataset.pageAddSection : templates[choice.dataset.pageAddLayout];
-      if (!type) return;
-      const anchor = insertAfterBlock;
-      layoutChoiceCommitted = true;
-      closeDialog(layoutDialog);
-      addBlock(type, anchor);
-    });
-    layoutDialog?.addEventListener('close', () => {
-      insertAfterBlock = null;
-      if (!layoutChoiceCommitted && layoutReturnFocus?.isConnected) {
-        layoutReturnFocus.focus({ preventScroll: true });
-      }
-      layoutReturnFocus = null;
-      layoutChoiceCommitted = false;
+    sectionChoiceDialog?.addEventListener('click', (event) => {
+      const choice = event.target.closest('[data-page-section-choice]');
+      if (!choice) return;
+      const isHero = choice.dataset.pageSectionChoice === 'hero';
+      const anchor = pendingSectionAfter;
+      closeDialog(sectionChoiceDialog);
+      const added = addBlock(isHero ? 'grid-hero' : 'grid-1', anchor);
+      // Adding a section must never open its settings modal automatically.
     });
     blockDialog?.addEventListener('click', (event) => {
       const choice = event.target.closest('[data-page-block-choice]');
@@ -1197,121 +1185,65 @@
       blockChoiceCommitted = true;
       const type = choice.dataset.pageBlockChoice;
       const column = pendingColumn;
+      const afterChild = pendingAfterChild;
       closeDialog(blockDialog);
       pendingColumn = null;
+      pendingAfterChild = null;
       if (column?.isConnected) {
-        const added = addGridChild(column.querySelector('[data-grid-child-add]'), type);
+        const added = addGridChild(column.querySelector('[data-grid-child-add]'), type, afterChild);
         const body = added?.querySelector('[data-page-child-fields]');
         const toggle = added?.querySelector('[data-page-child-toggle]');
         if (body) body.hidden = false;
         syncBlockToggle(toggle, true);
         body?.querySelector('input:not([type=hidden]), textarea, select')?.focus();
-      } else if (!column) {
-        addBlock(type);
       }
     });
     blockDialog?.addEventListener('close', () => {
       pendingColumn = null;
+      pendingAfterChild = null;
       if (!blockChoiceCommitted && chooserReturnFocus?.isConnected) {
         chooserReturnFocus.focus({ preventScroll: true });
       }
       blockChoiceCommitted = false;
       chooserReturnFocus = null;
     });
-    // V2.4.4z: read-only presets become normal editable Page Builder elements.
-    // Close/Cancel/Escape never modifies the existing editor; confirmation comes first.
-    let selectedPageTemplate = templatesDialog?.querySelector('[data-page-template-choice]')?.dataset.pageTemplateChoice || '';
-    let templateIsApplying = false;
-    const selectPageTemplate = (id) => {
-      const choice = [...(templatesDialog?.querySelectorAll('[data-page-template-choice]') || [])]
-        .find((entry) => entry.dataset.pageTemplateChoice === id);
-      if (!choice) return;
-      selectedPageTemplate = id;
-      templatesDialog.querySelectorAll('[data-page-template-choice]').forEach((button) => {
-        const active = button === choice;
-        button.classList.toggle('is-selected', active);
-        button.setAttribute('aria-pressed', String(active));
-      });
-      templatesDialog.querySelectorAll('[data-page-template-preview]').forEach((panel) => {
-        panel.hidden = panel.dataset.pageTemplatePreview !== id;
-      });
-    };
-    builderForm.querySelector('[data-page-templates-open]')?.addEventListener('click', () => {
-      if (modeInputs.find((input) => input.checked)?.value !== 'builder') {
-        window.adminNotify(translatePage('page_templates.switch_to_builder'));
-        return;
-      }
-      openDialog(templatesDialog);
-      templatesDialog?.querySelector('[data-page-template-choice][aria-pressed="true"]')?.focus();
-    });
-    templatesDialog?.addEventListener('click', async (event) => {
-      const choice = event.target.closest('[data-page-template-choice]');
-      if (choice) { selectPageTemplate(choice.dataset.pageTemplateChoice || ''); return; }
-      const apply = event.target.closest('[data-page-template-apply]');
-      if (!apply || !list || templateIsApplying || !selectedPageTemplate) return;
-      const template = [...builderForm.querySelectorAll('template[data-page-template-content]')]
-        .find((item) => item.dataset.pageTemplateContent === selectedPageTemplate);
-      if (!template) return;
-      const fragment = template.content.cloneNode(true);
-      const incoming = [...fragment.children].filter((entry) => entry.matches('[data-builder-block]'));
-      if (incoming.length < 1 || incoming.length > 60 || incoming.length !== fragment.children.length) {
-        window.adminNotify(translatePage('page_templates.invalid'));
-        return;
-      }
-      templateIsApplying = true;
-      apply.disabled = true;
-      try {
-        if (blocks().length > 0 && !await window.adminConfirm(
-          translatePage('page_templates.replace_confirm'),
-          translatePage('page_templates.replace_title'),
-          translatePage('page_templates.replace_action')
-        )) return;
-        // Only now is the existing Page Builder content allowed to change.
-        // section-###### IDs are unique per inserted instance and validated again on save.
-        const used = new Set(blocks().map((row) => row.querySelector('[data-builder-section-id]')?.value).filter(Boolean));
-        incoming.forEach((row) => {
-          const input = row.querySelector('[data-builder-section-id]');
-          if (!input) return;
-          let candidate = '';
-          do {
-            let value;
-            if (window.crypto?.getRandomValues) {
-              const bytes = new Uint32Array(1);
-              window.crypto.getRandomValues(bytes);
-              value = bytes[0];
-            } else value = Math.floor(Math.random() * 0x100000000);
-            candidate = `section-${String(100000 + (value % 900000))}`;
-          } while (used.has(candidate));
-          used.add(candidate);
-          input.value = candidate;
-        });
-        list.replaceChildren(...incoming);
-        reindex();
-        blocks().forEach((row) => {
-          updateSummary(row);
-          if (row.dataset.blockType === 'grid') gridColumns(row).forEach(updateGridColumnMeta);
-        });
-        closeDialog(templatesDialog);
-        builderForm.dispatchEvent(new Event('admin:changed', { bubbles: true }));
-        list.querySelector('[data-builder-block]')?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      } finally {
-        templateIsApplying = false;
-        apply.disabled = false;
-      }
-    });
-    // Arrow-key selection is an optional ergonomic shortcut. Native Tab/Enter also works.
-    templatesDialog?.addEventListener('keydown', (event) => {
-      const button = event.target.closest('[data-page-template-choice]');
-      if (!button || !['ArrowUp', 'ArrowDown'].includes(event.key)) return;
-      event.preventDefault();
-      const choices = [...templatesDialog.querySelectorAll('[data-page-template-choice]')];
-      const next = (choices.indexOf(button) + (event.key === 'ArrowDown' ? 1 : -1) + choices.length) % choices.length;
-      selectPageTemplate(choices[next].dataset.pageTemplateChoice || '');
-      choices[next].focus();
-    });
     // V2.4.4y4: Page section settings are edited in one reusable Core modal.
     // No changes are made to the stored inputs until Save is pressed.
     const sectionDialog = document.querySelector('[data-page-section-settings-dialog]');
+    const standardSectionHelp = sectionDialog?.querySelector('[data-page-section-help-standard]');
+    const heroSectionHelp = sectionDialog?.querySelector('[data-page-section-help-hero]');
+    const heroFields = sectionDialog?.querySelector('[data-page-hero-fields]');
+    const heroImageId = sectionDialog?.querySelector('[data-page-hero-image-id]');
+    const heroImagePath = sectionDialog?.querySelector('[data-page-hero-image-path]');
+    const heroHeight = sectionDialog?.querySelector('[data-page-hero-height]');
+    const heroOverlay = sectionDialog?.querySelector('[data-page-hero-overlay]');
+    const heroOpacity = sectionDialog?.querySelector('[data-page-hero-opacity]');
+    const heroOpacityField = sectionDialog?.querySelector('[data-page-hero-opacity-field]');
+    const heroOpacityValue = sectionDialog?.querySelector('[data-page-hero-opacity-value]');
+    const heroParallax = sectionDialog?.querySelector('[data-page-hero-parallax]');
+    const syncHeroSettings = () => {
+      if (heroOpacityField && heroOverlay) heroOpacityField.hidden = !heroOverlay.checked;
+      if (heroOpacityValue && heroOpacity) heroOpacityValue.textContent = `${heroOpacity.value}%`;
+    };
+    heroOverlay?.addEventListener('change', syncHeroSettings);
+    heroOpacity?.addEventListener('input', syncHeroSettings);
+    sectionDialog?.addEventListener('click', (event) => {
+      const open = event.target.closest('[data-media-picker-open]');
+      if (open && heroFields?.contains(open) && mediaPickerDialog) {
+        activeMediaPickerField = open.closest('[data-media-picker-field]');
+        if (mediaPickerSearch) mediaPickerSearch.value = '';
+        openDialog(mediaPickerDialog);
+        loadMediaPicker('');
+        requestAnimationFrame(() => mediaPickerSearch?.focus());
+        return;
+      }
+      const clear = event.target.closest('[data-media-picker-clear]');
+      if (clear && heroFields?.contains(clear)) {
+        if (heroImageId) heroImageId.value = '';
+        if (heroImagePath) heroImagePath.value = '';
+        clear.hidden = true;
+      }
+    });
     const sectionWidth = sectionDialog?.querySelector('[data-page-section-width]');
     const sectionTheme = sectionDialog?.querySelector('[data-page-section-theme]');
     const sectionPreview = sectionDialog?.querySelector('[data-page-section-preview]');
@@ -1381,6 +1313,21 @@
       if (statusInput.value !== nextStatus) {
         statusInput.value = nextStatus;
         statusInput.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      if (settingsSection.querySelector('[data-builder-section-variant]')?.value === 'hero') {
+        const saveHero = (selector, value) => {
+          const field = settingsSection.querySelector(selector);
+          if (field && field.value !== String(value)) {
+            field.value = String(value);
+            field.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        };
+        saveHero('[data-builder-hero-image-id]', Number(heroImageId?.value) || 0);
+        saveHero('[data-builder-hero-image-path]', heroImagePath?.value || '');
+        saveHero('[data-builder-hero-height]', ['auto','large','screen'].includes(heroHeight?.value) ? heroHeight.value : 'large');
+        saveHero('[data-builder-hero-overlay]', heroOverlay?.checked ? '1' : '0');
+        saveHero('[data-builder-hero-opacity]', Math.max(0, Math.min(80, Number(heroOpacity?.value) || 0)));
+        saveHero('[data-builder-hero-parallax]', heroParallax?.checked ? '1' : '0');
       }
       const hiddenLabel = settingsSection.querySelector('[data-page-section-hidden-label]');
       if (hiddenLabel) hiddenLabel.hidden = nextStatus !== 'hidden';
@@ -1454,14 +1401,10 @@
       return true;
     };
 
-    const addGridChild = (button, selectedType = null) => {
+    const addGridChild = (button, selectedType = null, afterChild = null) => {
       const column = button?.closest('[data-grid-column]');
       const gridBlock = button?.closest('[data-builder-block][data-block-type="grid"]');
       if (!column || !gridBlock) return null;
-      if (gridBlock.classList.contains('admin-page-row--v2-grid') && gridChildren(column).length > 0) {
-        window.adminNotify(translatePage('page_builder_v2.column_full'));
-        return null;
-      }
       const type = selectedType || column.querySelector('[data-grid-child-type]')?.value || 'text';
       const template = gridBlock.querySelector(`template[data-grid-child-template="${CSS.escape(type)}"]`);
       const childList = column.querySelector('[data-grid-child-list]');
@@ -1477,9 +1420,11 @@
         .replaceAll('__TOP_INDEX__', String(topIndex))
         .replaceAll('__COLUMN_INDEX__', String(columnIndex))
         .replaceAll('__CHILD_INDEX__', String(childIndex));
-      childList.insertAdjacentHTML('beforeend', html);
+      const anchor = afterChild?.parentElement === childList ? afterChild : null;
+      if (anchor) anchor.insertAdjacentHTML('afterend', html);
+      else childList.insertAdjacentHTML('beforeend', html);
       reindex();
-      const added = gridChildren(column).at(-1);
+      const added = anchor ? anchor.nextElementSibling : gridChildren(column).at(-1);
       newGalleryDefaults(added);
       return added;
     };
@@ -1488,12 +1433,35 @@
       const gridAdd = event.target.closest('[data-grid-child-add]');
       if (gridAdd) {
         const column = gridAdd.closest('[data-grid-column]');
-        if (column?.closest('.admin-page-row--v2-grid') && gridChildren(column).length >= 1) {
-          window.adminNotify(translatePage('page_builder_v2.column_full'));
+        chooserReturnFocus = gridAdd;
+        pendingAfterChild = null;
+        showBlockChoices(column);
+        return;
+      }
+
+      const insertChild = event.target.closest('[data-grid-child-insert-after]');
+      if (insertChild) {
+        const child = insertChild.closest('[data-grid-child]');
+        const column = child?.closest('[data-grid-column]');
+        if (!column || gridChildren(column).length >= 12) {
+          window.adminNotify(window.cmsTranslate('En kolonne kan højst indeholde 12 indholdsblokke.'));
           return;
         }
-        chooserReturnFocus = gridAdd;
+        chooserReturnFocus = insertChild;
+        pendingAfterChild = child;
         showBlockChoices(column);
+        return;
+      }
+
+      // Dedicated Hero uses the same inline Core expand/collapse pattern as content blocks.
+      const heroToggle = event.target.closest('[data-page-hero-toggle]');
+      if (heroToggle) {
+        const fields = heroToggle.closest('[data-page-hero-content]')?.querySelector('[data-page-hero-fields]');
+        if (fields) {
+          fields.hidden = !fields.hidden;
+          syncBlockToggle(heroToggle, !fields.hidden);
+          if (!fields.hidden) fields.querySelector('input:not([type=hidden]), textarea, select')?.focus();
+        }
         return;
       }
 
@@ -1522,8 +1490,31 @@
           updateSectionPreview();
           sectionVisibility.checked = statusInput.value !== 'hidden';
           syncSectionVisibility();
+          const isHero = row.querySelector('[data-builder-section-variant]')?.value === 'hero';
+          if (heroFields) heroFields.hidden = !isHero;
+          if (standardSectionHelp) standardSectionHelp.hidden = isHero;
+          if (heroSectionHelp) heroSectionHelp.hidden = !isHero;
+          const standardTitle = sectionDialog.querySelector('[data-page-section-title-standard]');
+          const heroTitle = sectionDialog.querySelector('[data-page-section-title-hero]');
+          const sectionPreview = sectionDialog.querySelector('[data-page-section-preview]');
+          if (standardTitle) standardTitle.hidden = isHero;
+          if (heroTitle) heroTitle.hidden = !isHero;
+          if (sectionPreview) sectionPreview.hidden = isHero;
+          sectionDialog.classList.toggle('admin-page-section-dialog--hero', isHero);
+          if (isHero) {
+            if (heroImageId) heroImageId.value = row.querySelector('[data-builder-hero-image-id]')?.value || '';
+            if (heroImagePath) heroImagePath.value = row.querySelector('[data-builder-hero-image-path]')?.value || '';
+            if (heroHeight) heroHeight.value = row.querySelector('[data-builder-hero-height]')?.value || 'large';
+            if (heroOverlay) heroOverlay.checked = row.querySelector('[data-builder-hero-overlay]')?.value !== '0';
+            if (heroOpacity) heroOpacity.value = row.querySelector('[data-builder-hero-opacity]')?.value || '40';
+            if (heroParallax) heroParallax.checked = row.querySelector('[data-builder-hero-parallax]')?.value === '1';
+            const clear = heroFields?.querySelector('[data-media-picker-clear]');
+            if (clear) clear.hidden = !heroImagePath?.value;
+            syncHeroSettings();
+          }
           const gapInput = row.querySelector('[data-grid-gap]');
           const isV2Row = row.classList.contains('admin-page-row--v2-grid');
+          // Dedicated Hero has no column layout; the classic H1 Hero retains it.
           if (sectionLayoutField) sectionLayoutField.hidden = !isV2Row;
           if (sectionLayoutWarning) {
             sectionLayoutWarning.textContent = '';
@@ -1638,6 +1629,12 @@
       const child = event.target.closest('[data-grid-child]');
       if (child && event.target.matches('[data-grid-child-summary-source]')) updateGridChildSummary(child);
 
+      // Keep the compact Hero overview readable while editing the heading.
+      if (event.target.matches('[data-builder-hero-title]')) {
+        const summary = event.target.closest('[data-page-hero-content]')?.querySelector('[data-page-hero-summary]');
+        if (summary) summary.textContent = event.target.value.trim() || translatePage('page_builder_v2.hero_title');
+      }
+
       const block = event.target.closest('[data-builder-block]');
       if (block && (event.target.matches('[data-builder-summary-source]') || event.target.matches('[data-builder-component]'))) {
         updateSummary(block);
@@ -1697,7 +1694,7 @@
       const columns = gridColumns(row);
       const next = columns.indexOf(current) + (event.key === 'ArrowLeft' ? -1 : 1);
       event.preventDefault();
-      if (next < 0 || next >= columns.length || gridChildren(columns[next]).length) return;
+      if (next < 0 || next >= columns.length || gridChildren(columns[next]).length >= 12) return;
       columns[next].querySelector('[data-grid-child-list]')?.appendChild(child);
       reindex();
       grip.focus();
@@ -1717,6 +1714,8 @@
         // The grip initiates drag, but the browser must show the entire block.
         const rect = draggedGridChild.getBoundingClientRect();
         event.dataTransfer.setDragImage(draggedGridChild, Math.max(0, Math.round(event.clientX - rect.left)), Math.max(0, Math.round(event.clientY - rect.top)));
+        gridDragOrigin = { list: draggedGridChild.parentElement, before: draggedGridChild.nextElementSibling };
+        gridDropCommitted = false;
         draggedGridChild.classList.add('is-dragging');
         return;
       }
@@ -1743,10 +1742,18 @@
     });
 
     builderForm.addEventListener('dragend', () => {
+      // Restore the original position when a native drag is cancelled.
+      if (draggedGridChild && gridDragOrigin && !gridDropCommitted) {
+        const { list: originList, before } = gridDragOrigin;
+        if (originList?.isConnected) originList.insertBefore(draggedGridChild, before?.parentElement === originList ? before : null);
+      }
       draggedBlock?.classList.remove('is-dragging');
       draggedGridChild?.classList.remove('is-dragging');
+      builderForm.querySelectorAll('.admin-grid-child-list.is-drop-target').forEach(el => el.classList.remove('is-drop-target'));
       draggedBlock = null;
       draggedGridChild = null;
+      gridDragOrigin = null;
+      gridDropCommitted = false;
       reindex();
     });
 
@@ -1754,7 +1761,7 @@
       const list = target.closest('[data-grid-child-list]');
       if (list) return list;
       const column = target.closest('[data-grid-column]');
-      if (!column?.closest('.admin-page-row--v2-grid') || gridChildren(column).length) return null;
+      if (!column?.closest('.admin-page-row--v2-grid')) return null;
       return column.querySelector('[data-grid-child-list]');
     };
 
@@ -1764,13 +1771,15 @@
       if (!targetList) return;
       const row = targetList.closest('[data-builder-block]');
       if (row?.classList.contains('admin-page-row--v2-grid') &&
-          [...targetList.children].some((item) => item.matches('[data-grid-child]') && item !== draggedGridChild)) {
+          gridChildren(targetList.closest('[data-grid-column]')).filter(item => item !== draggedGridChild).length >= 12) {
         event.dataTransfer.dropEffect = 'none';
         return;
       }
       event.preventDefault();
       event.stopPropagation();
       event.dataTransfer.dropEffect = 'move';
+      builderForm.querySelectorAll('.admin-grid-child-list.is-drop-target').forEach(el => { if (el !== targetList) el.classList.remove('is-drop-target'); });
+      targetList.classList.add('is-drop-target');
       const siblings = [...targetList.querySelectorAll(':scope > [data-grid-child]')].filter((child) => child !== draggedGridChild);
       const next = siblings.find((child) => {
         const rect = child.getBoundingClientRect();
@@ -1786,9 +1795,10 @@
       if (!targetList) return;
       const row = targetList.closest('[data-builder-block]');
       if (row?.classList.contains('admin-page-row--v2-grid') &&
-          [...targetList.children].some((item) => item.matches('[data-grid-child]') && item !== draggedGridChild)) return;
+          gridChildren(targetList.closest('[data-grid-column]')).filter(item => item !== draggedGridChild).length >= 12) return;
       event.preventDefault();
       event.stopPropagation();
+      gridDropCommitted = true;
       reindex();
     });
 
@@ -1809,6 +1819,21 @@
       if (!draggedBlock || draggedGridChild) return;
       event.preventDefault();
       reindex();
+    });
+
+    // Prevent silently truncated POST bodies on shared PHP hosting.
+    builderForm.addEventListener('submit', (event) => {
+      if ((modeInputs.find(input => input.checked)?.value || 'builder') !== 'builder') return;
+      const maxVars = Number(builderForm.dataset.builderMaxInputVars || 0);
+      if (!Number.isFinite(maxVars) || maxVars <= 0) return;
+      const count = [...builderForm.querySelectorAll('input[name], select[name], textarea[name]')].filter(field =>
+        !field.disabled && !field.closest('template') &&
+        (!['radio', 'checkbox'].includes(field.type) || field.checked)
+      ).length;
+      if (count + 10 >= maxVars) {
+        event.preventDefault();
+        window.adminNotify(translatePage('page_builder_v2.input_limit'));
+      }
     });
 
     updateMode();

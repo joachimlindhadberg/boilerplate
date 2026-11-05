@@ -1,15 +1,15 @@
-# Boilerplate CMS 2.5.1-beta.6 — Preview release
+# Boilerplate CMS 2.5.1-beta.9 — Preview release
 
 Boilerplate CMS is an open-source PHP/MySQL CMS with a browser-based first-time installer, Page Builder, Forms, Gallery, and a minimalist administration interface.
 
-**Release status:** `2.5.1-beta.6` is a **Beta / Pre-release**, not an approved public Stable release. Local tests have passed, but real shared-hosting deployment and production recovery are not yet verified.
+**Release status:** `2.5.1-beta.9` is a **Beta / Pre-release**, not an approved public Stable release. Local tests have passed, but real shared-hosting deployment and production recovery are not yet verified.
 
 ## Getting started
 
 - **Fresh installation:** [Installation guide](docs/deployment/INSTALLATION.md)
 - **Hosting requirements:** [Hosting requirements](docs/deployment/HOSTING-REQUIREMENTS.md)
 - **Existing installation:** [Updates and rollback](docs/deployment/UPDATING.md). Do **not** run the first-time installer to upgrade an existing site.
-- **Historical 2.5.0 readiness assessment:** [V2.5.0 go-live gate](docs/deployment/V2.5.0-GO-LIVE-GATE.md). This is an archived assessment, not the current Beta 6 release status.
+- **Historical 2.5.0 readiness assessment:** [V2.5.0 go-live gate](docs/deployment/V2.5.0-GO-LIVE-GATE.md). This is an archived assessment, not the current Beta 9 release status.
 
 ## Installation and security
 

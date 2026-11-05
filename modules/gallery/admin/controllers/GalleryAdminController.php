@@ -71,6 +71,11 @@ trait GalleryAdminController
                 }
             }
 
+            $usage = $id > 0 ? $repository->pageBuilderUsage($id) : ['count' => 0, 'page_ids' => []];
+            $usagePages = $id > 0 && !empty($usage['page_ids'])
+                ? $repository->referencedPageSummaries($usage['page_ids'])
+                : [];
+
             $this->context->renderAdmin('admin/views/' . ($screen === 'edit' ? 'edit' : 'new') . '.php', [
                 'user' => $runtime['user'] ?? null,
                 'activeNav' => 'module:gallery',
@@ -80,7 +85,8 @@ trait GalleryAdminController
                 'errors' => $errors,
                 'galleryId' => $id,
                 'isEdit' => $screen === 'edit',
-                'usage' => $id > 0 ? $repository->pageBuilderUsage($id) : ['count' => 0, 'page_ids' => []],
+                'usage' => $usage,
+                'usagePages' => $usagePages,
                 'notice' => admin_pull_notice(),
             ]);
             return;
@@ -91,12 +97,18 @@ trait GalleryAdminController
         $search = $this->limitText($search, 150);
         $total = $repository->countFilteredGalleries($search);
         $paging = admin_crud_pagination($total);
+        $galleries = $repository->filteredGalleries($search, $paging['perPage'], $paging['offset']);
+        $usageCounts = $repository->pageBuilderUsageCounts(array_map(
+            static fn(array $gallery): int => (int)($gallery['id'] ?? 0),
+            $galleries
+        ));
 
         $this->context->renderAdmin('admin/views/index.php', [
             'user' => $runtime['user'] ?? null,
             'activeNav' => 'module:gallery',
             'documentTitle' => 'Gallerier',
-            'galleries' => $repository->filteredGalleries($search, $paging['perPage'], $paging['offset']),
+            'galleries' => $galleries,
+            'usageCounts' => $usageCounts,
             'search' => $search,
             'total' => $total,
             'paging' => $paging,

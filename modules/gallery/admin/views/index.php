@@ -1,5 +1,6 @@
 <?php
 $galleries = is_array($galleries ?? null) ? $galleries : [];
+$usageCounts = is_array($usageCounts ?? null) ? $usageCounts : [];
 $search = (string)($search ?? '');
 $total = max(0, (int)($total ?? 0));
 $paging = is_array($paging ?? null) ? $paging : admin_crud_pagination($total);
@@ -33,7 +34,16 @@ $paging = is_array($paging ?? null) ? $paging : admin_crud_pagination($total);
       <table class="admin-list-table">
         <thead><tr><th><?= admin_e(t('gallery:Galleri')); ?></th><th><?= admin_e(t('Status')); ?></th><th><?= admin_e(t('gallery:Billeder')); ?></th><th><?= admin_e(t('Opdateret')); ?></th><th class="admin-list-table__actions"><?= admin_e(t('Handlinger')); ?></th></tr></thead>
         <tbody>
-        <?php foreach ($galleries as $gallery): $id=(int)$gallery['id']; $active=($gallery['status']??'active')==='active'; ?>
+        <?php foreach ($galleries as $gallery):
+          $id = (int)$gallery['id'];
+          $active = ($gallery['status'] ?? 'active') === 'active';
+          $usedCount = max(0, (int)($usageCounts[$id] ?? 0));
+          $useExplanation = $usedCount > 0
+              ? t($usedCount === 1 ? 'notice.gallery_in_use_one' : 'notice.gallery_in_use_many', ['count' => $usedCount])
+              : '';
+          $deleteLabel = t('gallery:Slet galleri') . ': ' . (string)$gallery['name'];
+          if ($usedCount > 0) $deleteLabel .= ' — ' . $useExplanation;
+        ?>
           <tr>
             <td><a class="admin-table-primary" href="/admin/gallerier?screen=edit&amp;id=<?= $id; ?>"><?= admin_e((string)$gallery['name']); ?></a><span class="admin-table-secondary"><?= admin_e(t('gallery:gallery_page_builder_component')); ?> · <?= $id; ?></span></td>
             <td><span class="admin-status-label <?= $active ? 'admin-status-label--module-active' : ''; ?>"><?= $active ? t('Aktiv') : t('Inaktiv'); ?></span></td>
@@ -41,11 +51,14 @@ $paging = is_array($paging ?? null) ? $paging : admin_crud_pagination($total);
             <td><?= !empty($gallery['updated_at']) ? admin_e(date('d.m.Y H:i', strtotime((string)$gallery['updated_at']))) : '—'; ?></td>
             <td class="admin-list-table__actions"><?= AdminListUI::actionGroup([
               ['icon' => 'edit', 'label' => t('gallery:Rediger galleri') . ': ' . (string)$gallery['name'], 'url' => '/admin/gallerier?screen=edit&id=' . $id],
-              ['type' => 'button', 'icon' => 'delete', 'label' => t('gallery:Slet galleri') . ': ' . (string)$gallery['name'], 'tone' => 'danger', 'attributes' => [
-                'data-admin-open-delete' => 'gallery-list-delete-dialog',
-                'data-gallery-list-delete-id' => (string)$id,
-                'data-gallery-list-delete-name' => (string)$gallery['name'],
-              ]],
+              ['type' => 'button', 'icon' => 'delete', 'label' => $deleteLabel, 'tone' => 'danger',
+                'attributes' => $usedCount > 0
+                    ? ['disabled' => true, 'title' => $useExplanation]
+                    : [
+                        'data-admin-open-delete' => 'gallery-list-delete-dialog',
+                        'data-gallery-list-delete-id' => (string)$id,
+                        'data-gallery-list-delete-name' => (string)$gallery['name'],
+                    ]],
             ], t('Handlinger') . ': ' . (string)$gallery['name']); ?></td>
           </tr>
         <?php endforeach; ?>

@@ -4073,6 +4073,13 @@
     "sv": "Utkast",
     "nb": "Utkast"
   },
+  "Beskyttede": {
+    "en": "Protected",
+    "da": "Beskyttede",
+    "de": "Geschützte",
+    "sv": "Skyddade",
+    "nb": "Beskyttede"
+  },
   "Søg indlæg": {
     "en": "Search posts",
     "da": "Søg indlæg",
@@ -7867,6 +7874,13 @@
     "sv": "Befintliga sektioner och äldre rutnät bevaras. Frontend-visningen ändras inte i den här versionen.",
     "nb": "Eksisterende seksjoner og eldre grids beholdes. Frontend-visningen endres ikke i denne versjonen."
   },
+  "page_builder_v2.input_limit": {
+    "da": "Siden indeholder for mange formularfelter til dette webhotel. Ingen ændringer er gemt. Reducér antallet af blokke eller kontakt webhotellet.",
+    "en": "This page has too many form fields for the hosting limit. Nothing was saved. Reduce the number of blocks or contact your host.",
+    "de": "Diese Seite enthält zu viele Formularfelder für das Hosting-Limit. Nichts wurde gespeichert. Reduziere die Blockanzahl oder kontaktiere den Hoster.",
+    "sv": "Sidan har för många formulärfält för webbhotellets gräns. Inget sparades. Minska antalet block eller kontakta webbhotellet.",
+    "nb": "Siden har for mange skjemafelt for webhotellets grense. Ingen endringer ble lagret. Reduser antall blokker eller kontakt webhotellet."
+  },
   "page_builder_v2.column_full": {
     "da": "Kolonnen har allerede en blok. Rediger eller fjern den først.",
     "en": "This column already has a block. Edit or remove it first.",
@@ -8652,11 +8666,11 @@
     "nb": "{count} kolonner"
   },
   "pages_detail.seo_preview_help": {
-    "en": "Preview of saved SEO metadata; actual search appearance may vary.",
-    "da": "Forhåndsvisning af gemte SEO-oplysninger. Det faktiske søgeresultat kan afvige.",
-    "de": "Vorschau der gespeicherten SEO-Daten. Die Anzeige in Suchergebnissen kann abweichen.",
-    "sv": "Förhandsvisning av sparade SEO-uppgifter. Utseendet i sökresultat kan avvika.",
-    "nb": "Forhåndsvisning av lagrede SEO-opplysninger. Utseendet i søkeresultater kan avvike."
+    "en": "SEO preview including fallback values; appearance in search results may vary.",
+    "da": "SEO-forhåndsvisning med standardværdier. Visningen i søgeresultater kan afvige.",
+    "de": "SEO-Vorschau einschließlich Ersatzwerten. Die Anzeige in Suchergebnissen kann abweichen.",
+    "sv": "SEO-förhandsvisning inklusive standardvärden. Visningen i sökresultat kan avvika.",
+    "nb": "SEO-forhåndsvisning med standardverdier. Visningen i søkeresultater kan variere."
   },
   "pages_detail.seo_title_missing": {
     "en": "SEO title not set",
@@ -10428,5 +10442,621 @@
     "de": "Ausgewählte Version installieren",
     "sv": "Uppdatera vald version",
     "nb": "Oppdater valgt versjon"
+  },
+  "page_builder_v2.add_section": {
+    "da": "Tilføj sektion",
+    "en": "Add section",
+    "de": "Abschnitt hinzufügen",
+    "sv": "Lägg till sektion",
+    "nb": "Legg til seksjon"
+  },
+  "page_builder_v2.add_content_inside": {
+    "da": "Tilføj indhold",
+    "en": "Add content",
+    "de": "Inhalt hinzufügen",
+    "sv": "Lägg till innehåll",
+    "nb": "Legg til innhold"
+  },
+  "page_builder_v2.choose_section": {
+    "en": "Choose section",
+    "da": "Vælg sektion",
+    "de": "Abschnitt auswählen",
+    "sv": "Välj sektion",
+    "nb": "Velg seksjon"
+  },
+  "page_builder_v2.choose_section_help": {
+    "en": "Select the type of section you want to add.",
+    "da": "Vælg hvilken sektion du vil tilføje.",
+    "de": "Wähle den gewünschten Abschnittstyp.",
+    "sv": "Välj vilken sektion du vill lägga till.",
+    "nb": "Velg hvilken seksjon du vil legge til."
+  },
+  "page_builder_v2.standard_section": {
+    "en": "Standard section",
+    "da": "Standardsektion",
+    "de": "Standardabschnitt",
+    "sv": "Standardsektion",
+    "nb": "Standardseksjon"
+  },
+  "page_builder_v2.standard_section_help": {
+    "en": "A regular section with columns and content blocks.",
+    "da": "En almindelig sektion med kolonner og indholdsblokke.",
+    "de": "Ein normaler Abschnitt mit Spalten und Inhaltsblöcken.",
+    "sv": "En vanlig sektion med kolumner och innehållsblock.",
+    "nb": "En vanlig seksjon med kolonner og innholdsblokker."
+  },
+  "page_builder_v2.hero_section": {
+    "en": "Hero section",
+    "da": "Hero-sektion",
+    "de": "Hero-Abschnitt",
+    "sv": "Hero-sektion",
+    "nb": "Hero-seksjon"
+  },
+  "page_builder_v2.hero_section_help": {
+    "en": "A full-width introductory section with image, overlay and optional parallax.",
+    "da": "En introduktionssektion med billede, overlay og valgfri parallax.",
+    "de": "Ein Einleitungsabschnitt mit Bild, Overlay und optionalem Parallax.",
+    "sv": "En introduktionssektion med bild, överlägg och valfri parallax.",
+    "nb": "En introduksjonsseksjon med bilde, overlegg og valgfri parallakse."
+  },
+  "page_builder_v2.hero_background": {
+    "en": "Background image",
+    "da": "Baggrundsbillede",
+    "de": "Hintergrundbild",
+    "sv": "Bakgrundsbild",
+    "nb": "Bakgrunnsbilde"
+  },
+  "page_builder_v2.hero_height": {
+    "en": "Height",
+    "da": "Højde",
+    "de": "Höhe",
+    "sv": "Höjd",
+    "nb": "Høyde"
+  },
+  "page_builder_v2.hero_height_auto": {
+    "en": "Automatic",
+    "da": "Automatisk",
+    "de": "Automatisch",
+    "sv": "Automatisk",
+    "nb": "Automatisk"
+  },
+  "page_builder_v2.hero_height_large": {
+    "en": "Large",
+    "da": "Stor",
+    "de": "Groß",
+    "sv": "Stor",
+    "nb": "Stor"
+  },
+  "page_builder_v2.hero_height_screen": {
+    "en": "Full screen",
+    "da": "Fuld skærm",
+    "de": "Vollbild",
+    "sv": "Helskärm",
+    "nb": "Fullskjerm"
+  },
+  "page_builder_v2.hero_overlay": {
+    "en": "Dark overlay",
+    "da": "Mørk overlejring",
+    "de": "Dunkles Overlay",
+    "sv": "Mörk övertoning",
+    "nb": "Mørkt overlegg"
+  },
+  "page_builder_v2.hero_overlay_opacity": {
+    "en": "Overlay strength",
+    "da": "Overlejringens styrke",
+    "de": "Overlay-Stärke",
+    "sv": "Överläggets styrka",
+    "nb": "Overleggets styrke"
+  },
+  "page_builder_v2.hero_parallax": {
+    "en": "Parallax scroll",
+    "da": "Parallax-scroll",
+    "de": "Parallax-Scrollen",
+    "sv": "Parallax-rullning",
+    "nb": "Parallaksrulling"
+  },
+  "page_builder_v2.hero_parallax_help": {
+    "en": "Subtle background movement on desktop. Disabled on mobile and for reduced motion.",
+    "da": "Diskret billedbevægelse på desktop. Slået fra på mobil og ved reduceret bevægelse.",
+    "de": "Dezente Bildbewegung am Desktop. Auf Mobilgeräten und bei reduzierter Bewegung deaktiviert.",
+    "sv": "Diskret bildrörelse på dator. Avstängd på mobil och vid minskad rörelse.",
+    "nb": "Diskret bildebevegelse på datamaskin. Avslått på mobil og ved redusert bevegelse."
+  },
+  "page_builder_v2.hero_title": {
+    "en": "Main heading (H1)",
+    "da": "Overskrift (H1)",
+    "de": "Hauptüberschrift (H1)",
+    "sv": "Rubrik (H1)",
+    "nb": "Overskrift (H1)"
+  },
+  "page_builder_v2.hero_subtitle": {
+    "en": "Subtitle",
+    "da": "Underoverskrift",
+    "de": "Untertitel",
+    "sv": "Underrubrik",
+    "nb": "Underoverskrift"
+  },
+  "page_builder_v2.hero_description": {
+    "en": "Description",
+    "da": "Beskrivelse",
+    "de": "Beschreibung",
+    "sv": "Beskrivning",
+    "nb": "Beskrivelse"
+  },
+  "page_builder_v2.hero_button_label": {
+    "en": "Button text",
+    "da": "Knaptekst",
+    "de": "Button-Text",
+    "sv": "Knapptext",
+    "nb": "Knappetekst"
+  },
+  "page_builder_v2.hero_button_url": {
+    "en": "Button link",
+    "da": "Knappens link",
+    "de": "Button-Link",
+    "sv": "Knapplänk",
+    "nb": "Knappelenke"
+  },
+  "page_builder_v2.hero_content": {
+    "en": "Hero content",
+    "da": "Hero-indhold",
+    "de": "Hero-Inhalt",
+    "sv": "Hero-innehåll",
+    "nb": "Hero-innhold"
+  },
+  "page_builder_v2.hero_settings": {
+    "en": "Hero settings",
+    "da": "Hero-indstillinger",
+    "de": "Hero-Einstellungen",
+    "sv": "Hero-inställningar",
+    "nb": "Hero-innstillinger"
+  },
+  "page_builder_v2.hero_settings_help": {
+    "en": "Adjust the background, height and effects for this hero.",
+    "da": "Tilpas baggrund, højde og effekter for denne Hero.",
+    "de": "Hintergrund, Höhe und Effekte dieses Hero-Bereichs anpassen.",
+    "sv": "Anpassa bakgrund, höjd och effekter för denna hero.",
+    "nb": "Tilpass bakgrunn, høyde og effekter for denne heroen."
+  },
+  "pages_detail.section_label": {
+    "en": "Section",
+    "da": "Sektion",
+    "de": "Abschnitt",
+    "sv": "Sektion",
+    "nb": "Seksjon"
+  },
+  "pages_detail.row_column_singular": {
+    "en": "{count} column",
+    "da": "{count} kolonne",
+    "de": "{count} Spalte",
+    "sv": "{count} kolumn",
+    "nb": "{count} kolonne"
+  },
+  "pages_detail.seo_title_from_page": {
+    "en": "Using the page title",
+    "da": "Bruger sidens titel",
+    "de": "Seitentitel wird verwendet",
+    "sv": "Sidans titel används",
+    "nb": "Sidens tittel brukes"
+  },
+  "pages_detail.seo_title_from_site": {
+    "en": "Using the website name",
+    "da": "Bruger hjemmesidens navn",
+    "de": "Website-Name wird verwendet",
+    "sv": "Webbplatsens namn används",
+    "nb": "Nettstedets navn brukes"
+  },
+  "pages_detail.seo_description_from_page": {
+    "en": "Using the page description",
+    "da": "Bruger sidens beskrivelse",
+    "de": "Seitenbeschreibung wird verwendet",
+    "sv": "Sidans beskrivning används",
+    "nb": "Sidens beskrivelse brukes"
+  },
+  "pages_detail.seo_description_from_site": {
+    "en": "Using the default SEO description from Settings",
+    "da": "Bruger standardbeskrivelsen fra Indstillinger",
+    "de": "Standard-SEO-Beschreibung aus den Einstellungen wird verwendet",
+    "sv": "Standardbeskrivningen från Inställningar används",
+    "nb": "Standardbeskrivelsen fra Innstillinger brukes"
+  },
+  "revisions.history_description": {
+    "en": "Previously saved versions of page content and Page Builder.",
+    "da": "Tidligere gemte versioner af sideindhold og Page Builder.",
+    "de": "Früher gespeicherte Versionen von Seiteninhalt und Page Builder.",
+    "sv": "Tidigare sparade versioner av sidinnehåll och Page Builder.",
+    "nb": "Tidligere lagrede versjoner av sideinnhold og Page Builder."
+  },
+  "revisions.count_one": {
+    "en": "{count} version",
+    "da": "{count} version",
+    "de": "{count} Version",
+    "sv": "{count} version",
+    "nb": "{count} versjon"
+  },
+  "revisions.count_many": {
+    "en": "{count} versions",
+    "da": "{count} versioner",
+    "de": "{count} Versionen",
+    "sv": "{count} versioner",
+    "nb": "{count} versjoner"
+  },
+  "revisions.action_baseline": {
+    "en": "Initial version",
+    "da": "Startversion",
+    "de": "Ausgangsversion",
+    "sv": "Startversion",
+    "nb": "Startversjon"
+  },
+  "revisions.action_saved": {
+    "en": "Saved",
+    "da": "Gemt",
+    "de": "Gespeichert",
+    "sv": "Sparad",
+    "nb": "Lagret"
+  },
+  "revisions.action_restored": {
+    "en": "Restored",
+    "da": "Gendannet",
+    "de": "Wiederhergestellt",
+    "sv": "Återställd",
+    "nb": "Gjenopprettet"
+  },
+  "revisions.action_auto_published": {
+    "en": "Published automatically",
+    "da": "Automatisk publiceret",
+    "de": "Automatisch veröffentlicht",
+    "sv": "Publicerad automatiskt",
+    "nb": "Publisert automatisk"
+  },
+  "revisions.action_auto_unpublished": {
+    "en": "Unpublished automatically",
+    "da": "Automatisk afpubliceret",
+    "de": "Automatisch zurückgezogen",
+    "sv": "Avpublicerad automatiskt",
+    "nb": "Avpublisert automatisk"
+  },
+  "revisions.version_label": {
+    "en": "Version {number}",
+    "da": "Version {number}",
+    "de": "Version {number}",
+    "sv": "Version {number}",
+    "nb": "Versjon {number}"
+  },
+  "revisions.unknown_editor": {
+    "en": "Unknown or deleted user",
+    "da": "Ukendt eller slettet bruger",
+    "de": "Unbekannter oder gelöschter Benutzer",
+    "sv": "Okänd eller borttagen användare",
+    "nb": "Ukjent eller slettet bruker"
+  },
+  "revisions.pagination_label": {
+    "en": "Versions",
+    "da": "Versioner",
+    "de": "Versionen",
+    "sv": "Versioner",
+    "nb": "Versjoner"
+  },
+  "revisions.summary_title": {
+    "en": "Summary of changes",
+    "da": "Oversigt over ændringer",
+    "de": "Zusammenfassung der Änderungen",
+    "sv": "Sammanfattning av ändringar",
+    "nb": "Oppsummering av endringer"
+  },
+  "revisions.page_fields": {
+    "en": "Page details",
+    "da": "Sideoplysninger",
+    "de": "Seitenangaben",
+    "sv": "Siduppgifter",
+    "nb": "Sideopplysninger"
+  },
+  "revisions.changed_field_one": {
+    "en": "{count} changed field",
+    "da": "{count} ændret felt",
+    "de": "{count} geändertes Feld",
+    "sv": "{count} ändrat fält",
+    "nb": "{count} endret felt"
+  },
+  "revisions.changed_field_many": {
+    "en": "{count} changed fields",
+    "da": "{count} ændrede felter",
+    "de": "{count} geänderte Felder",
+    "sv": "{count} ändrade fält",
+    "nb": "{count} endrede felt"
+  },
+  "revisions.html_changed": {
+    "en": "HTML content changed",
+    "da": "HTML-indhold ændret",
+    "de": "HTML-Inhalt geändert",
+    "sv": "HTML-innehåll ändrat",
+    "nb": "HTML-innhold endret"
+  },
+  "revisions.sections_count": {
+    "en": "{before} in this version · {after} now",
+    "da": "{before} i denne version · {after} nu",
+    "de": "{before} in dieser Version · {after} aktuell",
+    "sv": "{before} i denna version · {after} nu",
+    "nb": "{before} i denne versjonen · {after} nå"
+  },
+  "revisions.unchanged": {
+    "en": "Unchanged",
+    "da": "Uændret",
+    "de": "Unverändert",
+    "sv": "Oförändrat",
+    "nb": "Uendret"
+  },
+  "revisions.changed_fields_title": {
+    "en": "Changed page fields",
+    "da": "Ændrede sidefelter",
+    "de": "Geänderte Seitenfelder",
+    "sv": "Ändrade sidfält",
+    "nb": "Endrede sidefelt"
+  },
+  "revisions.no_field_changes": {
+    "en": "No page fields changed.",
+    "da": "Ingen sidefelter er ændret.",
+    "de": "Keine Seitenfelder wurden geändert.",
+    "sv": "Inga sidfält har ändrats.",
+    "nb": "Ingen sidefelt er endret."
+  },
+  "revisions.show_unchanged_fields": {
+    "en": "Show unchanged fields",
+    "da": "Vis uændrede felter",
+    "de": "Unveränderte Felder anzeigen",
+    "sv": "Visa oförändrade fält",
+    "nb": "Vis uendrede felt"
+  },
+  "revisions.section_changes_title": {
+    "en": "Page structure and content",
+    "da": "Sidestruktur og indhold",
+    "de": "Seitenstruktur und Inhalt",
+    "sv": "Sidstruktur och innehåll",
+    "nb": "Sidestruktur og innhold"
+  },
+  "revisions.section": {
+    "en": "Section",
+    "da": "Sektion",
+    "de": "Abschnitt",
+    "sv": "Sektion",
+    "nb": "Seksjon"
+  },
+  "revisions.standard_section": {
+    "en": "Standard section",
+    "da": "Standardsektion",
+    "de": "Standardabschnitt",
+    "sv": "Standardsektion",
+    "nb": "Standardseksjon"
+  },
+  "revisions.hero_section": {
+    "en": "Hero section",
+    "da": "Hero-sektion",
+    "de": "Hero-Abschnitt",
+    "sv": "Hero-sektion",
+    "nb": "Hero-seksjon"
+  },
+  "revisions.column_one": {
+    "en": "{count} column",
+    "da": "{count} kolonne",
+    "de": "{count} Spalte",
+    "sv": "{count} kolumn",
+    "nb": "{count} kolonne"
+  },
+  "revisions.column_many": {
+    "en": "{count} columns",
+    "da": "{count} kolonner",
+    "de": "{count} Spalten",
+    "sv": "{count} kolumner",
+    "nb": "{count} kolonner"
+  },
+  "revisions.block_one": {
+    "en": "{count} content block",
+    "da": "{count} indholdsblok",
+    "de": "{count} Inhaltsblock",
+    "sv": "{count} innehållsblock",
+    "nb": "{count} innholdsblokk"
+  },
+  "revisions.block_many": {
+    "en": "{count} content blocks",
+    "da": "{count} indholdsblokke",
+    "de": "{count} Inhaltsblöcke",
+    "sv": "{count} innehållsblock",
+    "nb": "{count} innholdsblokker"
+  },
+  "revisions.section_number": {
+    "en": "Section {number}",
+    "da": "Sektion {number}",
+    "de": "Abschnitt {number}",
+    "sv": "Sektion {number}",
+    "nb": "Seksjon {number}"
+  },
+  "revisions.position_number": {
+    "en": "Position {number}",
+    "da": "Position {number}",
+    "de": "Position {number}",
+    "sv": "Position {number}",
+    "nb": "Posisjon {number}"
+  },
+  "revisions.added": {
+    "en": "Added",
+    "da": "Tilføjet",
+    "de": "Hinzugefügt",
+    "sv": "Tillagd",
+    "nb": "Lagt til"
+  },
+  "revisions.removed": {
+    "en": "Removed",
+    "da": "Fjernet",
+    "de": "Entfernt",
+    "sv": "Borttagen",
+    "nb": "Fjernet"
+  },
+  "revisions.moved": {
+    "en": "Moved",
+    "da": "Flyttet",
+    "de": "Verschoben",
+    "sv": "Flyttad",
+    "nb": "Flyttet"
+  },
+  "revisions.visibility_changed": {
+    "en": "Visibility changed",
+    "da": "Synlighed ændret",
+    "de": "Sichtbarkeit geändert",
+    "sv": "Synlighet ändrad",
+    "nb": "Synlighet endret"
+  },
+  "revisions.content_or_settings_changed": {
+    "en": "Content or settings changed",
+    "da": "Indhold eller indstillinger ændret",
+    "de": "Inhalt oder Einstellungen geändert",
+    "sv": "Innehåll eller inställningar ändrade",
+    "nb": "Innhold eller innstillinger endret"
+  },
+  "revisions.position_changed": {
+    "en": "Content or placement differs",
+    "da": "Indhold eller placering er forskellig",
+    "de": "Inhalt oder Position unterscheidet sich",
+    "sv": "Innehåll eller placering skiljer sig",
+    "nb": "Innhold eller plassering er forskjellig"
+  },
+  "revisions.position_note": {
+    "en": "Older versions without stable section IDs are compared by position. A moved section may appear as changed content.",
+    "da": "Ældre versioner uden faste sektions-ID’er sammenlignes efter position. En flyttet sektion kan derfor fremstå som ændret indhold.",
+    "de": "Ältere Versionen ohne feste Abschnitts-IDs werden nach Position verglichen. Ein verschobener Abschnitt kann daher als geänderter Inhalt erscheinen.",
+    "sv": "Äldre versioner utan fasta sektions-ID:n jämförs efter position. En flyttad sektion kan därför visas som ändrat innehåll.",
+    "nb": "Eldre versjoner uten faste seksjons-ID-er sammenlignes etter posisjon. En flyttet seksjon kan derfor vises som endret innhold."
+  },
+  "revisions.no_section_changes": {
+    "en": "No Page Builder section changes.",
+    "da": "Ingen ændringer i Page Builder-sektionerne.",
+    "de": "Keine Änderungen an Page-Builder-Abschnitten.",
+    "sv": "Inga ändringar i Page Builder-sektionerna.",
+    "nb": "Ingen endringer i Page Builder-seksjonene."
+  },
+  "revisions.difference": {
+    "en": "Change",
+    "da": "Ændring",
+    "de": "Änderung",
+    "sv": "Ändring",
+    "nb": "Endring"
+  },
+  "revisions.technical_details": {
+    "en": "Technical details",
+    "da": "Tekniske detaljer",
+    "de": "Technische Details",
+    "sv": "Tekniska detaljer",
+    "nb": "Tekniske detaljer"
+  },
+  "revisions.show_html": {
+    "en": "View saved HTML content",
+    "da": "Vis gemt HTML-indhold",
+    "de": "Gespeicherten HTML-Inhalt anzeigen",
+    "sv": "Visa sparat HTML-innehåll",
+    "nb": "Vis lagret HTML-innhold"
+  },
+  "revisions.show_json": {
+    "en": "View full Page Builder data (JSON)",
+    "da": "Vis alle Page Builder-data (JSON)",
+    "de": "Vollständige Page-Builder-Daten anzeigen (JSON)",
+    "sv": "Visa alla Page Builder-data (JSON)",
+    "nb": "Vis alle Page Builder-data (JSON)"
+  },
+  "revisions.restore_title": {
+    "en": "Restore version {number}",
+    "da": "Gendan version {number}",
+    "de": "Version {number} wiederherstellen",
+    "sv": "Återställ version {number}",
+    "nb": "Gjenopprett versjon {number}"
+  },
+  "revisions.field_title": {
+    "en": "Page title",
+    "da": "Sidetitel",
+    "de": "Seitentitel",
+    "sv": "Sidtitel",
+    "nb": "Sidetittel"
+  },
+  "revisions.field_url": {
+    "en": "URL name",
+    "da": "URL-navn",
+    "de": "URL-Name",
+    "sv": "URL-namn",
+    "nb": "URL-navn"
+  },
+  "revisions.field_sort_order": {
+    "en": "Sort order",
+    "da": "Sorteringsrækkefølge",
+    "de": "Sortierreihenfolge",
+    "sv": "Sorteringsordning",
+    "nb": "Sorteringsrekkefølge"
+  },
+  "revisions.field_show_in_menu": {
+    "en": "Show in menu",
+    "da": "Vis i menu",
+    "de": "Im Menü anzeigen",
+    "sv": "Visa i meny",
+    "nb": "Vis i meny"
+  },
+  "revisions.parent_id": {
+    "en": "Page ID {id}",
+    "da": "Side-ID {id}",
+    "de": "Seiten-ID {id}",
+    "sv": "Sid-ID {id}",
+    "nb": "Side-ID {id}"
+  },
+  "revisions.yes": {
+    "en": "Yes",
+    "da": "Ja",
+    "de": "Ja",
+    "sv": "Ja",
+    "nb": "Ja"
+  },
+  "revisions.no": {
+    "en": "No",
+    "da": "Nej",
+    "de": "Nein",
+    "sv": "Nej",
+    "nb": "Nei"
+  },
+  "pages.editor.delete_system_locked": {
+    "en": "This system page has a protected URL and cannot be permanently deleted.",
+    "da": "Denne systemside har en beskyttet URL og kan ikke slettes permanent.",
+    "de": "Diese Systemseite hat eine geschützte URL und kann nicht dauerhaft gelöscht werden.",
+    "sv": "Den här systemsidan har en skyddad URL och kan inte raderas permanent.",
+    "nb": "Denne systemsiden har en beskyttet URL og kan ikke slettes permanent."
+  },
+  "pages.editor.delete_has_children": {
+    "en": "This page has child pages. Move or delete them first.",
+    "da": "Siden har undersider. Flyt eller slet dem først.",
+    "de": "Diese Seite hat Unterseiten. Verschieben oder löschen Sie diese zuerst.",
+    "sv": "Sidan har undersidor. Flytta eller ta bort dem först.",
+    "nb": "Siden har undersider. Flytt eller slett dem først."
+  },
+  "pages.editor.delete_permanent": {
+    "en": "Permanently delete this page from the database.",
+    "da": "Slet siden permanent fra databasen.",
+    "de": "Diese Seite dauerhaft aus der Datenbank löschen.",
+    "sv": "Ta bort sidan permanent från databasen.",
+    "nb": "Slett siden permanent fra databasen."
+  },
+  "pages.editor.seo_title_help": {
+    "en": "Leave blank to use the page title.",
+    "da": "Lad feltet stå tomt for at bruge sidens titel.",
+    "de": "Leer lassen, um den Seitentitel zu verwenden.",
+    "sv": "Lämna tomt för att använda sidans titel.",
+    "nb": "La feltet stå tomt for å bruke sidens tittel."
+  },
+  "pages.editor.seo_description_help": {
+    "en": "Leave blank to use the short description, or the default SEO description from Settings if that is empty.",
+    "da": "Lad feltet stå tomt for at bruge den korte beskrivelse eller standardbeskrivelsen fra Indstillinger, hvis den er tom.",
+    "de": "Leer lassen, um die Kurzbeschreibung zu verwenden. Ist diese leer, wird die Standard-SEO-Beschreibung aus den Einstellungen genutzt.",
+    "sv": "Lämna tomt för att använda den korta beskrivningen eller standardbeskrivningen från Inställningar om även den är tom.",
+    "nb": "La feltet stå tomt for å bruke den korte beskrivelsen, eller standardbeskrivelsen fra Innstillinger hvis den også er tom."
+  },
+  "pages.builder_publish_requires_active_section": {
+    "en": "A published Page Builder page must contain at least one active section.",
+    "da": "En publiceret Page Builder-side skal have mindst én aktiv sektion.",
+    "de": "Eine veröffentlichte Page-Builder-Seite muss mindestens einen aktiven Abschnitt enthalten.",
+    "sv": "En publicerad Page Builder-sida måste innehålla minst en aktiv sektion.",
+    "nb": "En publisert Page Builder-side må ha minst én aktiv seksjon."
   }
 }

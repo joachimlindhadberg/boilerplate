@@ -27,6 +27,8 @@
     removed: <?= json_encode(t('gallery:gallery_removed_feedback'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
     confirmBody: <?= json_encode(t('gallery:gallery_remove_confirm'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
     confirmTitle: <?= json_encode(t('gallery:gallery_remove_image'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+    alreadyAdded: <?= json_encode(t('gallery:ui.image_already_added'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
+    pickerError: <?= json_encode(t('gallery:gallery_media_picker_error'), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>,
   };
 
   const openDialog = (target) => { if (!target) return; if (typeof target.showModal === 'function') target.showModal(); else target.setAttribute('open',''); };
@@ -46,7 +48,7 @@
       button.className = 'admin-media-picker-item';
       button.dataset.galleryPickerId = id;
       if (selected.has(id)) button.classList.add('is-selected');
-      if (used.has(id)) { button.disabled = true; button.title = 'Billedet er allerede i galleriet'; }
+      if (used.has(id)) { button.disabled = true; button.title = labels.alreadyAdded; }
       const image = document.createElement('img'); image.src = String(item.url || ''); image.alt = ''; image.loading = 'lazy';
       const label = document.createElement('span'); label.textContent = String(item.title || item.filename || (window.cmsTranslate?.('Billede') ?? 'Billede'));
       button.append(image, label); grid.appendChild(button);
@@ -69,7 +71,7 @@
     } catch (error) {
       if (current !== requestId) return;
       grid.innerHTML = '';
-      if (emptyPicker) { emptyPicker.hidden = false; const text=emptyPicker.querySelector('span'); if(text) text.textContent='Mediebiblioteket kunne ikke indlæses. Prøv igen.'; }
+      if (emptyPicker) { emptyPicker.hidden = false; const text=emptyPicker.querySelector('span'); if(text) text.textContent=labels.pickerError; }
     } finally { if (current === requestId && loading) loading.hidden = true; }
   };
 

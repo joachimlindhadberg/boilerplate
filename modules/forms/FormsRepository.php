@@ -178,29 +178,17 @@ final class FormsRepository
         $submissions = (int)$this->db->fetchValue(
             'SELECT COUNT(*) FROM module_form_submissions WHERE form_id = ?', [$id]
         );
+        // ModuleManager stores Page Builder components with their module slug,
+        // e.g. forms:form-6. The old bare ID (form-6) is checked as a cautious
+        // compatibility fallback. Deduplicate pages across both representations.
         $pages = [];
-        $component = 'form-' . $id;
-        $blocks = $this->db->fetchArray(
-            'SELECT page_id, block_data FROM page_blocks WHERE block_data LIKE ?',
-            ['%' . $component . '%']
-        );
-        foreach ($blocks as $block) {
-            $data = json_decode((string)($block['block_data'] ?? ''), true);
-            if (is_array($data) && self::containsFormComponent($data, $component)) {
-                $pages[(int)$block['page_id']] = true;
+        foreach (['forms:form-' . $id, 'form-' . $id] as $component) {
+            $usage = PageComponentUsage::find($this->db, $component);
+            foreach ($usage['page_ids'] as $pageId) {
+                $pages[(int)$pageId] = true;
             }
         }
         return ['submissions' => $submissions, 'pages' => count($pages)];
-    }
-
-    /** Recursively match real component keys (including nested grid children). */
-    private static function containsFormComponent(array $data, string $component): bool
-    {
-        foreach ($data as $key => $value) {
-            if ($key === 'component' && $value === $component) return true;
-            if (is_array($value) && self::containsFormComponent($value, $component)) return true;
-        }
-        return false;
     }
 
     /**

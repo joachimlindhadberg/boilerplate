@@ -360,30 +360,10 @@ class Pages
 
     public function buildPublicUrl(array $page): string
     {
-        $slug = trim((string)($page['page_slug'] ?? ''));
-        if ($slug === 'forside') {
-            return '/';
-        }
-        if ($slug === '') {
-            return '/';
-        }
-
-        $segments = [$slug];
-        $parentId = (int)($page['parent_id'] ?? 0);
-        $visited = [];
-        while ($parentId > 0 && !isset($visited[$parentId])) {
-            $visited[$parentId] = true;
-            $parent = $this->findAdmin($parentId);
-            if (!$parent) {
-                break;
-            }
-            $parentSlug = trim((string)($parent['page_slug'] ?? ''));
-            if ($parentSlug !== '' && $parentSlug !== 'forside') {
-                array_unshift($segments, $parentSlug);
-            }
-            $parentId = (int)($parent['parent_id'] ?? 0);
-        }
-        return '/' . implode('/', $segments);
+        return PagePath::fromLookup(
+            $page,
+            fn(int $parentId): ?array => $this->findAdmin($parentId)
+        );
     }
 
     /**
@@ -421,33 +401,11 @@ class Pages
         $snapshot = [];
         foreach (array_keys($ids) as $pageId) {
             $snapshot[$pageId] = [
-                'url' => $this->pagePathFromMap($byId[$pageId], $byId),
+                'url' => PagePath::fromMap($byId[$pageId], $byId),
                 'status' => (string)($byId[$pageId]['page_status'] ?? 'draft'),
             ];
         }
         return $snapshot;
-    }
-
-    private function pagePathFromMap(array $page, array $byId): string
-    {
-        $slug = trim((string)($page['page_slug'] ?? ''));
-        if ($slug === '' || $slug === 'forside') {
-            return '/';
-        }
-
-        $segments = [$slug];
-        $parentId = (int)($page['parent_id'] ?? 0);
-        $visited = [];
-        while ($parentId > 0 && isset($byId[$parentId]) && !isset($visited[$parentId])) {
-            $visited[$parentId] = true;
-            $parent = $byId[$parentId];
-            $parentSlug = trim((string)($parent['page_slug'] ?? ''));
-            if ($parentSlug !== '' && $parentSlug !== 'forside') {
-                array_unshift($segments, $parentSlug);
-            }
-            $parentId = (int)($parent['parent_id'] ?? 0);
-        }
-        return '/' . implode('/', $segments);
     }
 
     private function buildAdminFilters(string $search, string $status): array

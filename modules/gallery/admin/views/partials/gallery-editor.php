@@ -3,6 +3,8 @@ $galleryData = is_array($galleryData ?? null) ? $galleryData : [];
 $items = is_array($items ?? null) ? $items : [];
 $errors = is_array($errors ?? null) ? $errors : [];
 $usage = is_array($usage ?? null) ? $usage : ['count' => 0, 'page_ids' => []];
+$usagePages = is_array($usagePages ?? null) ? $usagePages : [];
+$usageCount = max(0, (int)($usage['count'] ?? 0));
 $isEdit = !empty($isEdit);
 $galleryId = max(0, (int)($galleryId ?? 0));
 $fieldError = static fn(string $key): string => t((string)($errors[$key] ?? ''));
@@ -28,7 +30,7 @@ $action = $isEdit ? '/admin/gallerier?screen=edit&amp;id=' . $galleryId : '/admi
         <div class="admin-panel__header"><h2><?= admin_e(t('gallery:Galleri')); ?></h2></div>
         <div class="admin-form-section">
           <div class="admin-field"><label for="gallery-name"><?= admin_e(t('Navn *')); ?></label><input id="gallery-name" name="name" maxlength="191" value="<?= admin_e((string)($galleryData['name'] ?? '')); ?>" required><?php if($fieldError('name')):?><p class="admin-field-error"><?= admin_e(t((string)$fieldError('name'))); ?></p><?php endif; ?></div>
-          <div class="admin-field"><label for="gallery-description"><?= admin_e(t('Beskrivelse')); ?></label><textarea id="gallery-description" name="description" rows="3" maxlength="2000"><?= admin_e((string)($galleryData['description'] ?? '')); ?></textarea><p class="admin-field__help"><?= admin_e(t('gallery:Kun til intern administration i denne version.')); ?></p></div>
+          <div class="admin-field"><label for="gallery-description"><?= admin_e(t('Beskrivelse')); ?></label><textarea id="gallery-description" name="description" rows="3" maxlength="2000"><?= admin_e((string)($galleryData['description'] ?? '')); ?></textarea><p class="admin-field__help"><?= admin_e(t('gallery:gallery_description_help')); ?></p></div>
         </div>
       </section>
 
@@ -57,18 +59,45 @@ $action = $isEdit ? '/admin/gallerier?screen=edit&amp;id=' . $galleryId : '/admi
         <div class="admin-field"><label for="gallery-status"><?= admin_e(t('Status')); ?></label><select id="gallery-status" name="status"><option value="active" <?= ($galleryData['status']??'active')==='active'?'selected':''; ?>><?= admin_e(t('Aktiv')); ?></option><option value="inactive" <?= ($galleryData['status']??'')==='inactive'?'selected':''; ?>><?= admin_e(t('Inaktiv')); ?></option></select><p class="admin-field__help"><?= admin_e(t('gallery:Kun aktive gallerier kan vælges og vises via Page Builder.')); ?></p></div>
       </div></section>
       <section class="admin-panel"><div class="admin-panel__header"><h2><?= admin_e(t('gallery:Brug på sider')); ?></h2></div><div class="admin-form-section">
-        <?php if ($isEdit && ($galleryData['status']??'active') === 'active'): ?><p><?= admin_e(t('gallery:Åbn en side i Page Builder, tilføj')); ?> <strong><?= admin_e(t('gallery:Dynamisk komponent')); ?></strong> <?= admin_e(t('gallery:og vælg:')); ?></p><p><strong>Galleri · <?= admin_e((string)($galleryData['name'] ?? '')); ?></strong></p><p class="admin-field__help">Bruges aktuelt på <?= (int)($usage['count'] ?? 0); ?> <?= (int)($usage['count'] ?? 0) === 1 ? 'side' : 'sider'; ?>.</p><?php elseif ($isEdit): ?><p><?= admin_e(t('gallery:Aktivér galleriet for at gøre det tilgængeligt i Page Builder.')); ?></p><?php else: ?><p><?= admin_e(t('gallery:Gem galleriet først. Derefter bliver det tilgængeligt som dynamisk Page Builder-komponent.')); ?></p><?php endif; ?>
+        <?php if (!$isEdit): ?>
+          <p><?= admin_e(t('gallery:Gem galleriet først. Derefter bliver det tilgængeligt som dynamisk Page Builder-komponent.')); ?></p>
+        <?php elseif ($usageCount > 0): ?>
+          <p class="admin-field__help"><?= admin_e(t($usageCount === 1 ? 'gallery:gallery_used_one' : 'gallery:gallery_used_many', ['count' => $usageCount])); ?></p>
+          <?php foreach ($usagePages as $usagePage):
+            $pageId = max(0, (int)($usagePage['id'] ?? 0));
+            if ($pageId < 1) continue;
+            $pageCanEdit = LegacyHtmlPolicy::canEditPage($usagePage, (string)($user['role'] ?? ''));
+          ?>
+            <p><a href="/admin/sider?mode=<?= $pageCanEdit ? 'edit' : 'view'; ?>&amp;id=<?= $pageId; ?>"><?= admin_e((string)($usagePage['page_title'] ?? '') ?: t('gallery:gallery_untitled_page')); ?></a></p>
+          <?php endforeach; ?>
+          <?php if ($usageCount > count($usagePages)): ?>
+            <?php $otherCount = $usageCount - count($usagePages); ?>
+            <p class="admin-field__help"><?= admin_e(t($otherCount === 1 ? 'gallery:gallery_additional_page' : 'gallery:gallery_additional_pages', ['count' => $otherCount])); ?></p>
+          <?php endif; ?>
+        <?php elseif (($galleryData['status'] ?? 'active') === 'active'): ?>
+          <p class="admin-field__help"><?= admin_e(t('gallery:gallery_unused')); ?></p>
+          <p><?= admin_e(t('gallery:gallery_add_to_page')); ?></p>
+          <p><strong><?= admin_e(t('gallery:Galleri')); ?> · <?= admin_e((string)($galleryData['name'] ?? '')); ?></strong></p>
+        <?php else: ?>
+          <p><?= admin_e(t('gallery:Aktivér galleriet for at gøre det tilgængeligt i Page Builder.')); ?></p>
+        <?php endif; ?>
       </div></section>
-      <div class="admin-form-actions"><a class="admin-button admin-button--secondary" href="/admin/gallerier"><?= admin_e(t('Annuller')); ?></a><button class="admin-button" type="submit" name="gallery_action" value="save"><?= admin_e(t('gallery:Gem galleri')); ?></button></div>
       <?php if ($isEdit): ?>
         <section class="admin-panel admin-danger-zone">
           <div class="admin-panel__header"><h2><?= admin_e(t('Slet')); ?></h2></div>
-          <div class="admin-form-section">
-            <p><?= admin_e(t('gallery:Galleriet kan kun slettes, hvis det ikke længere bruges på en side. Billederne i Medier bliver ikke slettet.')); ?></p>
-            <button class="admin-button admin-button--danger" type="button" data-gallery-delete-open><?= admin_e(t('gallery:Slet galleri')); ?></button>
+          <div class="admin-danger-zone__body">
+            <?php if ($usageCount > 0): ?>
+              <p><?= admin_e(t($usageCount === 1 ? 'notice.gallery_in_use_one' : 'notice.gallery_in_use_many', ['count' => $usageCount])); ?></p>
+              <p class="admin-field__help"><?= admin_e(t('gallery:gallery_images_remain')); ?></p>
+              <button class="admin-button admin-button--danger" type="button" disabled><?= admin_e(t('gallery:Slet galleri')); ?></button>
+            <?php else: ?>
+              <p><?= admin_e(t('gallery:gallery_images_remain')); ?></p>
+              <button class="admin-button admin-button--danger" type="button" data-gallery-delete-open><?= admin_e(t('gallery:Slet galleri')); ?></button>
+            <?php endif; ?>
           </div>
         </section>
       <?php endif; ?>
+      <div class="admin-form-actions"><a class="admin-button admin-button--secondary" href="/admin/gallerier"><?= admin_e(t('Annuller')); ?></a><button class="admin-button" type="submit" name="gallery_action" value="save"><?= admin_e(t('gallery:Gem galleri')); ?></button></div>
     </aside>
   </div>
 </form>

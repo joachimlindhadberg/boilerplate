@@ -473,10 +473,10 @@ class MediaLibrary
     private function dataUsesMedia(array $data, int $id, string $path): bool
     {
         foreach ($data as $key => $value) {
-            if ($key === 'image_id' && (int)$value === $id) {
+            if (in_array($key, ['image_id', 'hero_image_id'], true) && (int)$value === $id) {
                 return true;
             }
-            if ($path !== '' && $key === 'image_path' && (string)$value === $path) {
+            if ($path !== '' && in_array($key, ['image_path', 'hero_image_path'], true) && (string)$value === $path) {
                 return true;
             }
             if (is_array($value) && $this->dataUsesMedia($value, $id, $path)) {

@@ -40,11 +40,15 @@ if ($mode === 'view') {
     }
     $page['public_url'] = $pagesModel->buildPublicUrl($page);
     $blockRecords = $pageBlocksModel->getForPage($id);
+    // Match public_html/incl/header.php: use the site's configured SEO fallback.
+    $seoSettings = new Settings($pageDb);
     admin_render('pages/view', [
         'user' => $auth->user(),
         'activeNav' => 'pages',
         'pageRecord' => $page,
         'blocks' => $blockRecords,
+        'seoSiteName' => (string)$seoSettings->get('site_name', 'Boilerplate'),
+        'seoDefaultDescription' => (string)$seoSettings->get('seo_default_description', 'Generisk CMS boilerplate.'),
         'childCount' => $pagesModel->childCount($id),
         'notice' => admin_pull_notice(),
         'revisionCount' => $revisionsModel->count($id),
@@ -79,10 +83,14 @@ if ($mode === 'new') {
             if (!empty($builderResult['errors'])) {
                 $errors['builder'] = implode(' ', $builderResult['errors']);
             }
+            // BP-MULTI-BLOCKS-QA1: reject truncated POST (max_input_vars) before writing.
+            if (($form['content_mode'] ?? 'legacy') === 'builder' && ($_POST['page_builder_payload_complete'] ?? '') !== '1') {
+                $errors['builder'] = 'page_builder_v2.input_limit';
+            }
             if (($form['content_mode'] ?? 'legacy') === 'builder' && ($form['page_status'] ?? 'draft') === 'published') {
                 $activeBlocks = array_filter($builderBlocks, static fn(array $block): bool => ($block['status'] ?? 'active') === 'active');
                 if (!$activeBlocks) {
-                    $errors['builder'] = trim(($errors['builder'] ?? '') . ' En publiceret Page Builder-side skal have mindst én aktiv sektion.');
+                    $errors['builder'] = trim(($errors['builder'] ?? '') . ' ' . t('pages.builder_publish_requires_active_section'));
                 }
             }
             $scheduleUtc = [null, null];
@@ -169,10 +177,14 @@ if ($mode === 'edit') {
             if (!empty($builderResult['errors'])) {
                 $errors['builder'] = implode(' ', $builderResult['errors']);
             }
+            // BP-MULTI-BLOCKS-QA1: reject truncated POST (max_input_vars) before writing.
+            if (($form['content_mode'] ?? 'legacy') === 'builder' && ($_POST['page_builder_payload_complete'] ?? '') !== '1') {
+                $errors['builder'] = 'page_builder_v2.input_limit';
+            }
             if (($form['content_mode'] ?? 'legacy') === 'builder' && ($form['page_status'] ?? 'draft') === 'published') {
                 $activeBlocks = array_filter($builderBlocks, static fn(array $block): bool => ($block['status'] ?? 'active') === 'active');
                 if (!$activeBlocks) {
-                    $errors['builder'] = trim(($errors['builder'] ?? '') . ' En publiceret Page Builder-side skal have mindst én aktiv sektion.');
+                    $errors['builder'] = trim(($errors['builder'] ?? '') . ' ' . t('pages.builder_publish_requires_active_section'));
                 }
             }
             if ($isSystem) {

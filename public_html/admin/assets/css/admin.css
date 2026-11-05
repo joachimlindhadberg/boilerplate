@@ -658,7 +658,7 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
 .admin-metric__menu[hidden] { display: none; }
 .admin-metric__menu-heading { display: block; padding: 8px 9px 7px; color: var(--admin-muted); font-size: 11px; font-weight: 600; }
 .admin-metric__choice { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 9px; border: 0; border-radius: 2px; background: transparent; color: var(--admin-text); text-align: left; font: inherit; font-size: 12px; cursor: pointer; }
-.admin-metric__choice:hover, .admin-metric__choice:focus-visible { background: var(--admin-bg); }
+.admin-metric__choice:not(:disabled):hover, .admin-metric__choice:focus-visible { background: var(--admin-surface-soft); }
 .admin-metric__choice:focus-visible { outline: 2px solid var(--admin-accent); outline-offset: -2px; }
 .admin-metric__choice-check { width: 14px; height: 14px; flex: 0 0 14px; visibility: hidden; }
 .admin-metric__choice[aria-pressed="true"] .admin-metric__choice-check { visibility: visible; color: var(--admin-accent); }
@@ -2119,6 +2119,7 @@ body.nf-admin .admin-media-picker-toolbar input:focus-visible {
   color: transparent;
   background: transparent;
   border: 1px solid transparent;
+  border-radius: var(--admin-radius);
   font-size: 0;
   line-height: 0;
   cursor: pointer;
@@ -2757,6 +2758,21 @@ body.nf-admin .admin-grid-add-block { display:flex; flex-direction:column; align
 body.nf-admin .admin-grid-add-block span { font-size:19px; font-weight:400; line-height:1; }
 body.nf-admin .admin-grid-add-block:hover, body.nf-admin .admin-grid-add-block:focus-visible { background:var(--admin-surface-soft); border-color:var(--admin-accent); color:var(--admin-text); }
 body.nf-admin .admin-grid-add-block:focus-visible { outline:2px solid var(--admin-accent); outline-offset:2px; }
+/* BP-MULTI-BLOCKS-QA1: multi-block editor with Core SVGs and calm compact cards. */
+body.nf-admin .admin-page-row--v2-grid .admin-grid-child-list { gap:8px; }
+body.nf-admin .admin-grid-child__identity { display:flex; align-items:center; gap:8px; min-width:0; }
+body.nf-admin .admin-grid-child__heading { display:grid; min-width:0; gap:1px; }
+body.nf-admin .admin-grid-child__heading strong { font-size:11px; font-weight:650; color:var(--admin-text); }
+body.nf-admin .admin-grid-child__heading [data-grid-child-summary] { color:var(--admin-muted); font-size:10px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+body.nf-admin .admin-grid-child__type-icon { display:inline-flex; flex:none; align-items:center; justify-content:center; color:var(--admin-muted); }
+body.nf-admin .admin-grid-child__type-svg { width:16px; height:16px; }
+body.nf-admin .admin-grid-child__drag-icon { width:15px; height:15px; }
+body.nf-admin .admin-builder-drag__icon { width:16px; height:16px; }
+body.nf-admin .admin-grid-add-block__icon { display:block; flex:none; width:17px; height:17px; }
+body.nf-admin .admin-grid-child__actions > button:not(.admin-icon-action) svg { width:14px; height:14px; }
+body.nf-admin .admin-page-row--v2-grid .admin-grid-column:has(> .admin-grid-child-list > [data-grid-child]) .admin-grid-add-block { min-height:40px; flex-direction:row; gap:7px; padding:8px; }
+body.nf-admin .admin-page-row--v2-grid .admin-grid-child-list.is-drop-target { outline:1px dashed var(--admin-accent); outline-offset:-3px; }
+body.nf-admin .admin-page-row--v2-grid [data-grid-child-insert-after][hidden] { display:none; }
 body.nf-admin .admin-page-row--v2-grid .admin-grid-column__add:has(>button[hidden]) { display:none; }
 /* Five/six column Rows keep full width when available and reflow without horizontal scroll. */
 @container (max-width:1200px) {
@@ -3062,7 +3078,7 @@ body.nf-admin .admin-page-section-preview__line--short { width:76%; }
   body.nf-admin .admin-page-section-preview__content { transition:none; }
 }
 
-/* Page Builder QA2: hover/focus/touch insertion point, without extra sort siblings. */
+/* Page Builder clean flow: discoverable section insertion, no hover-only action. */
 body.nf-admin .admin-page-row { position:relative; }
 body.nf-admin .admin-page-row__insert-wrap { position:relative; z-index:2; height:0; display:flex; justify-content:center; }
 body.nf-admin .admin-page-row__insert-after {
@@ -3070,22 +3086,69 @@ body.nf-admin .admin-page-row__insert-after {
   min-height:28px; padding:2px 10px; border:1px solid var(--admin-border);
   border-radius:var(--admin-radius); background:var(--admin-surface); color:var(--admin-muted);
   font:inherit; font-size:11px; line-height:1.2; cursor:pointer;
-  opacity:0; pointer-events:none; transition:opacity .12s ease;
+  opacity:1; pointer-events:auto;
 }
 body.nf-admin .admin-page-row__insert-icon { width:12px; height:12px; flex-shrink:0; }
-body.nf-admin .admin-page-row:hover .admin-page-row__insert-after,
-body.nf-admin .admin-page-row:focus-within .admin-page-row__insert-after,
-body.nf-admin .admin-page-row__insert-after:focus-visible { opacity:1; pointer-events:auto; }
 body.nf-admin .admin-page-row__insert-after:hover,
 body.nf-admin .admin-page-row__insert-after:focus-visible {
-  border-color:var(--admin-accent); color:var(--admin-accent); background:var(--admin-surface-soft);
-  outline-offset:2px;
+  border-color:var(--admin-accent); color:var(--admin-accent);
+  background:var(--admin-surface-soft); outline-offset:2px;
 }
-/* The existing bottom Add Content control already covers the final position. */
 body.nf-admin [data-builder-list] > [data-builder-block]:last-child [data-builder-insert-after] { display:none; }
-@media (hover:none) {
-  body.nf-admin .admin-page-row__insert-after { opacity:1; pointer-events:auto; }
+
+/* Hero choices use shared Core icons, controls and modal structure. */
+.admin-page-choice__icon { width:20px; height:20px; color:var(--admin-accent, currentColor); margin-bottom:8px; }
+/* A compact, section-specific arrangement; Core provides the control styling. */
+body.nf-admin .admin-page-hero-settings { display:grid; gap:14px; min-width:0; padding-top:14px; border-top:1px solid var(--admin-border); }
+body.nf-admin .admin-page-hero-settings[hidden],
+body.nf-admin .admin-modal__header [hidden],
+body.nf-admin [data-page-hero-opacity-field][hidden] { display:none !important; }
+body.nf-admin .admin-page-hero-settings__range-heading { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+body.nf-admin .admin-page-hero-settings__range-heading output { font-size:12px; color:var(--admin-muted); font-variant-numeric:tabular-nums; }
+
+/* Shared Core range input. Reusable by every admin module; no native blue slider. */
+body.nf-admin .admin-field input.admin-range {
+  display:block; appearance:none; -webkit-appearance:none; width:100%; height:24px;
+  min-height:24px; margin:0; padding:0; border:0; border-radius:0;
+  background:transparent; box-shadow:none; cursor:pointer; accent-color:var(--admin-accent);
 }
-@media (prefers-reduced-motion:reduce) {
-  body.nf-admin .admin-page-row__insert-after { transition:none; }
+body.nf-admin .admin-field input.admin-range::-webkit-slider-runnable-track {
+  height:6px; background:var(--admin-border); border-radius:99px;
 }
+body.nf-admin .admin-field input.admin-range::-moz-range-track {
+  height:6px; background:var(--admin-border); border-radius:99px;
+}
+body.nf-admin .admin-field input.admin-range::-webkit-slider-thumb {
+  appearance:none; -webkit-appearance:none; height:16px; width:16px; margin-top:-5px;
+  background:var(--admin-accent); border:2px solid var(--admin-surface); border-radius:50%;
+  box-shadow:0 0 0 1px var(--admin-accent);
+}
+body.nf-admin .admin-field input.admin-range::-moz-range-thumb {
+  height:12px; width:12px; background:var(--admin-accent);
+  border:2px solid var(--admin-surface); border-radius:50%; box-shadow:0 0 0 1px var(--admin-accent);
+}
+body.nf-admin .admin-field input.admin-range:focus-visible {
+  outline:2px solid var(--admin-accent); outline-offset:2px; box-shadow:none;
+}
+@media (forced-colors: active) {
+  body.nf-admin .admin-field input.admin-range { appearance:auto; -webkit-appearance:auto; }
+}
+
+
+/* Dedicated Hero content uses existing Core component-header and fields styles. */
+
+/* Hero content reuses the Core Page Builder identity (type icon, label, summary).
+   No new icon set or custom component controls. */
+body.nf-admin .admin-page-row--dedicated-hero .admin-page-row__component-header > .admin-grid-child__identity {
+  display:flex; align-items:center; gap:8px; min-width:0;
+}
+body.nf-admin .admin-page-row--dedicated-hero .admin-page-row__component-header .admin-grid-child__heading {
+  display:grid; gap:1px; min-width:0;
+}
+/* Only Hero changes its modal layout; standard section settings stay untouched. */
+body.nf-admin .admin-page-section-dialog--hero .admin-page-section-settings-fields { gap:12px; }
+body.nf-admin .admin-page-section-dialog--hero .admin-page-hero-settings {
+  gap:12px; padding-top:0; border-top:0;
+}
+body.nf-admin .admin-page-section-preview[hidden] { display:none !important; }
+

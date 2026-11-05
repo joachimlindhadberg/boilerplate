@@ -9,6 +9,37 @@ document.addEventListener('DOMContentLoaded', () => {
   const toggle = document.querySelector('[data-navigation-toggle]');
   const navigation = document.querySelector('[data-navigation]');
 
+  // BP-HERO-H1: optional decorative scroll depth, never moves real content.
+  const heroLayers = [...document.querySelectorAll('.site-hero--parallax .site-hero__media')];
+  if (heroLayers.length) {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const mobileHero = window.matchMedia('(max-width: 767.98px)');
+    let scheduled = false;
+    const updateHero = () => {
+      scheduled = false;
+      const enabled = !reduce.matches && !mobileHero.matches;
+      heroLayers.forEach((layer) => {
+        if (!enabled) { layer.style.transform = ''; return; }
+        const bounds = layer.parentElement.getBoundingClientRect();
+        const center = bounds.top + bounds.height / 2 - window.innerHeight / 2;
+        const offset = Math.max(-56, Math.min(56, -center * 0.12));
+        layer.style.transform = `translate3d(0, ${offset.toFixed(1)}px, 0)`;
+      });
+    };
+    const requestUpdate = () => {
+      if (scheduled) return;
+      scheduled = true;
+      window.requestAnimationFrame(updateHero);
+    };
+    window.addEventListener('scroll', requestUpdate, { passive: true });
+    window.addEventListener('resize', requestUpdate, { passive: true });
+    [reduce, mobileHero].forEach((media) => {
+      if (media.addEventListener) media.addEventListener('change', requestUpdate);
+      else if (media.addListener) media.addListener(requestUpdate);
+    });
+    requestUpdate();
+  }
+
   if (!header || !toggle || !navigation) return;
 
   const mobile = window.matchMedia('(max-width: 767.98px)');

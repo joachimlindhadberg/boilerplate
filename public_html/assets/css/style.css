@@ -1255,3 +1255,33 @@ body:has(> .frontend-admin-bar) .site-header {
   .frontend-admin-bar__account > summary { padding-inline: 8px; }
   .frontend-admin-bar__label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
 }
+
+
+/* Page Builder Hero section: a grid variant, not an additional content tree. */
+.site-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+.site-hero[data-hero-height="large"] { min-height: clamp(420px, 65svh, 820px); }
+.site-hero[data-hero-height="screen"] { min-height: 100svh; }
+.site-hero[data-hero-height="auto"] { min-height: 0; }
+.site-hero > .container { position: relative; z-index: 1; width: 100%; }
+.site-hero__overlay { position: absolute; inset: 0; background: rgba(0,0,0,var(--hero-overlay-opacity, .4)); z-index: 0; pointer-events: none; }
+.site-hero__media { position: absolute; inset: -80px 0; background-position: center; background-size: cover; background-repeat: no-repeat; z-index: -1; pointer-events: none; }
+.site-hero.site-hero--parallax { background-image: none; }
+@media (max-width: 767.98px), (prefers-reduced-motion: reduce) {
+  .site-hero__media { inset: 0; transform: none !important; }
+}
+
+/* Dedicated Hero content: no grid/column wrapper in HTML. */
+.site-hero__content { max-width: 760px; }
+.site-hero__title { font-size: clamp(2.75rem, 7vw, 5.5rem); line-height: 1.04; letter-spacing: -.035em; }
+.site-hero__subtitle { margin-top: 12px; font-size: clamp(1rem, 2vw, 1.35rem); font-weight: 600; }
+.site-hero__content > p:not(.site-hero__subtitle) { max-width: 65ch; margin-top: 16px; }
+.site-hero__content > .button { display: inline-flex; margin-top: 24px; }

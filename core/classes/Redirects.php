@@ -375,32 +375,11 @@ final class Redirects
             $byId[(int)$row['id']] = $row;
         }
         foreach ($byId as $row) {
-            if ($this->pagePathFromMap($row, $byId) === $path) {
+            if (PagePath::fromMap($row, $byId) === $path) {
                 return true;
             }
         }
         return false;
-    }
-
-    private function pagePathFromMap(array $page, array $byId): string
-    {
-        $slug = trim((string)($page['page_slug'] ?? ''));
-        if ($slug === '' || $slug === 'forside') {
-            return '/';
-        }
-        $segments = [$slug];
-        $parentId = (int)($page['parent_id'] ?? 0);
-        $visited = [];
-        while ($parentId > 0 && isset($byId[$parentId]) && !isset($visited[$parentId])) {
-            $visited[$parentId] = true;
-            $parent = $byId[$parentId];
-            $parentSlug = trim((string)($parent['page_slug'] ?? ''));
-            if ($parentSlug !== '' && $parentSlug !== 'forside') {
-                array_unshift($segments, $parentSlug);
-            }
-            $parentId = (int)($parent['parent_id'] ?? 0);
-        }
-        return '/' . implode('/', $segments);
     }
 
     private function wouldLoop(string $source, string $target, ?int $excludeId): bool

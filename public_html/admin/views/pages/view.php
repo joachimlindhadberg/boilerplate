@@ -9,8 +9,25 @@ $blocks = is_array($blocks ?? null) ? $blocks : [];
 $url = admin_page_public_url($pageRecord);
 $title = (string)($pageRecord['page_title'] ?? t('Side'));
 $description = trim((string)($pageRecord['page_description'] ?? ''));
-$metaTitle = trim((string)($pageRecord['meta_title'] ?? ''));
-$metaDescription = trim((string)($pageRecord['meta_description'] ?? ''));
+// Calculate the effective frontend SEO values without saving or changing any metadata.
+// Keep the fallback order aligned with public_html/incl/header.php.
+$seoSiteName = trim((string)($seoSiteName ?? 'Boilerplate')) ?: 'Boilerplate';
+$seoPreviewTitle = trim((string)(!empty($pageRecord['meta_title'])
+    ? $pageRecord['meta_title']
+    : ($pageRecord['page_title'] ?? $seoSiteName)));
+$seoTitleSource = empty($pageRecord['meta_title']) && $seoPreviewTitle !== ''
+    ? (trim((string)($pageRecord['page_title'] ?? '')) !== '' ? 'pages_detail.seo_title_from_page' : 'pages_detail.seo_title_from_site')
+    : '';
+$seoPreviewDescription = trim((string)(!empty($pageRecord['meta_description'])
+    ? $pageRecord['meta_description']
+    : ($pageRecord['page_description'] ?? '')));
+$seoDescriptionSource = empty($pageRecord['meta_description']) && $seoPreviewDescription !== ''
+    ? 'pages_detail.seo_description_from_page'
+    : '';
+if ($seoPreviewDescription === '') {
+    $seoPreviewDescription = (string)($seoDefaultDescription ?? 'Generisk CMS boilerplate.');
+    $seoDescriptionSource = 'pages_detail.seo_description_from_site';
+}
 $revisionCount = max(0, (int)($revisionCount ?? 0));
 $hiddenCount = count(array_filter($blocks, static fn($block): bool => is_array($block) && ($block['status'] ?? 'active') === 'hidden'));
 $createdTimestamp = !empty($pageRecord['created']) ? strtotime((string)$pageRecord['created']) : false;
@@ -53,11 +70,17 @@ ob_start();
             $data = is_array($block['data'] ?? null) ? $block['data'] : [];
             $type = (string)($block['block_type'] ?? '');
             $def = PageBlocks::definitions()[$type] ?? ['label' => $type];
-            $label = (string)($def['label'] ?? $type);
+            $label = $type === 'grid' ? t('pages_detail.section_label') : (string)($def['label'] ?? $type);
             $summary = admin_page_builder_summary($type, $data);
-            if ($type === 'grid' && ($data['layout_version'] ?? '') === 'v2') {
-                $count = max(1, min(4, (int)($data['column_count'] ?? 1)));
-                $summary = t('pages_detail.row_columns', ['count' => $count]);
+            if ($type === 'grid') {
+                $count = max(1, min(6, (int)($data['column_count'] ?? 1)));
+                $summary = t($count === 1 ? 'pages_detail.row_column_singular' : 'pages_detail.row_columns', ['count' => $count]);
+                // Preserve the historic layout ratio shown for older grid sections.
+                if (($data['layout_version'] ?? '') !== 'v2') {
+                    $presets = PageBlocks::gridPresets($count);
+                    $presetLabel = $presets[(string)($data['preset'] ?? 'equal')] ?? $presets['equal'];
+                    $summary .= ' · ' . $presetLabel;
+                }
             }
             $hidden = ($block['status'] ?? 'active') === 'hidden';
             $icon = match ($type) { 'grid' => 'cube', 'image' => 'image', 'component' => 'settings', default => 'file' };
@@ -86,13 +109,15 @@ ob_start();
       <div class="admin-panel__header admin-page-overview-panel-heading"><div><h2 id="page-seo-title"><?= admin_e(t('SEO')); ?></h2><p><?= admin_e(t('pages_detail.seo_preview_help')); ?></p></div></div>
       <div class="admin-page-overview-seo">
         <div class="admin-page-overview-seo__url"><?= admin_e($url); ?></div>
-        <?php if ($metaTitle !== ''): ?>
-          <div class="admin-page-overview-seo__title"><?= admin_e($metaTitle); ?></div>
+        <?php if ($seoPreviewTitle !== ''): ?>
+          <div class="admin-page-overview-seo__title"><?= admin_e($seoPreviewTitle); ?></div>
+          <?php if ($seoTitleSource !== ''): ?><div class="admin-page-overview-seo__missing"><?= admin_e(t($seoTitleSource)); ?></div><?php endif; ?>
         <?php else: ?>
           <div class="admin-page-overview-seo__missing"><?= admin_e(t('pages_detail.seo_title_missing')); ?></div>
         <?php endif; ?>
-        <?php if ($metaDescription !== ''): ?>
-          <p class="admin-page-overview-seo__description"><?= admin_e($metaDescription); ?></p>
+        <?php if (trim($seoPreviewDescription) !== ''): ?>
+          <p class="admin-page-overview-seo__description"><?= admin_e($seoPreviewDescription); ?></p>
+          <?php if ($seoDescriptionSource !== ''): ?><p class="admin-page-overview-seo__missing"><?= admin_e(t($seoDescriptionSource)); ?></p><?php endif; ?>
         <?php else: ?>
           <p class="admin-page-overview-seo__missing"><?= admin_e(t('pages_detail.seo_description_missing')); ?></p>
         <?php endif; ?>

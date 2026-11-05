@@ -27,7 +27,33 @@ function render_page_builder_v2_block(array $block): void
 {
     $type = (string)($block['block_type'] ?? '');
     $data = is_array($block['data'] ?? null) ? $block['data'] : [];
-    $defaultTheme = $type === 'hero' ? 'dark' : 'light';
+    $dedicatedHero = $type === 'grid'
+        && ($data['section_variant'] ?? 'standard') === 'hero'
+        && ($data['hero_layout'] ?? '') === 'dedicated';
+    if ($dedicatedHero) {
+        $title = trim((string)($data['hero_title'] ?? ''));
+        $subtitle = trim((string)($data['hero_subtitle'] ?? ''));
+        $body = trim((string)($data['hero_body'] ?? ''));
+        $label = trim((string)($data['hero_button_label'] ?? ''));
+        $url = page_builder_public_url($data['hero_button_url'] ?? '');
+        if ($title === '' && $subtitle === '' && $body === '' && ($label === '' || $url === '')) return;
+    }
+    if ($type === 'grid' && !$dedicatedHero) {
+        $columns = is_array($data['columns'] ?? null) ? $data['columns'] : [];
+        $hasContent = false;
+        foreach ($columns as $column) {
+            foreach ((is_array($column) ? ($column['blocks'] ?? []) : []) as $child) {
+                if (is_array($child) && ($child['status'] ?? 'active') === 'active') {
+                    $hasContent = true;
+                    break 2;
+                }
+            }
+        }
+        // Keep empty sections editable in admin without blank frontend spacing.
+        if (!$hasContent) return;
+    }
+    $heroSection = $type === 'grid' && ($data['section_variant'] ?? 'standard') === 'hero';
+    $defaultTheme = $heroSection || $type === 'hero' ? 'dark' : 'light';
     $theme = in_array(($data['theme'] ?? $defaultTheme), ['light', 'soft', 'dark'], true) ? ($data['theme'] ?? $defaultTheme) : $defaultTheme;
     $containerWidth = PageBlocks::normalContainerWidth((string)($data['container_width'] ?? 'standard'));
     $e = static fn(string $text): string => htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
@@ -40,7 +66,42 @@ function render_page_builder_v2_block(array $block): void
 
     // Exact public structure: section > container > site-grid > site-grid--item.
     // The semantic data-* attributes allow the Theme to keep existing visual treatments.
-    echo '<section' . page_builder_section_id_attribute($data) . ' class="block-section" data-theme="' . $e($theme) . '" data-content="' . $e($type) . '" data-container-width="' . $e($containerWidth) . '">';
+    $heroMediaUrl = '';
+    $heroParallax = false;
+    $heroOpacity = 40;
+    if ($heroSection) {
+        $media = page_builder_media_asset([
+            'image_id' => $data['hero_image_id'] ?? 0,
+            'image_path' => $data['hero_image_path'] ?? '',
+        ]);
+        // CSS-image URLs must be restricted to local uploads (no arbitrary URLs
+        // or CSS-injection metacharacters). Broken references fall back to color.
+        $candidate = (string)($media['path'] ?? '');
+        if (preg_match('~^/(?:assets/)?uploads/(?!.*(?:\.\.|//))[A-Za-z0-9_./%\-]+$~D', $candidate) === 1) {
+            $heroMediaUrl = $candidate;
+        }
+        $heroParallax = ($data['hero_parallax'] ?? '0') === '1' && $heroMediaUrl !== '';
+        $heroOpacity = max(0, min(80, (int)($data['hero_overlay_opacity'] ?? 40)));
+    }
+    $heroHeight = in_array($data['hero_height'] ?? 'large', ['auto','large','screen'], true) ? (string)($data['hero_height'] ?? 'large') : 'large';
+    $heroStyle = $heroSection ? ' style="--hero-overlay-opacity:' . ($heroOpacity / 100) . ';"' : '';
+    $bgStyle = $heroSection && !$heroParallax && $heroMediaUrl !== ''
+        ? ' style="background-image:url(&quot;' . $e($heroMediaUrl) . '&quot;);--hero-overlay-opacity:' . ($heroOpacity / 100) . ';"'
+        : $heroStyle;
+    echo '<section' . page_builder_section_id_attribute($data) . ' class="block-section' . ($heroSection ? ' site-hero' . ($heroParallax ? ' site-hero--parallax' : '') : '') . '" data-theme="' . $e($theme) . '" data-content="' . $e($type) . '" data-container-width="' . $e($containerWidth) . '"' . ($heroSection ? ' data-hero-height="' . $e($heroHeight) . '"' : '') . $bgStyle . '>';
+    if ($heroParallax) echo '<div class="site-hero__media" style="background-image:url(&quot;' . $e($heroMediaUrl) . '&quot;);" aria-hidden="true"></div>';
+    if ($heroSection && $heroMediaUrl !== '' && ($data['hero_overlay'] ?? '1') !== '0') echo '<div class="site-hero__overlay" aria-hidden="true"></div>';
+    if ($dedicatedHero) {
+        // Only the three necessary layers: section > container > content.
+        // Keep semantic content independent of presentation/media.
+        echo '<div class="container"><div class="site-hero__content">';
+        if ($title !== '') echo '<h1 class="site-hero__title">' . $e($title) . '</h1>';
+        if ($subtitle !== '') echo '<p class="site-hero__subtitle">' . $e($subtitle) . '</p>';
+        if ($body !== '') echo page_builder_paragraphs($body);
+        if ($label !== '' && $url !== '') echo '<a class="button" href="' . $e($url) . '">' . $e($label) . '</a>';
+        echo '</div></div></section>';
+        return;
+    }
     echo '<div class="container"><div class="site-grid site-grid--' . $columns . '"';
     if ($type === 'grid') {
         $gap = (string)($data['gap'] ?? 'normal');

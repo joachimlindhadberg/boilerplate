@@ -10,8 +10,6 @@ $pageId = (int)($pageRecord['id'] ?? 0);
 $contentMode = (($form['content_mode'] ?? 'builder') === 'legacy') ? 'legacy' : 'builder';
 $canUnfilteredHtml = LegacyHtmlPolicy::canUseRawHtml((string)($user['role'] ?? ''));
 $fieldError = static fn(string $key): string => t((string)($errors[$key] ?? ''));
-$definitions = PageBlocks::definitions();
-$pageTemplates = PageTemplateCatalog::all();
 ob_start();
 ?>
 <div class="admin-detail-back"><a class="admin-back-link" href="/admin/sider"><?= admin_icon('arrow-left', 'admin-back-link__icon'); ?><?= admin_e(t('Tilbage')); ?></a></div>
@@ -20,7 +18,7 @@ ob_start();
 <?php if ($fieldError('form') !== ''): ?><div class="admin-notice admin-notice--error" role="alert"><?= admin_e(t((string)$fieldError('form'))); ?></div><?php endif; ?>
 <?php if ($fieldError('builder') !== ''): ?><div class="admin-notice admin-notice--error" role="alert"><strong>Page Builder:</strong> <?= admin_e(t((string)$fieldError('builder'))); ?></div><?php endif; ?>
 <?php if ($isSystem): ?><div class="admin-notice" role="status"><strong><?= admin_e(t('Systemside:')); ?></strong> <?= admin_e(t('Slug, parent og permanent sletning er låst for at beskytte faste routes. Du kan stadig skifte mellem Legacy HTML og Page Builder.')); ?></div><?php endif; ?>
-<form class="admin-page-form" method="post" action="<?= $isEdit ? '/admin/sider?mode=edit&amp;id='.$pageId : '/admin/sider?mode=new'; ?>" novalidate data-page-builder-form data-admin-track-changes<?= $isEdit ? ' data-page-save-scroll="' . $pageId . '"' : ''; ?>>
+<form class="admin-page-form" method="post" action="<?= $isEdit ? '/admin/sider?mode=edit&amp;id='.$pageId : '/admin/sider?mode=new'; ?>" novalidate data-page-builder-form data-builder-max-input-vars="<?= (int) ini_get('max_input_vars'); ?>" data-admin-track-changes<?= $isEdit ? ' data-page-save-scroll="' . $pageId . '"' : ''; ?>>
   <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>"><?php if ($isEdit): ?><input type="hidden" name="id" value="<?= $pageId; ?>"><?php endif; ?>
   <!-- Legacy fields preserved for non-destructive upgrades; no longer drive the frontend navigation. -->
   <input type="hidden" name="show_in_menu" value="<?= admin_e($form['show_in_menu'] ?? '0'); ?>">
@@ -36,7 +34,7 @@ ob_start();
       </div></section>
 
       <section class="admin-panel admin-page-builder-panel">
-        <div class="admin-panel__header admin-panel__header--builder"><div><h2><?= admin_e(t('Page Builder')); ?></h2><p><?= admin_e(t('page_builder_v2.subtitle')); ?></p></div><button class="admin-button admin-button--secondary admin-button--compact" type="button" data-page-templates-open><?= admin_e(t('Skabeloner')); ?></button></div>
+        <div class="admin-panel__header admin-panel__header--builder"><div><h2><?= admin_e(t('Page Builder')); ?></h2><p><?= admin_e(t('page_builder_v2.subtitle')); ?></p></div></div>
         <div class="admin-form-section">
           <div class="admin-content-mode" role="group" aria-labelledby="content-mode-label">
             <div><strong id="content-mode-label"><?= admin_e(t('Editor')); ?></strong><span><?= admin_e(t('Vælg hvordan denne sides indhold rendres.')); ?></span></div>
@@ -51,15 +49,10 @@ ob_start();
             <div class="admin-builder-list" data-builder-list>
               <?php foreach ($builderBlocks as $index=>$block): ?><?= admin_page_builder_block_editor($block, (string)$index); ?><?php endforeach; ?>
             </div>
-            <div class="admin-builder-empty" data-builder-empty <?= $builderBlocks ? 'hidden' : ''; ?>>
-              <strong><?= admin_e(t('page_builder_v2.no_rows')); ?></strong>
-              <span><?= admin_e(t('page_builder_v2.start_hint')); ?></span>
-            </div>
             <button class="admin-page-add-box" type="button" data-builder-add>
               <?= admin_icon('plus', 'admin-page-add-box__plus'); ?>
-              <span><?= admin_e(t('page_builder_v2.add_content')); ?></span>
+              <span><?= admin_e(t('page_builder_v2.add_section')); ?></span>
             </button>
-            <p class="admin-builder-note"><?= admin_e(t('page_builder_v2.compat_note')); ?></p>
           </div>
 
           <?php if ($canUnfilteredHtml): ?>
@@ -72,8 +65,8 @@ ob_start();
       </section>
 
       <section class="admin-panel"><div class="admin-panel__header"><h2><?= admin_e(t('SEO')); ?></h2></div><div class="admin-form-section">
-        <div class="admin-field"><label for="meta-title"><?= admin_e(t('SEO-titel')); ?></label><input id="meta-title" name="meta_title" maxlength="255" value="<?= admin_e($form['meta_title'] ?? ''); ?>"></div>
-        <div class="admin-field"><label for="meta-description"><?= admin_e(t('SEO-beskrivelse')); ?></label><textarea id="meta-description" name="meta_description" rows="4"><?= admin_e($form['meta_description'] ?? ''); ?></textarea></div>
+        <div class="admin-field"><label for="meta-title"><?= admin_e(t('SEO-titel')); ?></label><input id="meta-title" name="meta_title" maxlength="255" value="<?= admin_e($form['meta_title'] ?? ''); ?>"><p class="admin-field__help"><?= admin_e(t('pages.editor.seo_title_help')); ?></p></div>
+        <div class="admin-field"><label for="meta-description"><?= admin_e(t('SEO-beskrivelse')); ?></label><textarea id="meta-description" name="meta_description" rows="4"><?= admin_e($form['meta_description'] ?? ''); ?></textarea><p class="admin-field__help"><?= admin_e(t('pages.editor.seo_description_help')); ?></p></div>
       </div></section>
     </div>
     <aside class="admin-detail-sidebar">
@@ -92,30 +85,50 @@ ob_start();
     </aside>
   </div>
 
-  <?php foreach ($definitions as $type=>$definition): ?>
-    <template data-builder-template="<?= admin_e($type); ?>"><?= admin_page_builder_block_editor(['type'=>$type,'status'=>'active','data'=>$type === 'grid' ? ['column_count'=>2,'preset'=>'equal','layout_version'=>'v2'] : []], '__INDEX__'); ?></template>
-  <?php endforeach; ?>
   <template data-builder-template="grid-1"><?= admin_page_builder_block_editor(['type'=>'grid','status'=>'active','data'=>['column_count'=>1,'preset'=>'equal','layout_version'=>'v2']], '__INDEX__'); ?></template>
-  <template data-builder-template="grid-4"><?= admin_page_builder_block_editor(['type'=>'grid','status'=>'active','data'=>['column_count'=>4,'preset'=>'equal','layout_version'=>'v2']], '__INDEX__'); ?></template>
-  <template data-builder-template="grid-3"><?= admin_page_builder_block_editor(['type'=>'grid','status'=>'active','data'=>['column_count'=>3,'preset'=>'equal','layout_version'=>'v2']], '__INDEX__'); ?></template>
-  <?php foreach ([5, 6] as $count): ?>
-    <template data-builder-template="grid-<?= $count; ?>"><?= admin_page_builder_block_editor(['type'=>'grid','status'=>'active','data'=>['column_count'=>$count,'preset'=>'equal','layout_version'=>'v2']], '__INDEX__'); ?></template>
-  <?php endforeach; ?>
-  <?php foreach ($pageTemplates as $pageTemplate): ?>
-    <template data-page-template-content="<?= admin_e($pageTemplate['id']); ?>">
-      <?php foreach ($pageTemplate['blocks'] as $templateIndex=>$templateBlock): ?><?= admin_page_builder_block_editor($templateBlock, (string)$templateIndex); ?><?php endforeach; ?>
-    </template>
-  <?php endforeach; ?>
+  <template data-builder-template="grid-hero"><?= admin_page_builder_block_editor(['type'=>'grid','status'=>'active','data'=>['column_count'=>1,'preset'=>'equal','layout_version'=>'v2','section_variant'=>'hero','hero_layout'=>'dedicated','hero_height'=>'large','hero_overlay'=>'1','hero_overlay_opacity'=>40,'hero_parallax'=>'0','theme'=>'dark']], '__INDEX__'); ?></template>
+  <!-- BP-MULTI-BLOCKS-QA1: final marker rejects truncated PHP POST data. -->
+  <input type="hidden" name="page_builder_payload_complete" value="1">
 </form>
 <?php if ($isEdit): $id = $pageId; $deleteReturnMode = 'edit'; require __DIR__ . '/delete-modal.php'; endif; ?>
 <script src="<?= admin_e(admin_asset('/admin/assets/js/admin-page-workflow.js')); ?>" defer></script>
 
+<dialog class="admin-modal admin-modal--sm" data-admin-modal data-page-section-choice-dialog aria-labelledby="page-section-choice-title">
+  <div class="admin-modal__surface">
+    <div class="admin-modal__header"><div><h2 id="page-section-choice-title"><?= admin_e(t('page_builder_v2.choose_section')); ?></h2><p><?= admin_e(t('page_builder_v2.choose_section_help')); ?></p></div><button class="admin-modal__close" type="button" data-modal-close aria-label="<?= admin_e(t('Luk')); ?>">×</button></div>
+    <div class="admin-modal__body"><div class="admin-page-choice-list">
+      <button type="button" class="admin-page-choice" data-page-section-choice="standard"><?= admin_icon('layers', 'admin-page-choice__icon'); ?><strong><?= admin_e(t('page_builder_v2.standard_section')); ?></strong><span><?= admin_e(t('page_builder_v2.standard_section_help')); ?></span></button>
+      <button type="button" class="admin-page-choice" data-page-section-choice="hero"><?= admin_icon('image', 'admin-page-choice__icon'); ?><strong><?= admin_e(t('page_builder_v2.hero_section')); ?></strong><span><?= admin_e(t('page_builder_v2.hero_section_help')); ?></span></button>
+    </div></div>
+    <div class="admin-modal__footer"><button class="admin-button admin-button--secondary" type="button" data-modal-close><?= admin_e(t('Annuller')); ?></button></div>
+  </div>
+</dialog>
 <dialog class="admin-modal admin-modal--sm" data-admin-modal data-page-section-settings-dialog aria-labelledby="page-section-settings-title">
   <div class="admin-modal__surface">
-    <div class="admin-modal__header"><div><h2 id="page-section-settings-title"><?= admin_e(t('page_builder_v2.section_settings')); ?></h2><p><?= admin_e(t('page_builder_v2.section_settings_help')); ?></p></div><button class="admin-modal__close" type="button" data-modal-close aria-label="<?= admin_e(t('Luk')); ?>">×</button></div>
+    <div class="admin-modal__header"><div><h2 id="page-section-settings-title"><span data-page-section-title-standard><?= admin_e(t('page_builder_v2.section_settings')); ?></span><span data-page-section-title-hero hidden><?= admin_e(t('page_builder_v2.hero_settings')); ?></span></h2><p data-page-section-help-standard><?= admin_e(t('page_builder_v2.section_settings_help')); ?></p><p data-page-section-help-hero hidden><?= admin_e(t('page_builder_v2.hero_settings_help')); ?></p></div><button class="admin-modal__close" type="button" data-modal-close aria-label="<?= admin_e(t('Luk')); ?>">×</button></div>
     <div class="admin-modal__body admin-page-section-settings-fields">
       <div class="admin-page-section-visibility">
         <?= admin_toggle_switch('page-section-visible', t('Synlighed'), true, t('page_builder_v2.visibility_help'), ['data-page-section-visibility' => '1'], ['on'=>t('Vises'), 'off'=>t('Skjult')]); ?>
+      </div>
+      <div class="admin-page-hero-settings" data-page-hero-fields hidden>
+        <div class="admin-field" data-media-picker-field>
+          <label><?= admin_e(t('page_builder_v2.hero_background')); ?></label>
+          <div class="admin-media-picker-field">
+            <input type="hidden" data-media-picker-id data-page-hero-image-id>
+            <input class="admin-media-picker-field__path" readonly data-media-picker-path data-page-hero-image-path placeholder="<?= admin_e(t('Intet billede valgt')); ?>">
+            <button type="button" class="admin-button admin-button--secondary admin-button--compact" data-media-picker-open><?= admin_e(t('Vælg fra Medier')); ?></button>
+            <button type="button" class="admin-text-action" data-media-picker-clear hidden><?= admin_e(t('Fjern')); ?></button>
+          </div>
+        </div>
+        <div class="admin-field"><label for="page-hero-height"><?= admin_e(t('page_builder_v2.hero_height')); ?></label>
+          <select id="page-hero-height" data-page-hero-height><option value="auto"><?= admin_e(t('page_builder_v2.hero_height_auto')); ?></option><option value="large"><?= admin_e(t('page_builder_v2.hero_height_large')); ?></option><option value="screen"><?= admin_e(t('page_builder_v2.hero_height_screen')); ?></option></select>
+        </div>
+        <?= admin_toggle_switch('page-hero-overlay', t('page_builder_v2.hero_overlay'), true, '', ['data-page-hero-overlay' => '1']); ?>
+        <div class="admin-field" data-page-hero-opacity-field>
+          <div class="admin-page-hero-settings__range-heading"><label for="page-hero-opacity"><?= admin_e(t('page_builder_v2.hero_overlay_opacity')); ?></label><output for="page-hero-opacity" data-page-hero-opacity-value>40%</output></div>
+          <input class="admin-range" id="page-hero-opacity" type="range" min="0" max="80" step="5" value="40" data-page-hero-opacity>
+        </div>
+        <?= admin_toggle_switch('page-hero-parallax', t('page_builder_v2.hero_parallax'), false, t('page_builder_v2.hero_parallax_help'), ['data-page-hero-parallax' => '1']); ?>
       </div>
       <fieldset class="admin-page-row-layout-picker" data-page-row-layout-field hidden>
         <legend><?= admin_e(t('page_builder_v2.layout_columns')); ?></legend>
@@ -131,6 +144,7 @@ ob_start();
       <div class="admin-field" data-page-section-gap-field hidden><label for="page-section-gap"><?= admin_e(t('Afstand')); ?></label><select id="page-section-gap" data-page-section-gap><?php foreach (PageBlocks::gridGaps() as $gap=>$name): ?><option value="<?= admin_e($gap); ?>"><?= admin_e(t($name)); ?></option><?php endforeach; ?></select></div>
 
       <div class="admin-field"><label for="page-section-theme"><?= admin_e(t('page_builder_v2.color_theme')); ?></label><select id="page-section-theme" data-page-section-theme><?php foreach (PageBlocks::themes() as $theme=>$name): ?><option value="<?= admin_e($theme); ?>"><?= admin_e(t('page_builder_v2.theme_' . $theme)); ?></option><?php endforeach; ?></select></div>
+
       <!-- Read-only schematic feedback. The frontend theme still owns actual colors and widths. -->
       <div class="admin-page-section-preview" data-page-section-preview data-theme="light" data-width="standard" aria-hidden="true">
         <div class="admin-page-section-preview__content">
@@ -143,98 +157,15 @@ ob_start();
     <div class="admin-modal__footer"><button class="admin-button admin-button--secondary" type="button" data-modal-close><?= admin_e(t('Annuller')); ?></button><button class="admin-button" type="button" data-page-section-save><?= admin_e(t('page_builder_v2.save_settings')); ?></button></div>
   </div>
 </dialog>
-<dialog class="admin-modal" data-admin-modal data-page-layout-dialog aria-labelledby="page-layout-title">
-  <div class="admin-modal__surface">
-    <div class="admin-modal__header"><div><h2 id="page-layout-title"><?= admin_e(t('page_builder_v2.add_dialog_title')); ?></h2><p><?= admin_e(t('page_builder_v2.add_dialog_help')); ?></p></div><button class="admin-modal__close" type="button" data-modal-close aria-label="<?= admin_e(t('Luk')); ?>">×</button></div>
-    <div class="admin-modal__body admin-page-add-dialog-body">
-      <div class="admin-page-choice-group">
-        <h3><?= admin_e(t('page_builder_v2.sections_group')); ?></h3>
-        <div class="admin-page-choice-list admin-page-choice-list--sections">
-          <?php foreach (PageBlocks::definitions() as $sectionType=>$section): if ($sectionType === 'grid') continue; ?>
-            <button type="button" class="admin-page-choice" data-page-add-section="<?= admin_e($sectionType); ?>"><strong><?= admin_e(t((string)$section['label'])); ?></strong><span><?= admin_e(t((string)$section['description'])); ?></span></button>
-          <?php endforeach; ?>
-        </div>
-      </div>
-      <div class="admin-page-choice-group">
-        <h3><?= admin_e(t('page_builder_v2.layouts_group')); ?></h3>
-        <div class="admin-page-choice-list admin-page-choice-list--layouts">
-          <button type="button" class="admin-page-choice" data-page-add-layout="100"><strong>1 <?= admin_e(t('Kolonne')); ?></strong><span><?= admin_e(t('page_builder_v2.full_width_help')); ?></span></button>
-          <button type="button" class="admin-page-choice" data-page-add-layout="50"><strong>2 <?= admin_e(t('page_builder_v2.columns')); ?></strong><span><?= admin_e(t('page_builder_v2.half_width_help')); ?></span></button>
-          <button type="button" class="admin-page-choice" data-page-add-layout="33"><strong>3 <?= admin_e(t('page_builder_v2.columns')); ?></strong><span><?= admin_e(t('page_builder_v2.third_width_help')); ?></span></button>
-          <button type="button" class="admin-page-choice" data-page-add-layout="25"><strong>4 <?= admin_e(t('page_builder_v2.columns')); ?></strong><span><?= admin_e(t('page_builder_v2.fourth_width_help')); ?></span></button>
-          <?php foreach ([5 => '20', 6 => '16'] as $count=>$key): ?>
-          <button type="button" class="admin-page-choice" data-page-add-layout="<?= $key; ?>"><strong><?= $count; ?> <?= admin_e(t('page_builder_v2.columns')); ?></strong><span><?= admin_e(t('page_builder_v2.equal_width_help')); ?></span></button>
-          <?php endforeach; ?>
-        </div>
-      </div>
-    </div>
-    <div class="admin-modal__footer"><button type="button" class="admin-button admin-button--secondary" data-modal-close><?= admin_e(t('Annuller')); ?></button></div>
-  </div>
-</dialog>
 <dialog class="admin-modal" data-admin-modal data-page-block-dialog aria-labelledby="page-block-title">
   <div class="admin-modal__surface">
     <div class="admin-modal__header"><div><h2 id="page-block-title"><?= admin_e(t('page_builder_v2.choose_block')); ?></h2><p><?= admin_e(t('page_builder_v2.choose_block_help')); ?></p></div><button class="admin-modal__close" type="button" data-modal-close aria-label="<?= admin_e(t('Luk')); ?>">×</button></div>
-    <div class="admin-modal__body"><div class="admin-page-choice-list" data-page-block-choices="top">
-      <?php foreach (PageBlocks::definitions() as $blockType=>$definition): if ($blockType === 'grid') continue; ?>
-        <button type="button" class="admin-page-choice" data-page-block-choice="<?= admin_e($blockType); ?>"><strong><?= admin_e(t((string)$definition['label'])); ?></strong><span><?= admin_e(t((string)$definition['description'])); ?></span></button>
-      <?php endforeach; ?>
-    </div><div class="admin-page-choice-list" data-page-block-choices="child" hidden>
+    <div class="admin-modal__body"><div class="admin-page-choice-list" data-page-block-choices="child">
       <?php foreach (PageBlocks::gridChildDefinitions() as $blockType=>$definition): ?>
         <button type="button" class="admin-page-choice" data-page-block-choice="<?= admin_e($blockType); ?>"><strong><?= admin_e(t((string)$definition['label'])); ?></strong><span><?= admin_e(t((string)$definition['description'])); ?></span></button>
       <?php endforeach; ?>
     </div></div>
     <div class="admin-modal__footer"><button type="button" class="admin-button admin-button--secondary" data-modal-close><?= admin_e(t('Annuller')); ?></button></div>
-  </div>
-</dialog>
-<dialog class="admin-modal admin-modal--lg" data-admin-modal data-page-templates-dialog aria-labelledby="page-templates-title">
-  <div class="admin-modal__surface">
-    <div class="admin-modal__header"><div><h2 id="page-templates-title"><?= admin_e(t('page_templates.modal_title')); ?></h2><p><?= admin_e(t('page_templates.modal_help')); ?></p></div><button type="button" class="admin-modal__close" data-modal-close aria-label="<?= admin_e(t('Luk')); ?>">×</button></div>
-    <div class="admin-modal__body">
-      <div class="admin-page-templates">
-        <div class="admin-page-templates__list" role="group" aria-label="<?= admin_e(t('page_templates.choose')); ?>">
-          <h3><?= admin_e(t('page_templates.list_label')); ?></h3>
-          <?php foreach ($pageTemplates as $templateIndex=>$pageTemplate): ?>
-            <button class="admin-page-template-choice<?= $templateIndex === 0 ? ' is-selected' : ''; ?>" type="button" data-page-template-choice="<?= admin_e($pageTemplate['id']); ?>" aria-pressed="<?= $templateIndex === 0 ? 'true' : 'false'; ?>" aria-controls="page-template-preview-<?= admin_e($pageTemplate['id']); ?>">
-              <span class="admin-page-template-choice__name"><?= admin_e($pageTemplate['title']); ?></span>
-              <span class="admin-page-template-choice__count"><?= admin_e(t('page_templates.sections_count', ['count'=>count($pageTemplate['blocks'])])); ?></span>
-              <span class="admin-page-template-choice__check" aria-hidden="true"><?= admin_icon('check'); ?></span>
-            </button>
-          <?php endforeach; ?>
-        </div>
-        <div class="admin-page-templates__preview">
-          <h3><?= admin_e(t('page_templates.preview_label')); ?></h3>
-          <?php foreach ($pageTemplates as $templateIndex=>$pageTemplate): ?>
-            <section id="page-template-preview-<?= admin_e($pageTemplate['id']); ?>" class="admin-page-template-detail" data-page-template-preview="<?= admin_e($pageTemplate['id']); ?>" <?= $templateIndex !== 0 ? 'hidden' : ''; ?>>
-              <div class="admin-page-template-wireframe" aria-label="<?= admin_e($pageTemplate['title']); ?>">
-                <?php foreach ($pageTemplate['preview_blocks'] as $previewBlock): ?>
-                  <?php $previewType = $previewBlock['type']; ?>
-                  <div class="admin-page-template-wireframe__section admin-page-template-wireframe__section--<?= admin_e($previewType); ?>">
-                    <?php if ($previewType === 'grid'): ?>
-                      <span class="admin-page-template-wireframe__kind"><?= admin_e($previewBlock['label']); ?> · <?= count($previewBlock['columns']); ?> <?= admin_e(t('page_builder_v2.columns')); ?></span>
-                      <div class="admin-page-template-wireframe__columns">
-                        <?php foreach ($previewBlock['columns'] as $columnLabel): ?>
-                          <div class="admin-page-template-wireframe__column"><span><?= admin_e($columnLabel); ?></span></div>
-                        <?php endforeach; ?>
-                      </div>
-                    <?php else: ?>
-                      <span class="admin-page-template-wireframe__kind"><?= admin_e($previewBlock['label']); ?></span>
-                      <?php if ($previewType === 'text_image'): ?><span class="admin-page-template-wireframe__image" aria-hidden="true"><?= admin_icon('image'); ?></span><?php endif; ?>
-                      <strong><?= admin_e($previewBlock['title'] !== '' ? $previewBlock['title'] : $previewBlock['label']); ?></strong>
-                      <?php if ($previewType === 'hero' || $previewType === 'intro' || $previewType === 'text'): ?><span class="admin-page-template-wireframe__line" aria-hidden="true"></span><?php endif; ?>
-                    <?php endif; ?>
-                  </div>
-                <?php endforeach; ?>
-              </div>
-              <div class="admin-page-template-detail__description"><strong><?= admin_e($pageTemplate['title']); ?></strong><p><?= admin_e($pageTemplate['description']); ?></p></div>
-            </section>
-          <?php endforeach; ?>
-          <p class="admin-field__help"><?= admin_e(t('page_templates.preview_note')); ?></p>
-        </div>
-      </div>
-      <p class="admin-field__help admin-page-templates__note"><?= admin_e(t('page_templates.note')); ?></p>
-      <p class="admin-field__help admin-page-templates__note"><?= admin_e(t('page_templates.replace_notice')); ?></p>
-    </div>
-    <div class="admin-modal__footer"><button type="button" class="admin-button admin-button--secondary" data-modal-close><?= admin_e(t('Annuller')); ?></button><button type="button" class="admin-button" data-page-template-apply><?= admin_e(t('page_templates.use')); ?></button></div>
   </div>
 </dialog>
 <dialog class="admin-modal admin-modal--lg" data-admin-modal data-media-picker-dialog aria-labelledby="media-picker-title">

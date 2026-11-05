@@ -242,13 +242,13 @@ final class MediaReferenceIndex
         array &$missingPaths
     ): void {
         foreach ($data as $key => $value) {
-            if ($key === 'image_id' && (is_scalar($value) || $value === null)) {
+            if (in_array($key, ['image_id', 'hero_image_id'], true) && (is_scalar($value) || $value === null)) {
                 $id = (int)$value;
                 if ($id > 0) {
                     if (isset($ids[$id])) $found[$id] = true;
                     else $missingIds[$id] = true;
                 }
-            } elseif ($key === 'image_path' && is_string($value) && trim($value) !== '') {
+            } elseif (in_array($key, ['image_path', 'hero_image_path'], true) && is_string($value) && trim($value) !== '') {
                 $matched = false;
                 foreach (self::pathAliases($value) as $candidate) {
                     if (isset($paths[$candidate])) {

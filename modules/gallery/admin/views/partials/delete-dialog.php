@@ -18,7 +18,7 @@ if ($isEdit && $galleryId > 0):
         'fields' => ['id' => $galleryId, 'gallery_action' => 'delete'],
         'prefix' => t('gallery:Galleri'),
         'subject' => (string)($galleryData['name'] ?? ''),
-        'suffix' => '– ' . t('gallery:Galleriet kan kun slettes, hvis det ikke længere bruges på en side. Billederne i Medier bliver ikke slettet.'),
+        'suffix' => '– ' . t('gallery:gallery_images_remain'),
         'confirmLabel' => t('gallery:Slet galleri'),
         'cancelLabel' => t('Annuller'),
         'closeLabel' => t('Luk'),

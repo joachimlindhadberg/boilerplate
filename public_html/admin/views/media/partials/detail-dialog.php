@@ -16,7 +16,7 @@
         </div>
       </div>
     </div>
-    <div class="admin-modal__footer admin-modal__footer--split">
+    <div class="admin-modal__footer">
       <button class="admin-button admin-button--danger-outline" type="button" data-admin-open-delete="media-delete-dialog"><?= admin_e(t('Slet permanent')); ?></button>
       <button class="admin-button" type="submit" form="media-detail-update-form"><?= admin_e(t('Gem oplysninger')); ?></button>
     </div>

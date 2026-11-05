@@ -62,6 +62,14 @@ Tastaturhandlinger er ligeværdige med mus: `:focus-visible`, Enter/Space på na
 4. **Chevron:** Ned når panel er lukket, op når åbent. `aria-expanded`, tilknyttet target og label skal afspejle samme faktiske tilstand.
 5. **Slet/Fjern/Deaktiver:** Ingen native `window.confirm`, `alert` eller `prompt` i workflow. Brug fælles Core modal, og sørg for server-side autorisation, validering, CSRF, data-afhængigheder og korrekt POST.
 
+### Bindende regel — Delete over Cancel / Save (Gallery QA1e, 2026-11-05)
+
+**På alle CMS-admins redigeringssider med en særskilt sletteboks skal hele Delete-panelet placeres OVER den afsluttende handlingsrække med Cancel og Save.** DOM-rækkefølgen skal svare til den visuelle rækkefølge. Cancel og Save er den sidste handlingsrække i redigeringsflowet; intet separat destruktivt panel må komme efter den. Reglen gælder også, når sletning er deaktiveret. På oprettelsessider uden et eksisterende objekt vises intet slettepanel.
+
+Delete-panelet skal være kompakt og diskret med de eksisterende Core-komponenter (`.admin-panel.admin-danger-zone`, `.admin-danger-zone__body`), og knapper skal bruge Core-varianter og native `disabled`, når sletning er blokeret. En kort oversat forklaring må ikke fjernes. Klasserne og rækkefølgen ændrer aldrig autorisation, sletteafhængigheder, server-side POST/CSRF eller Core-bekræftelsesmodal.
+
+**Implementeringsstatus:** Gallerys editor implementerer denne regel fra QA1e. Andre allerede eksisterende redigeringssider gennemgås og tilpasses enkeltvis i deres respektive QA-forløb, så denne kontraktændring ikke fejlagtigt beskrives som en færdig migration af hele CMS'et.
+
 ## 4. Liste- og tabelmønster
 
 - Titelbar med titel, kort beskrivelse og kun relevant opret-handling. List-panellet rummer toolbar (valgfri tabs/filtre + søgning), summary, tabel/grid eller meningsfuld tomtilstand og pagination. Undgå flere konkurrerende panels og menupunkter for samme handling.
