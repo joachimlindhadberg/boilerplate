@@ -65,6 +65,15 @@ function admin_page_builder_hero_content_editor(string $prefix, array $data): st
         <?= admin_icon_action_button('chevron-down', t('page_builder_v2.expand_block'), ['data-page-hero-toggle' => '1', 'aria-expanded' => 'false']); ?>
       </div>
       <div class="admin-page-row__fields" data-page-hero-fields hidden>
+        <div class="admin-field" data-media-picker-field data-page-hero-content-media>
+          <label><?= $e(t('page_builder_v2.hero_background')); ?></label>
+          <div class="admin-media-picker-field">
+            <input type="hidden" data-media-picker-id value="<?= max(0, (int)($data['hero_image_id'] ?? 0)); ?>">
+            <input class="admin-media-picker-field__path" readonly data-media-picker-path value="<?= $e($data['hero_image_path'] ?? ''); ?>" aria-label="<?= $e(t('page_builder_v2.hero_background')); ?>" placeholder="<?= $e(t('Intet billede valgt')); ?>">
+            <button type="button" class="admin-button admin-button--secondary admin-button--compact" data-media-picker-open><?= $e(t('Vælg fra Medier')); ?></button>
+            <button type="button" class="admin-text-action" data-media-picker-clear <?= empty($data['hero_image_path']) ? 'hidden' : ''; ?>><?= $e(t('Fjern')); ?></button>
+          </div>
+        </div>
         <?php foreach ($fields as [$key, $translation, $max]): ?>
           <div class="admin-field"><label><?= $e(t($translation)); ?></label>
             <input name="<?= $e($prefix); ?>[data][<?= $key; ?>]" value="<?= $e($data[$key] ?? ''); ?>" maxlength="<?= $max; ?>" <?= $key === 'hero_title' ? 'data-builder-hero-title data-builder-summary-source' : ''; ?>>

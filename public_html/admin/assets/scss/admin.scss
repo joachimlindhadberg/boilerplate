@@ -2756,7 +2756,8 @@ body.nf-admin .admin-page-row--v2-grid .admin-grid-child-list { padding:8px; gap
 body.nf-admin .admin-page-row--v2-grid .admin-grid-child-list:not(:has(> [data-grid-child])) { padding:0; }
 /* One down chevron rotates upward when the block's inline editor is expanded. */
 body.nf-admin [data-page-row-toggle][aria-expanded="true"] .admin-icon-action__icon,
-body.nf-admin [data-page-child-toggle][aria-expanded="true"] .admin-icon-action__icon { transform:rotate(180deg); }
+body.nf-admin [data-page-child-toggle][aria-expanded="true"] .admin-icon-action__icon,
+body.nf-admin [data-page-hero-toggle][aria-expanded="true"] .admin-icon-action__icon { transform:rotate(180deg); }
 body.nf-admin .admin-page-row--v2-grid .admin-grid-child__header { grid-template-columns:24px minmax(0,1fr) auto; gap:6px; padding:8px; border:0; background:var(--admin-surface-soft); }
 body.nf-admin .admin-page-row--v2-grid .admin-grid-child__actions { grid-column:3; grid-row:1; justify-self:end; flex-wrap:nowrap; align-items:center; }
 body.nf-admin .admin-page-row--v2-grid [data-grid-child-up],

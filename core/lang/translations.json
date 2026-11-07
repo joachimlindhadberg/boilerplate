@@ -8092,11 +8092,11 @@
     "nb": "Fargetema"
   },
   "page_builder_v2.save_settings": {
-    "da": "Gem indstillinger",
-    "en": "Save settings",
-    "de": "Einstellungen speichern",
-    "sv": "Spara inställningar",
-    "nb": "Lagre innstillinger"
+    "da": "Anvend indstillinger",
+    "en": "Apply settings",
+    "de": "Einstellungen übernehmen",
+    "sv": "Tillämpa inställningar",
+    "nb": "Bruk innstillinger"
   },
   "page_builder_v2.width_narrow": {
     "da": "Smal",
@@ -10612,11 +10612,11 @@
     "nb": "Hero-innstillinger"
   },
   "page_builder_v2.hero_settings_help": {
-    "en": "Adjust the background, height and effects for this hero.",
-    "da": "Tilpas baggrund, højde og effekter for denne Hero.",
-    "de": "Hintergrund, Höhe und Effekte dieses Hero-Bereichs anpassen.",
-    "sv": "Anpassa bakgrund, höjd och effekter för denna hero.",
-    "nb": "Tilpass bakgrunn, høyde og effekter for denne heroen."
+    "en": "Adjust height, layout and visual effects for this hero.",
+    "da": "Tilpas højde, layout og visuelle effekter for denne Hero.",
+    "de": "Höhe, Layout und visuelle Effekte dieses Hero-Bereichs anpassen.",
+    "sv": "Anpassa höjd, layout och visuella effekter för denna hero.",
+    "nb": "Tilpass høyde, oppsett og visuelle effekter for denne heroen."
   },
   "pages_detail.section_label": {
     "en": "Section",

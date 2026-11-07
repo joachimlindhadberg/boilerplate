@@ -123,7 +123,7 @@ ob_start();
         <?= admin_toggle_switch('page-section-visible', t('Synlighed'), true, t('page_builder_v2.visibility_help'), ['data-page-section-visibility' => '1'], ['on'=>t('Vises'), 'off'=>t('Skjult')]); ?>
       </div>
       <div class="admin-page-hero-settings" data-page-hero-fields hidden>
-        <div class="admin-field" data-media-picker-field>
+        <div class="admin-field" data-media-picker-field data-page-hero-background-settings>
           <label><?= admin_e(t('page_builder_v2.hero_background')); ?></label>
           <div class="admin-media-picker-field">
             <input type="hidden" data-media-picker-id data-page-hero-image-id>

@@ -961,6 +961,26 @@
     let gridDragOrigin = null;
     let gridDropCommitted = false;
 
+    // Dedicated Hero's image picker lives in Hero content. The authoritative
+    // values remain the existing named inputs on the section, so saved page JSON
+    // and existing frontend rendering do not change.
+    const syncDedicatedHeroMedia = (field) => {
+      const hero = field?.closest('[data-page-hero-content]')?.closest('[data-builder-block]');
+      if (!hero?.classList.contains('admin-page-row--dedicated-hero')) return;
+      const id = field.querySelector('[data-media-picker-id]')?.value || '';
+      const path = field.querySelector('[data-media-picker-path]')?.value || '';
+      for (const [selector, value] of [
+        ['[data-builder-hero-image-id]', id],
+        ['[data-builder-hero-image-path]', path],
+      ]) {
+        const target = hero.querySelector(selector);
+        if (target && target.value !== value) {
+          target.value = value;
+          target.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      }
+    };
+
     const mediaPickerDialog = document.querySelector('[data-media-picker-dialog]');
     const mediaPickerGrid = mediaPickerDialog?.querySelector('[data-media-picker-grid]');
     const mediaPickerSearch = mediaPickerDialog?.querySelector('[data-media-picker-search]');
@@ -1044,6 +1064,7 @@
           pathInput.dispatchEvent(new Event('change', { bubbles: true }));
         }
         if (idInput) idInput.value = '';
+        syncDedicatedHeroMedia(field);
         const scope = clearButton.closest('[data-grid-child], [data-builder-block]');
         const altInput = scope?.querySelector('[data-media-picker-alt]');
         if (altInput) altInput.value = '';
@@ -1062,6 +1083,7 @@
         pathInput.dispatchEvent(new Event('change', { bubbles: true }));
       }
       if (idInput) idInput.value = selected.dataset.mediaId || '';
+      syncDedicatedHeroMedia(activeMediaPickerField);
       const clearButton = activeMediaPickerField.querySelector('[data-media-picker-clear]');
       if (clearButton) clearButton.hidden = false;
       const scope = activeMediaPickerField.closest('[data-grid-child], [data-builder-block]');
@@ -1303,6 +1325,7 @@
     const standardSectionHelp = sectionDialog?.querySelector('[data-page-section-help-standard]');
     const heroSectionHelp = sectionDialog?.querySelector('[data-page-section-help-hero]');
     const heroFields = sectionDialog?.querySelector('[data-page-hero-fields]');
+    const heroBackgroundSettings = sectionDialog?.querySelector('[data-page-hero-background-settings]');
     const heroImageId = sectionDialog?.querySelector('[data-page-hero-image-id]');
     const heroImagePath = sectionDialog?.querySelector('[data-page-hero-image-path]');
     const heroHeight = sectionDialog?.querySelector('[data-page-hero-height]');
@@ -1412,8 +1435,12 @@
             field.dispatchEvent(new Event('change', { bubbles: true }));
           }
         };
-        saveHero('[data-builder-hero-image-id]', Number(heroImageId?.value) || 0);
-        saveHero('[data-builder-hero-image-path]', heroImagePath?.value || '');
+        // Legacy Hero keeps its original image picker in Settings. For the
+        // dedicated Hero, image changes are handled by the inline content picker.
+        if (!settingsSection.classList.contains('admin-page-row--dedicated-hero')) {
+          saveHero('[data-builder-hero-image-id]', Number(heroImageId?.value) || 0);
+          saveHero('[data-builder-hero-image-path]', heroImagePath?.value || '');
+        }
         saveHero('[data-builder-hero-height]', ['auto','large','screen'].includes(heroHeight?.value) ? heroHeight.value : 'large');
         saveHero('[data-builder-hero-overlay]', heroOverlay?.checked ? '1' : '0');
         saveHero('[data-builder-hero-opacity]', Math.max(0, Math.min(80, Number(heroOpacity?.value) || 0)));
@@ -1581,7 +1608,9 @@
           sectionVisibility.checked = statusInput.value !== 'hidden';
           syncSectionVisibility();
           const isHero = row.querySelector('[data-builder-section-variant]')?.value === 'hero';
+          const dedicatedHero = isHero && row.classList.contains('admin-page-row--dedicated-hero');
           if (heroFields) heroFields.hidden = !isHero;
+          if (heroBackgroundSettings) heroBackgroundSettings.hidden = dedicatedHero;
           if (standardSectionHelp) standardSectionHelp.hidden = isHero;
           if (heroSectionHelp) heroSectionHelp.hidden = !isHero;
           const standardTitle = sectionDialog.querySelector('[data-page-section-title-standard]');
@@ -1619,7 +1648,10 @@
             if (gapInput) sectionGap.value = gapInput.value;
           }
           openDialog(sectionDialog);
-          sectionWidth.focus();
+          // Hero controls start at the top of the modal, not at the width field
+          // below the fold. Avoid scrolling the dialog to a mid-page control.
+          if (isHero && heroHeight) heroHeight.focus({ preventScroll: true });
+          else sectionWidth.focus();
         }
         return;
       }
