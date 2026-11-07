@@ -149,3 +149,12 @@ filtre, pagination og Core-modal for sletning er uændrede. Teksten escapes ved
 rendering; ingen frontend, CSS/SCSS, database, indsendelses- eller builder-ændringer.
 UI-12 er dermed kildebaseret lukket. Den særskilt dokumenterede UI-10 er fortsat
 accepteret som bevidst GET-filterinteraktion med eksplicit Filtrer-knap.
+
+## Core update availability (QA1)
+
+- After an administrator signs in, the shared Core update status is checked asynchronously; it must never delay login or block the admin view.
+- A newer official Stable/Beta/RC version is shown consistently on Dashboard, the Tools sidebar indicator, the Tools Updates card, and the Updates page. The latter must offer the verified version without requiring a manual check.
+- **Check for updates** remains a manual refresh, updating the same cached status on all admin screens.
+- The UI must not report **up to date** if the GitHub lookup failed or was incomplete.
+- Notification visibility requires the existing `tools.manage` permission. Checking is read-only; installation always requires an explicit, CSRF-protected action and existing revalidation and recovery rules.
+- Reuse Core visual tokens and existing translations; no permanent warning panel or separate per-module update checker.

@@ -40,9 +40,8 @@ ob_start();
     </div>
   </div>
   <div class="admin-tools-body">
-    <div class="admin-tools-feature">
-      <?php if ($choicesStatus !== 'not_checked'): ?>
-      <div>
+    <div class="admin-tools-feature" data-core-update-page data-core-update-autoload="<?= $choicesStatus === 'not_checked' ? '1' : '0'; ?>" data-core-update-recovery="<?= $pendingRecovery ? '1' : '0'; ?>">
+      <div data-core-update-summary <?= $choicesStatus === 'not_checked' ? 'hidden' : ''; ?> role="status">
         <?php if ($releases): ?>
           <strong><?= admin_e(t('updates.choices_title')); ?></strong>
           <span><?= admin_e(t('updates.choices_description')); ?></span>
@@ -51,7 +50,6 @@ ob_start();
           <span><?= admin_e(t($statusDescription)); ?></span>
         <?php endif; ?>
       </div>
-      <?php endif; ?>
       <form method="post" action="/admin/tools/update">
         <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
         <input type="hidden" name="action" value="check_for_updates">
@@ -67,8 +65,8 @@ ob_start();
           <button type="submit" class="admin-button admin-button--secondary"><?= admin_e(t('updates.restore_button')); ?></button>
         </form>
       </div>
-    <?php elseif ($releases): ?>
-      <form method="post" action="/admin/tools/update" data-official-update-form>
+    <?php else: ?>
+      <form method="post" action="/admin/tools/update" data-official-update-form <?= !$releases ? 'hidden' : ''; ?>>
         <input type="hidden" name="csrf_token" value="<?= admin_e(admin_csrf_token()); ?>">
         <input type="hidden" name="action" value="install_official_update">
         <div class="admin-update-options" role="group" aria-label="<?= admin_e(t('updates.choices_title')); ?>">

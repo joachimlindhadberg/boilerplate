@@ -51,7 +51,7 @@ ob_start();
     <?= admin_icon('refresh-cw', 'admin-dashboard-attention__icon'); ?>
     <div>
       <strong><?= admin_e(t('updates.latest_version')); ?>: <span data-dashboard-update-version></span></strong>
-      <p><?= admin_e(t('updates.available_description')); ?></p>
+      <p><?= admin_e(t('updates.available_beta_description')); ?></p>
       <a class="admin-text-action admin-dashboard-attention__action" href="/admin/tools/update"><?= admin_e(t('updates.open')); ?> <span aria-hidden="true">→</span></a>
     </div>
   </div>

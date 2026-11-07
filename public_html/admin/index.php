@@ -130,7 +130,7 @@ if ($moduleRoute === '' && $mode === 'nav-badges') {
     exit;
 }
 
-// Dashboard polls this endpoint AFTER rendering, so a slow or unavailable
+// Core checks this endpoint AFTER rendering, so a slow or unavailable
 // GitHub API never blocks the main admin page. Only tools managers may check.
 if ($moduleRoute === '' && $mode === 'update-notice') {
     header('Content-Type: application/json; charset=utf-8');
@@ -148,7 +148,8 @@ if ($moduleRoute === '' && $mode === 'update-notice') {
         exit;
     }
     // No persistent channel: the dashboard follows the same relevant releases as Tools → Updates.
-    $notice = UpdateAdminNotification::check((string)BOILERPLATE_VERSION, $_SESSION, null, null, 'all');
+    // UpdateAdminNotification::overview delegates to UpdateAdminNotification::check() and its session cache.
+    $notice = UpdateAdminNotification::overview((string)BOILERPLATE_VERSION, $_SESSION);
     echo json_encode($notice, JSON_THROW_ON_ERROR);
     exit;
 }

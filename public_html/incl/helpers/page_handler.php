@@ -14,7 +14,7 @@ function get_current_page(Pages $pagesModel): array
     // Drafts and unknown statuses are never public. A future preview feature
     // should use an explicit authenticated preview route instead of exposing
     // draft URLs through the normal frontend router.
-    if (!$page || !in_array((string)($page['page_status'] ?? ''), ['published', 'protected'], true)) {
+    if (!$page || !PageAccess::canDisplay($page)) {
         http_response_code(404);
         return $cached = [
             'page_title' => '404 – Siden findes ikke',
@@ -22,14 +22,6 @@ function get_current_page(Pages $pagesModel): array
             'page_content' => $pagesModel->get404Content(),
             'content_mode' => 'legacy',
         ];
-    }
-
-    if (($page['page_status'] ?? '') === 'protected') {
-        if (session_status() === PHP_SESSION_NONE) session_start();
-        if (!is_logged_in()) {
-            header('Location: /admin');
-            exit;
-        }
     }
 
     return $cached = $page;

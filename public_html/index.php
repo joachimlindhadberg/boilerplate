@@ -4,6 +4,9 @@ require_once __DIR__ . '/incl/init.php';
 // Best-effort shared-hosting fallback; a real cron is recommended for idle sites.
 ScheduledContent::runOnTraffic();
 
+// Gate restricted HTML before metadata, modules or theme output.
+if (PageAccess::guard(model('pages'))) exit;
+
 if (handle_system_endpoint()) exit;
 if (handle_core_redirect()) exit;
 if (handle_maintenance_mode()) exit;

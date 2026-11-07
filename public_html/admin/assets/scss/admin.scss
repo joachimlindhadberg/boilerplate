@@ -422,6 +422,12 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
 }
 .admin-nav a:hover { color: var(--admin-text); background: var(--admin-surface-soft); }
 .admin-nav a.is-active { color: #fff; background: var(--admin-accent); }
+/* Core update notification: subtle, accessible Tools menu indicator. */
+.admin-nav a[data-core-update-available="true"]::after {
+  content: ""; width: 7px; height: 7px; flex: 0 0 7px;
+  margin-left: auto; border-radius: 50%; background: var(--admin-accent);
+}
+.admin-nav a.is-active[data-core-update-available="true"]::after { background: #fff; }
 .admin-nav a.is-active::before { background: transparent; }
 .admin-nav__disabled { color: #96a2a3; cursor: default; }
 .admin-nav__icon { width: 20px; height: 20px; flex: 0 0 20px; }
@@ -1842,6 +1848,7 @@ body.nf-admin .admin-media-picker-toolbar input:focus-visible {
 .admin-tools-card__heading p { margin: 5px 0 0; color: var(--admin-muted); font-size: 12px; line-height: 1.5; }
 .admin-tools-card__footer { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-top: auto; min-height: 32px; }
 .admin-tools-card__footer--action { justify-content: flex-end; }
+.admin-tools-card__status[hidden], [data-core-update-summary][hidden], .admin-tools-body > form[data-official-update-form][hidden] { display: none; }
 .admin-tools-card__status { display: inline-flex; gap: 8px; align-items: center; color: var(--admin-muted); font-size: 11px; line-height: 1.45; }
 .admin-tools-card__status .admin-health-indicator { flex: 0 0 9px; }
 @media (max-width: 850px) { .admin-tools-grid--overview { grid-template-columns: 1fr; } }

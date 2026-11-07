@@ -68,6 +68,38 @@ final class RateLimiter
         ];
     }
 
+    /**
+     * Read the current fixed window without incrementing it. Used by
+     * password gates so only *failed* password submissions consume attempts.
+     * Queries fail closed: database errors propagate instead of granting access.
+     *
+     * @return array{allowed: bool, retry_after: int}
+     */
+    public function status(string $scope, string $identifier, int $limit): array
+    {
+        $limit = max(1, min(1000, $limit));
+        $key = $this->hashKey($scope, $identifier);
+        $row = $this->db->fetchArray(
+            'SELECT hit_count, GREATEST(0, TIMESTAMPDIFF(SECOND, UTC_TIMESTAMP(), reset_at)) AS retry_after '
+            . 'FROM security_rate_limits WHERE key_hash = ? LIMIT 1',
+            [$key]
+        )[0] ?? null;
+        if (!is_array($row)) return ['allowed' => true, 'retry_after' => 0];
+
+        $seconds = max(0, (int)($row['retry_after'] ?? 0));
+        $blocked = $seconds > 0 && (int)($row['hit_count'] ?? 0) >= $limit;
+        return ['allowed' => !$blocked, 'retry_after' => $blocked ? max(1, $seconds) : 0];
+    }
+
+    /** Clear this scope/IP only after successful authentication. */
+    public function clear(string $scope, string $identifier): void
+    {
+        $this->db->query(
+            'DELETE FROM security_rate_limits WHERE key_hash = ?',
+            [$this->hashKey($scope, $identifier)]
+        );
+    }
+
     private function hashKey(string $scope, string $identifier): string
     {
         $secret = trim((string)AppConfig::get('RATE_LIMIT_SECRET', ''));

@@ -1,0 +1,16 @@
+# macOS metadata
+.DS_Store
+._*
+
+# Local secrets and runtime data
+.env
+.env.*
+/storage/
+/public_html/uploads/*
+!/public_html/uploads/.htaccess
+/public_html/assets/uploads/
+
+# Python / temporary files
+__pycache__/
+*.pyc
+*.log

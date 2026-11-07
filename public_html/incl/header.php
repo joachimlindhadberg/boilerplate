@@ -7,7 +7,7 @@ if ($description === '') $description = (string)$settings->get('seo_default_desc
 $canonical = get_current_url();
 $indexing = filter_var($settings->get('seo_indexing', 1), FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
 if ($indexing === null) $indexing = (string)$settings->get('seo_indexing', '1') !== '0';
-$robots = (http_response_code() === 404 || !$indexing) ? 'noindex, nofollow' : 'index, follow';
+$robots = (http_response_code() === 404 || !$indexing || in_array((string)($page['page_status'] ?? ''), ['draft', 'protected'], true)) ? 'noindex, nofollow' : 'index, follow';
 ?>
 <!doctype html>
 <html lang="<?php get_page('site_locale'); ?>">

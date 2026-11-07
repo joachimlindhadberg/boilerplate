@@ -18,9 +18,11 @@ if ($mode === 'update') {
     $choices = null;
     $pendingRecovery = (new UpdateOneClickInstaller())->hasInterruptedUpdate();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'check_for_updates') {
-        $choices = !admin_verify_csrf($_POST['csrf_token'] ?? null)
-            ? ['status' => 'csrf', 'releases' => []]
-            : (new UpdateReleaseChoices())->find($installedVersion);
+        $csrfValid = admin_verify_csrf($_POST['csrf_token'] ?? null);
+        $choices = $csrfValid
+            ? (new UpdateReleaseChoices())->find($installedVersion)
+            : ['status' => 'csrf', 'releases' => []];
+        if ($csrfValid) UpdateAdminNotification::rememberChoices($installedVersion, $_SESSION, $choices);
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['action'] ?? ''),
         ['install_official_update', 'restore_interrupted_update'], true)) {
         // Bootstrap already requires login + tools.manage. All actions are CSRF protected.

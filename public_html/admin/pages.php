@@ -75,6 +75,11 @@ if ($mode === 'new') {
             $form = $payload['form'];
             $builderBlocks = $builderResult['blocks'];
             $errors = $payload['errors'];
+            $accessPassword = is_string($_POST['page_access_password'] ?? null) ? $_POST['page_access_password'] : '';
+            if (($form['page_status'] ?? '') === 'protected' && $accessPassword !== ''
+                && !PageAccess::validNewPassword($accessPassword)) {
+                $errors['page_access_password'] = 'pages.access.password_invalid';
+            }
             try {
                 $payload['data'] = LegacyHtmlPolicy::prepareSave($payload['data'], null, (string)($auth->role() ?? ''));
             } catch (InvalidArgumentException $e) {
@@ -108,6 +113,8 @@ if ($mode === 'new') {
                     $createdId = $pagesModel->createAdmin($payload['data'], false, (int)($auth->user()['id'] ?? 0));
                     $pageBlocksModel->replaceForPage($createdId, $builderBlocks, false);
                     $schedulerModel->saveForPage($createdId, ...$scheduleUtc);
+                    PageAccess::save($createdId, (string)$form['page_status'], $accessPassword,
+                        ($_POST['page_access_clear'] ?? '') === '1', $pageDb);
                     $revisionsModel->record($createdId, (int)($auth->user()['id'] ?? 0), 'create');
                     $pageDb->commit();
                     admin_log_activity('created', 'page', $createdId, (string)$form['page_title']);
@@ -169,6 +176,11 @@ if ($mode === 'edit') {
             $form = $payload['form'];
             $builderBlocks = $builderResult['blocks'];
             $errors = $payload['errors'];
+            $accessPassword = is_string($_POST['page_access_password'] ?? null) ? $_POST['page_access_password'] : '';
+            if (($form['page_status'] ?? '') === 'protected' && $accessPassword !== ''
+                && !PageAccess::validNewPassword($accessPassword)) {
+                $errors['page_access_password'] = 'pages.access.password_invalid';
+            }
             try {
                 $payload['data'] = LegacyHtmlPolicy::prepareSave($payload['data'], $page, (string)($auth->role() ?? ''));
             } catch (InvalidArgumentException $e) {
@@ -214,6 +226,8 @@ if ($mode === 'edit') {
                     }
                     $pageBlocksModel->replaceForPage($id, $builderBlocks, false);
                     $schedulerModel->saveForPage($id, ...$scheduleUtc);
+                    PageAccess::save($id, (string)$form['page_status'], $accessPassword,
+                        ($_POST['page_access_clear'] ?? '') === '1', $pageDb);
                     $revisionsModel->record($id, (int)($auth->user()['id'] ?? 0), 'save');
                     $pageDb->commit();
                     admin_log_activity('updated', 'page', $id, (string)$form['page_title']);
@@ -239,6 +253,7 @@ if ($mode === 'edit') {
         'builderBlocks' => $builderBlocks,
         'errors' => $errors,
         'isEdit' => true,
+        'pageAccessConfigured' => PageAccess::hasPassword($id, $pageDb),
         'isSystem' => $isSystem,
         'childCount' => $pagesModel->childCount($id),
         'notice' => admin_pull_notice(),

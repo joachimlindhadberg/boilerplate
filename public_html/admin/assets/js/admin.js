@@ -42,27 +42,117 @@
     }).observe(mainNotices, { childList: true, subtree: true });
   }
 
-  // Dashboard-only release notice: keep the page responsive even if GitHub
-  // is unavailable. Interpret only a validated numeric version as text.
+  // Core update state: one optional, non-blocking request per admin view.
+  // The server owns release discovery, validation and the session cache.
   const updateNotice = document.querySelector('[data-dashboard-update-notice]');
-  if (updateNotice instanceof HTMLElement) {
-    const endpoint = updateNotice.dataset.updateUrl;
-    if (endpoint === '/admin/index.php?mode=update-notice') {
-      fetch(endpoint, {
-        method: 'GET', credentials: 'same-origin', redirect: 'error',
-        headers: { 'Accept': 'application/json' }, cache: 'no-store'
-      }).then((response) => {
-        if (!response.ok) throw new Error('Update notice unavailable');
-        return response.json();
-      }).then((data) => {
-        if (data?.status !== 'available'
-          || typeof data.latest_version !== 'string'
-          || !/^\d+\.\d+\.\d+(?:\.\d+)?(?:-(?:beta|rc)\.[1-9]\d*)?$/.test(data.latest_version)) return;
-        const version = updateNotice.querySelector('[data-dashboard-update-version]');
-        if (version) version.textContent = data.latest_version;
-        updateNotice.hidden = false;
-      }).catch(() => { /* An unavailable update service must not interrupt admin UX. */ });
-    }
+  const toolsNav = document.querySelector('a[data-admin-nav-key="tools"]');
+  const toolsCard = document.querySelector('[data-core-update-card-status]');
+  const updatesPage = document.querySelector('[data-core-update-page]');
+  if (toolsNav instanceof HTMLAnchorElement) {
+    const endpoint = '/admin/index.php?mode=update-notice';
+    fetch(endpoint, {
+      method: 'GET', credentials: 'same-origin', redirect: 'error',
+      headers: { 'Accept': 'application/json' }, cache: 'no-store'
+    }).then((response) => {
+      if (!response.ok) throw new Error('Update status unavailable');
+      return response.json();
+    }).then((data) => {
+      const validVersion = typeof data?.latest_version === 'string'
+        && /^\d+\.\d+\.\d+(?:\.\d+)?(?:-(?:beta|rc)\.[1-9]\d*)?$/.test(data.latest_version);
+      const notAvailable = data?.status !== 'available';
+      const available = !notAvailable && validVersion;
+      const current = data?.status === 'current' || data?.status === 'no_release';
+      if (available) {
+        toolsNav.dataset.coreUpdateAvailable = 'true';
+        toolsNav.title = adminTr('updates.available');
+        toolsNav.setAttribute('aria-label', `${toolsNav.querySelector('span')?.textContent?.trim() || 'Tools'} — ${adminTr('updates.available')}`);
+        if (updateNotice instanceof HTMLElement) {
+          const version = updateNotice.querySelector('[data-dashboard-update-version]');
+          if (version) version.textContent = data.latest_version;
+          updateNotice.hidden = false;
+        }
+      } else {
+        delete toolsNav.dataset.coreUpdateAvailable;
+        toolsNav.removeAttribute('aria-label');
+        if (updateNotice instanceof HTMLElement) updateNotice.hidden = true;
+      }
+      if (toolsCard instanceof HTMLElement) {
+        toolsCard.hidden = !available && !current;
+        if (available || current) {
+          const indicator = toolsCard.querySelector('.admin-health-indicator');
+          if (indicator) {
+            indicator.classList.toggle('admin-health-indicator--warning', available);
+            indicator.classList.toggle('admin-health-indicator--good', current);
+          }
+          const label = toolsCard.querySelector('[data-core-update-card-text]');
+          if (label) label.textContent = available
+            ? `${adminTr('updates.available')} · ${data.latest_version}`
+            : adminTr('updates.up_to_date');
+        }
+      }
+      if (updatesPage instanceof HTMLElement && updatesPage.dataset.coreUpdateAutoload === '1') {
+        const summary = updatesPage.querySelector('[data-core-update-summary]');
+        const title = summary?.querySelector('strong');
+        const description = summary?.querySelector('span');
+        if (title && description && summary) {
+          summary.hidden = false;
+          title.textContent = available ? adminTr('updates.choices_title')
+            : current ? adminTr('updates.up_to_date') : adminTr('updates.check_failed');
+          description.textContent = available ? adminTr('updates.choices_description')
+            : current ? adminTr('updates.up_to_date_beta_description')
+            : adminTr('updates.check_failed_description');
+        }
+        const installForm = document.querySelector('[data-official-update-form]');
+        if (installForm instanceof HTMLFormElement) {
+          const canOffer = available && updatesPage.dataset.coreUpdateRecovery !== '1';
+          installForm.hidden = !canOffer;
+          if (canOffer) {
+            const options = installForm.querySelector('.admin-update-options');
+            if (options) {
+              const preview = data.latest_version.includes('-');
+              const kind = preview ? 'beta' : 'stable';
+              const item = document.createElement('div');
+              item.className = 'admin-update-option';
+              const label = document.createElement('label');
+              label.className = 'admin-update-option__choice';
+              const radio = document.createElement('input');
+              radio.type = 'radio';
+              radio.name = 'release_selection';
+              radio.value = `${kind}:${data.latest_version}`;
+              radio.checked = true;
+              radio.required = true;
+              const details = document.createElement('span');
+              details.className = 'admin-update-option__details';
+              const heading = document.createElement('strong');
+              heading.textContent = `${data.latest_version} — ${adminTr(preview ? 'updates.preview_label' : 'updates.stable_label')}`;
+              const hint = document.createElement('span');
+              hint.textContent = adminTr(preview ? 'updates.preview_help' : 'updates.stable_help');
+              details.append(heading, hint);
+              label.append(radio, details);
+              const link = document.createElement('a');
+              link.href = `https://github.com/joachimlindhadberg/boilerplate/releases/tag/v${encodeURIComponent(data.latest_version)}`;
+              link.target = '_blank';
+              link.rel = 'noopener noreferrer';
+              link.textContent = adminTr('updates.view_release');
+              item.append(label, link);
+              options.replaceChildren(item);
+            }
+          }
+        }
+      }
+    }).catch(() => {
+      // Never display a false "up to date" state when the service is unreachable.
+      if (updatesPage instanceof HTMLElement && updatesPage.dataset.coreUpdateAutoload === '1') {
+        const summary = updatesPage.querySelector('[data-core-update-summary]');
+        if (summary) {
+          summary.hidden = false;
+          const title = summary.querySelector('strong');
+          const description = summary.querySelector('span');
+          if (title) title.textContent = adminTr('updates.check_failed');
+          if (description) description.textContent = adminTr('updates.check_failed_description');
+        }
+      }
+    });
   }
 
   // RC5b: Core-owned, per-card metric menu with authenticated AJAX autosave.

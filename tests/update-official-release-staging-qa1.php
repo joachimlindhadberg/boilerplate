@@ -68,6 +68,16 @@ $test=static function(bool $ok,string $label) use (&$pass,&$fail):void {
 $root=sys_get_temp_dir().'/boilerplate-official-staging-'.bin2hex(random_bytes(9));
 if (!mkdir($root.'/public_html/incl',0700,true)) throw new RuntimeException('Fixture unavailable');
 file_put_contents($root.'/public_html/incl/init.php',"<?php define('BOILERPLATE_VERSION', '2.5.0');\n");
+// The package reviewer requires installed SQL sources and checks that
+// the staged ZIP preserves them byte-for-byte.
+if (!mkdir($root.'/database/migrations', 0700, true)
+    || !mkdir($root.'/database/install', 0700, true)) {
+    throw new RuntimeException('Cannot prepare private SQL fixture');
+}
+$emptySchema = "-- Isolated first-install schema fixture\n";
+if (file_put_contents($root.'/database/install/empty-schema.sql', $emptySchema) === false) {
+    throw new RuntimeException('Cannot create private SQL fixture');
+}
 $tmp=$root.'/test-release.zip';
 $zip=new ZipArchive();
 if ($zip->open($tmp,ZipArchive::CREATE|ZipArchive::OVERWRITE)!==true) throw new RuntimeException('Test archive unavailable');
@@ -79,6 +89,7 @@ $members=[
     'core/classes/MigrationRunner.php'=>'<?php',
     'docs/deployment/UPDATING.md'=>'Fixture',
     'database/updates/20261013_000_core_schema.php'=>'<?php',
+    'database/install/empty-schema.sql'=>$emptySchema,
 ];
 foreach ($members as $name=>$body) {
     $name='boilerplate/'.$name;

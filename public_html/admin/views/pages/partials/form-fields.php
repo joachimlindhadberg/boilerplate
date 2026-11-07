@@ -72,8 +72,21 @@ ob_start();
     <aside class="admin-detail-sidebar">
       <section class="admin-panel"><div class="admin-panel__header"><h2><?= admin_e(t('Publicering')); ?></h2></div><div class="admin-form-section">
         <div class="admin-field"><label for="page-status"><?= admin_e(t('Status')); ?></label><select id="page-status" name="page_status"><?php foreach (['draft','published','protected'] as $value): ?><option value="<?= $value; ?>" <?= ($form['page_status'] ?? 'draft') === $value ? 'selected' : ''; ?>><?= admin_e(admin_page_status_label($value)); ?></option><?php endforeach; ?></select><?php if ($fieldError('page_status')): ?><p class="admin-field-error"><?= admin_e(t((string)$fieldError('page_status'))); ?></p><?php endif; ?></div>
-        <div class="admin-field"><label for="schedule-publish"><?= admin_e(t('Publicér automatisk')); ?></label><input id="schedule-publish" type="datetime-local" name="schedule_publish" value="<?= admin_e($form['schedule_publish'] ?? ''); ?>"><p class="admin-field__help"><?= admin_e(t('Kun for kladder. Siden forbliver skjult indtil tidspunktet.')); ?></p><?php if ($fieldError('schedule_publish')): ?><p class="admin-field-error"><?= admin_e(t((string)$fieldError('schedule_publish'))); ?></p><?php endif; ?></div>
-        <div class="admin-field"><label for="schedule-unpublish"><?= admin_e(t('Afpublicér automatisk')); ?></label><input id="schedule-unpublish" type="datetime-local" name="schedule_unpublish" value="<?= admin_e($form['schedule_unpublish'] ?? ''); ?>"><p class="admin-field__help"><?= admin_e(t('Kun for publicerede sider eller sider med en kommende publicering.')); ?></p><?php if ($fieldError('schedule_unpublish')): ?><p class="admin-field-error"><?= admin_e(t((string)$fieldError('schedule_unpublish'))); ?></p><?php endif; ?></div>
+        <?php $accessConfigured = (bool)($pageAccessConfigured ?? false); ?>
+        <div data-page-access-controls<?= ($form['page_status'] ?? 'draft') !== 'protected' ? ' hidden' : ''; ?>>
+          <div class="admin-field">
+            <label for="page-access-password"><?= admin_e(t('pages.access.password_label')); ?></label>
+            <input id="page-access-password" type="password" name="page_access_password" maxlength="128" autocomplete="new-password" value="">
+            <p class="admin-field__help"><?= admin_e(t('pages.access.password_help')); ?></p>
+            <?php if ($fieldError('page_access_password')): ?><p class="admin-field-error"><?= admin_e(t((string)$fieldError('page_access_password'))); ?></p><?php endif; ?>
+          </div>
+          <?php if ($isEdit && $accessConfigured): ?>
+            <label class="admin-checkbox"><input type="checkbox" name="page_access_clear" value="1"> <?= admin_e(t('pages.access.clear_password')); ?></label>
+          <?php endif; ?>
+          <p class="admin-field__help"><?= admin_e(t('pages.access.password_note')); ?></p>
+        </div>
+        <div class="admin-field" data-page-schedule-field="publish"<?= ($form['page_status'] ?? 'draft') !== 'draft' ? ' hidden' : ''; ?>><label for="schedule-publish"><?= admin_e(t('Publicér automatisk')); ?></label><input id="schedule-publish" type="datetime-local" name="schedule_publish" value="<?= admin_e($form['schedule_publish'] ?? ''); ?>"><p class="admin-field__help"><?= admin_e(t('Kun for kladder. Siden forbliver skjult indtil tidspunktet.')); ?></p><?php if ($fieldError('schedule_publish')): ?><p class="admin-field-error"><?= admin_e(t((string)$fieldError('schedule_publish'))); ?></p><?php endif; ?></div>
+        <div class="admin-field" data-page-schedule-field="unpublish"<?= (($form['page_status'] ?? 'draft') === 'published' || (($form['page_status'] ?? 'draft') === 'draft' && trim((string)($form['schedule_publish'] ?? '')) !== '')) ? '' : ' hidden'; ?>><label for="schedule-unpublish"><?= admin_e(t('Afpublicér automatisk')); ?></label><input id="schedule-unpublish" type="datetime-local" name="schedule_unpublish" value="<?= admin_e($form['schedule_unpublish'] ?? ''); ?>"><p class="admin-field__help"><?= admin_e(t('Kun for publicerede sider eller sider med en kommende publicering.')); ?></p><?php if ($fieldError('schedule_unpublish')): ?><p class="admin-field-error"><?= admin_e(t((string)$fieldError('schedule_unpublish'))); ?></p><?php endif; ?></div>
         <p class="admin-field__help"><?= admin_e(t('pages.schedule_timezone', ['timezone' => date_default_timezone_get()])); ?></p>
         <p class="admin-field__help"><?= admin_e(t('Menupunkter og rækkefølge administreres under')); ?> <a href="/admin/navigation"><?= admin_e(t('Navigation')); ?></a>.</p>
       </div></section>

@@ -46,3 +46,58 @@
     try { sessionStorage.removeItem(key); } catch { /* no storage available */ }
   });
 })();
+
+/** Pages Publishing Visibility QA1: schedule controls follow the chosen status.
+ *  Only currently relevant fields are submitted. Values stay in the editor while
+ *  the user experiments with statuses, but hidden values never reach the server.
+ *  PageScheduler remains the final, authoritative validator on POST.
+ */
+(() => {
+  'use strict';
+  const form = document.querySelector('form[data-page-builder-form]');
+  if (!form) return;
+
+  const status = form.querySelector('#page-status');
+  const publish = form.querySelector('#schedule-publish');
+  const unpublish = form.querySelector('#schedule-unpublish');
+  const publishField = form.querySelector('[data-page-schedule-field="publish"]');
+  const unpublishField = form.querySelector('[data-page-schedule-field="unpublish"]');
+  if (!status || !publish || !unpublish || !publishField || !unpublishField) return;
+
+  const show = (field, input, visible) => {
+    field.hidden = !visible;
+    input.disabled = !visible;
+  };
+  const sync = () => {
+    const draft = status.value === 'draft';
+    const published = status.value === 'published';
+    // Scheduled unpublishing for a Draft is meaningful only when a publication
+    // date is scheduled first. Protected pages have no scheduling controls.
+    show(publishField, publish, draft);
+    show(unpublishField, unpublish, published || (draft && publish.value.trim() !== ''));
+  };
+
+  status.addEventListener('change', sync);
+  publish.addEventListener('input', sync);
+  publish.addEventListener('change', sync);
+  form.addEventListener('submit', sync);
+  sync();
+})();
+
+/** Pages Access & Preview QA1: only Protected exposes password settings. */
+(() => {
+  'use strict';
+  const form = document.querySelector('form[data-page-builder-form]');
+  if (!form) return;
+  const status = form.querySelector('#page-status');
+  const controls = form.querySelector('[data-page-access-controls]');
+  if (!status || !controls) return;
+  const sync = () => {
+    const active = status.value === 'protected';
+    controls.hidden = !active;
+    controls.querySelectorAll('input').forEach(input => { input.disabled = !active; });
+  };
+  status.addEventListener('change', sync);
+  form.addEventListener('submit', sync);
+  sync();
+})();

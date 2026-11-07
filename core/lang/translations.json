@@ -11058,5 +11058,82 @@
     "de": "Eine veröffentlichte Page-Builder-Seite muss mindestens einen aktiven Abschnitt enthalten.",
     "sv": "En publicerad Page Builder-sida måste innehålla minst en aktiv sektion.",
     "nb": "En publisert Page Builder-side må ha minst én aktiv seksjon."
+  },
+  "pages.access.password_label": {
+    "en": "Page password (optional)",
+    "da": "Sideadgangskode (valgfri)",
+    "de": "Seitenpasswort (optional)",
+    "sv": "Sidans lösenord (valfritt)",
+    "nb": "Sidepassord (valgfritt)"
+  },
+  "pages.access.password_help": {
+    "en": "At least 12 characters. Leave blank to retain the current password. CMS editors can always preview.",
+    "da": "Mindst 12 tegn. Lad feltet være tomt for at bevare den nuværende kode. CMS-redaktører kan altid se siden.",
+    "de": "Mindestens 12 Zeichen. Leer lassen, um das bestehende Passwort zu behalten. CMS-Redakteure haben weiter Zugriff.",
+    "sv": "Minst 12 tecken. Lämna tomt för att behålla det nuvarande lösenordet. CMS-redaktörer har fortsatt åtkomst.",
+    "nb": "Minst 12 tegn. La stå tomt for å beholde det gjeldende passordet. CMS-redaktører har fortsatt tilgang."
+  },
+  "pages.access.clear_password": {
+    "en": "Remove existing page password",
+    "da": "Fjern eksisterende sideadgangskode",
+    "de": "Bestehendes Seitenpasswort entfernen",
+    "sv": "Ta bort befintligt sidlösenord",
+    "nb": "Fjern eksisterende sidepassord"
+  },
+  "pages.access.password_invalid": {
+    "en": "Use 12–128 characters without control characters.",
+    "da": "Brug 12–128 tegn uden kontroltegn.",
+    "de": "12–128 Zeichen ohne Steuerzeichen verwenden.",
+    "sv": "Använd 12–128 tecken utan kontrolltecken.",
+    "nb": "Bruk 12–128 tegn uten kontrolltegn."
+  },
+  "pages.access.password_note": {
+    "en": "Protected pages without a password require CMS login. Public upload links are not private.",
+    "da": "Beskyttede sider uden kode kræver CMS-login. Offentlige medielinks er ikke private.",
+    "de": "Geschützte Seiten ohne Passwort erfordern eine CMS-Anmeldung. Öffentliche Medienlinks sind nicht privat.",
+    "sv": "Skyddade sidor utan lösenord kräver CMS-inloggning. Offentliga medielänkar är inte privata.",
+    "nb": "Beskyttede sider uten passord krever CMS-innlogging. Offentlige medielenker er ikke private."
+  },
+  "pages.access.gate_title": {
+    "en": "Protected page",
+    "da": "Beskyttet side",
+    "de": "Geschützte Seite",
+    "sv": "Skyddad sida",
+    "nb": "Beskyttet side"
+  },
+  "pages.access.gate_description": {
+    "en": "Enter the page password to continue.",
+    "da": "Indtast sidens adgangskode for at fortsætte.",
+    "de": "Geben Sie das Seitenpasswort ein, um fortzufahren.",
+    "sv": "Ange sidans lösenord för att fortsätta.",
+    "nb": "Skriv inn sidepassordet for å fortsette."
+  },
+  "pages.access.gate_password": {
+    "en": "Password",
+    "da": "Adgangskode",
+    "de": "Passwort",
+    "sv": "Lösenord",
+    "nb": "Passord"
+  },
+  "pages.access.gate_button": {
+    "en": "View page",
+    "da": "Se side",
+    "de": "Seite anzeigen",
+    "sv": "Visa sida",
+    "nb": "Vis side"
+  },
+  "pages.access.gate_error": {
+    "en": "The password could not be accepted.",
+    "da": "Adgangskoden blev ikke godkendt.",
+    "de": "Das Passwort wurde nicht akzeptiert.",
+    "sv": "Lösenordet kunde inte godkännas.",
+    "nb": "Passordet ble ikke godtatt."
+  },
+  "pages.access.gate_blocked": {
+    "en": "Too many attempts. Try again later.",
+    "da": "For mange forsøg. Prøv igen senere.",
+    "de": "Zu viele Versuche. Versuchen Sie es später erneut.",
+    "sv": "För många försök. Försök igen senare.",
+    "nb": "For mange forsøk. Prøv igjen senere."
   }
 }
