@@ -8,7 +8,7 @@ function admin_page_builder_blocks_from_records(array $records): array
         $type = (string)($record['block_type'] ?? '');
         if (!array_key_exists($type, PageBlocks::definitions())) {
             // Never discard persisted content from an old page on the next save.
-            throw new RuntimeException('Denne side indeholder en ældre Page Builder-sektion. Tag backup og migrér siden før redigering.');
+            throw new RuntimeException(t('pages.builder.legacy_section_error'));
         }
         $blocks[] = [
             'type' => $type,
@@ -23,7 +23,7 @@ function admin_page_builder_payload(array $source): array
 {
     $raw = $source['blocks'] ?? [];
     if (!is_array($raw)) $raw = [];
-    return PageBlocks::normalizeSubmitted($raw);
+    return PageBlocks::normalizeSubmitted($raw, static fn(string $key, array $params): string => t($key, $params));
 }
 
 function admin_page_builder_media_field(string $prefix, array $data, string $label = 'Billede', bool $summarySource = false): string
@@ -33,7 +33,7 @@ function admin_page_builder_media_field(string $prefix, array $data, string $lab
     $e = static fn(mixed $v): string => admin_e((string)$v);
     ob_start(); ?>
     <div class="admin-field" data-media-picker-field>
-      <label><?= $e($label); ?></label>
+      <label><?= $e(t($label)); ?></label>
       <div class="admin-media-picker-field">
         <input type="hidden" name="<?= $e($prefix); ?>[data][image_id]" value="<?= $id; ?>" data-media-picker-id>
         <input class="admin-media-picker-field__path" name="<?= $e($prefix); ?>[data][image_path]" value="<?= $e($path); ?>" placeholder="<?= admin_e(t('Intet billede valgt')); ?>" readonly data-media-picker-path <?= $summarySource ? 'data-grid-child-summary-source' : ''; ?>>
@@ -221,8 +221,8 @@ function admin_page_builder_grid_editor(string $prefix, array $data): string
     ob_start(); ?>
     <div class="admin-form-row admin-grid-settings" <?= ($data['layout_version'] ?? '') === 'v2' ? 'data-page-grid-settings hidden' : ''; ?>>
       <div class="admin-field"><label><?= admin_e(t('Antal kolonner')); ?></label><select name="<?= $e($prefix); ?>[data][column_count]" data-grid-column-count><?php for ($i=$v2Grid ? 1 : 2;$i<=6;$i++): ?><option value="<?= $i; ?>" <?= $count === $i ? 'selected' : ''; ?>><?= $i; ?> <?= $e(t($i === 1 ? 'Kolonne' : 'page_builder_v2.columns')); ?></option><?php endfor; ?></select></div>
-      <div class="admin-field"><label><?= admin_e(t('Fordeling')); ?></label><select name="<?= $e($prefix); ?>[data][preset]" data-grid-preset><?php foreach (PageBlocks::gridPresets($count) as $value=>$label): ?><option value="<?= $e($value); ?>" <?= $preset === $value ? 'selected' : ''; ?>><?= $e($label); ?></option><?php endforeach; ?></select></div>
-      <div class="admin-field"><label><?= admin_e(t('Afstand')); ?></label><select name="<?= $e($prefix); ?>[data][gap]" data-grid-gap><?php foreach (PageBlocks::gridGaps() as $value=>$label): ?><option value="<?= $e($value); ?>" <?= $gap === $value ? 'selected' : ''; ?>><?= $e($label); ?></option><?php endforeach; ?></select></div>
+      <div class="admin-field"><label><?= admin_e(t('Fordeling')); ?></label><select name="<?= $e($prefix); ?>[data][preset]" data-grid-preset><?php foreach (PageBlocks::gridPresets($count) as $value=>$label): ?><option value="<?= $e($value); ?>" <?= $preset === $value ? 'selected' : ''; ?>><?= $e(t($label)); ?></option><?php endforeach; ?></select></div>
+      <div class="admin-field"><label><?= admin_e(t('Afstand')); ?></label><select name="<?= $e($prefix); ?>[data][gap]" data-grid-gap><?php foreach (PageBlocks::gridGaps() as $value=>$label): ?><option value="<?= $e($value); ?>" <?= $gap === $value ? 'selected' : ''; ?>><?= $e(t($label)); ?></option><?php endforeach; ?></select></div>
     </div>
     <p class="admin-field__help admin-grid-help"><?= admin_e(t('Desktop viser 2–6 kolonner. På tablet bliver brede grids automatisk færre kolonner, og på mobil stables de i én kolonne.')); ?></p>
 
@@ -231,12 +231,12 @@ function admin_page_builder_grid_editor(string $prefix, array $data): string
         $children = is_array($column['blocks'] ?? null) ? array_values($column['blocks']) : [];
       ?>
         <section class="admin-grid-column" data-grid-column data-grid-column-index="<?= $columnIndex; ?>">
-          <header class="admin-grid-column__header"><strong data-grid-column-label><?= admin_e(t('Kolonne')); ?> <?= $columnIndex + 1; ?></strong><span><?= count($children); ?> blok<?= count($children) === 1 ? '' : 'ke'; ?></span></header>
+          <header class="admin-grid-column__header"><strong data-grid-column-label><?= admin_e(t('Kolonne')); ?> <?= $columnIndex + 1; ?></strong><span><?= admin_e(count($children) . ' ' . t(count($children) === 1 ? 'blok' : 'blokke')); ?></span></header>
           <div class="admin-grid-child-list" data-grid-child-list>
             <?php foreach ($children as $childIndex=>$child): ?><?= admin_page_builder_grid_child_editor($child, $prefix . '[data][columns]['.$columnIndex.'][blocks]['.$childIndex.']', $v2Grid); ?><?php endforeach; ?>
           </div>
           <?php if (!$v2Grid): ?><div class="admin-grid-column__empty" data-grid-column-empty <?= $children ? 'hidden' : ''; ?>><?= admin_e(t('Træk indhold hertil eller tilføj en blok.')); ?></div><?php endif; ?>
-          <div class="admin-grid-column__add"><select class="sr-only" data-grid-child-type aria-label="<?= admin_e(t('Bloktype')); ?>"><?php foreach (PageBlocks::gridChildDefinitions() as $childType=>$definition): ?><option value="<?= $e($childType); ?>"><?= $e($definition['label']); ?></option><?php endforeach; ?></select><button class="<?= $v2Grid ? 'admin-grid-add-block' : 'admin-button admin-button--secondary admin-button--compact'; ?>" type="button" data-grid-child-add><?= $v2Grid ? admin_icon('plus', 'admin-grid-add-block__icon') : ''; ?><?= admin_e(t('page_builder_v2.add_content_inside')); ?></button></div>
+          <div class="admin-grid-column__add"><select class="sr-only" data-grid-child-type aria-label="<?= admin_e(t('Bloktype')); ?>"><?php foreach (PageBlocks::gridChildDefinitions() as $childType=>$definition): ?><option value="<?= $e($childType); ?>"><?= $e(t($definition['label'])); ?></option><?php endforeach; ?></select><button class="<?= $v2Grid ? 'admin-grid-add-block' : 'admin-button admin-button--secondary admin-button--compact'; ?>" type="button" data-grid-child-add><?= $v2Grid ? admin_icon('plus', 'admin-grid-add-block__icon') : ''; ?><?= admin_e(t('page_builder_v2.add_content_inside')); ?></button></div>
         </section>
       <?php endforeach; ?>
     </div>
@@ -267,7 +267,7 @@ function admin_page_builder_grid_child_editor(array $block, string $prefix, bool
       <input type="hidden" name="<?= $e($prefix); ?>[type]" value="<?= $e($type); ?>">
       <header class="admin-grid-child__header">
         <button class="admin-grid-child__drag" type="button" data-grid-child-drag draggable="true" aria-label="<?= admin_e(t('Flyt blok')); ?>"><?= admin_icon('grip', 'admin-grid-child__drag-icon'); ?></button>
-        <div class="admin-grid-child__identity"><span class="admin-grid-child__type-icon" aria-hidden="true"><?= admin_icon($childIcon, 'admin-grid-child__type-svg'); ?></span><div class="admin-grid-child__heading"><strong><?= $e($definition['label']); ?></strong><span data-grid-child-summary><?= $e(admin_page_builder_grid_child_summary($type, $data)); ?></span></div></div>
+        <div class="admin-grid-child__identity"><span class="admin-grid-child__type-icon" aria-hidden="true"><?= admin_icon($childIcon, 'admin-grid-child__type-svg'); ?></span><div class="admin-grid-child__heading"><strong><?= $e(t($definition['label'])); ?></strong><span data-grid-child-summary><?= $e(admin_page_builder_grid_child_summary($type, $data)); ?></span></div></div>
 
         <div class="admin-grid-child__actions"><?= admin_icon_action_button('chevron-down', t('page_builder_v2.expand_block'), ['data-page-child-toggle' => '1', 'aria-expanded' => 'false']); ?><button type="button" data-grid-child-up aria-label="<?= admin_e(t('Flyt op')); ?>"><?= admin_icon('arrow-up'); ?></button><button type="button" data-grid-child-down aria-label="<?= admin_e(t('Flyt ned')); ?>"><?= admin_icon('arrow-down'); ?></button><?= admin_icon_action_button('delete', t('page_builder_v2.delete_block'), ['data-grid-child-remove' => '1'], 'danger'); ?></div>
       </header>
@@ -287,7 +287,7 @@ function admin_page_builder_grid_child_editor(array $block, string $prefix, bool
           <div class="admin-field"><label><?= admin_e(t('Kicker')); ?></label><input name="<?= $e($prefix); ?>[data][kicker]" value="<?= $e($value('kicker')); ?>"></div>
           <div class="admin-field"><label><?= admin_e(t('Tekst')); ?></label><textarea name="<?= $e($prefix); ?>[data][body]" rows="4"><?= $e($value('body')); ?></textarea></div>
           <div class="admin-form-row"><?= admin_page_builder_media_field($prefix, $data, 'Billede'); ?><div class="admin-field"><label><?= admin_e(t('Alt-tekst')); ?></label><input name="<?= $e($prefix); ?>[data][image_alt]" value="<?= $e($value('image_alt')); ?>" data-media-picker-alt></div></div>
-          <div class="admin-field"><label><?= admin_e(t('Billedplacering')); ?></label><select name="<?= $e($prefix); ?>[data][image_position]"><option value="top" <?= $value('image_position','top') === 'top' ? 'selected' : ''; ?>>Øverst</option><option value="bottom" <?= $value('image_position') === 'bottom' ? 'selected' : ''; ?>>Nederst</option></select></div>
+          <div class="admin-field"><label><?= admin_e(t('Billedplacering')); ?></label><select name="<?= $e($prefix); ?>[data][image_position]"><option value="top" <?= $value('image_position','top') === 'top' ? 'selected' : ''; ?>><?= admin_e(t('Øverst')); ?></option><option value="bottom" <?= $value('image_position') === 'bottom' ? 'selected' : ''; ?>><?= admin_e(t('Nederst')); ?></option></select></div>
         <?php elseif ($type === 'cta'): ?>
           <div class="admin-field"><label><?= admin_e(t('Overskrift')); ?></label><input data-grid-child-summary-source name="<?= $e($prefix); ?>[data][title]" value="<?= $e($value('title')); ?>"></div>
           <div class="admin-field"><label><?= admin_e(t('Kicker')); ?></label><input name="<?= $e($prefix); ?>[data][kicker]" value="<?= $e($value('kicker')); ?>"></div>
@@ -308,15 +308,15 @@ function admin_page_builder_grid_child_summary(string $type, array $data): strin
 {
     if ($type === 'component') {
         $component = (string)($data['component'] ?? '');
-        return PageBlocks::componentOptions()[$component] ?? 'Vælg komponent';
+        return PageBlocks::componentOptions()[$component] ?? t('Vælg komponent');
     }
     if ($type === 'image') {
         $path = trim((string)($data['image_path'] ?? ''));
-        return $path !== '' ? basename($path) : 'Intet billede valgt';
+        return $path !== '' ? basename($path) : t('Intet billede valgt');
     }
     $title = trim((string)($data['title'] ?? ''));
     $kicker = trim((string)($data['kicker'] ?? ''));
-    return $title !== '' ? $title : ($kicker !== '' ? $kicker : 'Ingen overskrift endnu');
+    return $title !== '' ? $title : ($kicker !== '' ? $kicker : t('pages.builder.no_heading'));
 }
 
 function admin_page_builder_summary(string $type, array $data): string
@@ -325,14 +325,14 @@ function admin_page_builder_summary(string $type, array $data): string
     $kicker = trim((string)($data['kicker'] ?? ''));
     if ($type === 'component') {
         $component = (string)($data['component'] ?? '');
-        return PageBlocks::componentOptions()[$component] ?? 'Vælg komponent';
+        return PageBlocks::componentOptions()[$component] ?? t('Vælg komponent');
     }
     if ($type === 'grid') {
         $count = max(1, min(6, (int)($data['column_count'] ?? 1)));
         $preset = (string)($data['preset'] ?? 'equal');
         $presetLabel = PageBlocks::gridPresets($count)[$preset] ?? PageBlocks::gridPresets($count)['equal'];
-        return $count . ' kolonner · ' . $presetLabel;
+        return t($count === 1 ? 'pages_detail.row_column_singular' : 'pages_detail.row_columns', ['count' => $count]) . ' · ' . t($presetLabel);
     }
-    return $title !== '' ? $title : ($kicker !== '' ? $kicker : 'Ingen overskrift endnu');
+    return $title !== '' ? $title : ($kicker !== '' ? $kicker : t('pages.builder.no_heading'));
 }
 

@@ -1193,8 +1193,8 @@
       if (block.dataset.blockType === 'grid') {
         const count = Number(block.querySelector('[data-grid-column-count]')?.value || 2);
         const presetSelect = block.querySelector('[data-grid-preset]');
-        const presetLabel = presetSelect?.options[presetSelect.selectedIndex]?.textContent?.trim() || 'Lige brede kolonner';
-        summary.textContent = `${count} kolonner · ${presetLabel}`;
+        const presetLabel = presetSelect?.options[presetSelect.selectedIndex]?.textContent?.trim() || window.cmsTranslate('Lige brede kolonner');
+        summary.textContent = `${window.cmsTranslate(count === 1 ? 'pages_detail.row_column_singular' : 'pages_detail.row_columns').replace('{count}', String(count))} · ${presetLabel}`;
         return;
       }
       const component = block.querySelector('[data-builder-component]');
@@ -1204,7 +1204,7 @@
       }
       const sources = [...block.querySelectorAll('[data-builder-summary-source]')];
       const values = sources.map((field) => field.value.trim()).filter(Boolean);
-      summary.textContent = values[1] || values[0] || 'Ingen overskrift endnu';
+      summary.textContent = values[1] || values[0] || window.cmsTranslate('pages.builder.no_heading');
     };
 
     const updateGridChildSummary = (child) => {
@@ -1221,7 +1221,7 @@
         summary.textContent = child.dataset.gridChildType === 'image' ? value.split('/').filter(Boolean).at(-1) : value;
         return;
       }
-      summary.textContent = child.dataset.gridChildType === 'image' ? 'Intet billede valgt' : 'Ingen overskrift endnu';
+      summary.textContent = child.dataset.gridChildType === 'image' ? window.cmsTranslate('Intet billede valgt') : window.cmsTranslate('pages.builder.no_heading');
     };
 
     const addBlock = (type, afterBlock = null) => {
@@ -1465,7 +1465,7 @@
           // or remove its blocks explicitly before selecting fewer columns.
           return false;
         }
-        if (containsContent && !await window.adminConfirm('De kolonner du fjerner indeholder indhold. Skal de og deres indhold fjernes?', 'Fjern kolonner', 'Fjern kolonner')) {
+        if (containsContent && !await window.adminConfirm(window.cmsTranslate('pages.builder.remove_columns_warning'), window.cmsTranslate('pages.builder.remove_columns'), window.cmsTranslate('pages.builder.remove_columns'))) {
           const countSelect = gridBlock.querySelector('[data-grid-column-count]');
           if (countSelect) countSelect.value = String(columns.length);
           return false;

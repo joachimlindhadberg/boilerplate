@@ -41,6 +41,7 @@ $displayValue = static function (string $field, mixed $value): string {
         return match ((string)$value) {
             'published' => t('Publiceret'),
             'draft' => t('Kladde'),
+            'protected' => t('Beskyttet'),
             default => (string)$value,
         };
     }

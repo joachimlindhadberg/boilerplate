@@ -211,7 +211,12 @@ class PageBlocks
         }
     }
 
-    public static function normalizeSubmitted(array $submitted): array
+    private static function localizedError(?callable $translate, string $key, array $params, string $fallback): string
+    {
+        return $translate !== null ? (string)$translate($key, $params) : $fallback;
+    }
+
+    public static function normalizeSubmitted(array $submitted, ?callable $translateError = null): array
     {
         $definitions = self::definitions();
         $blocks = [];
@@ -221,7 +226,9 @@ class PageBlocks
         $usedSectionIds = [];
 
         if (count($submitted) > self::MAX_TOP_LEVEL_BLOCKS) {
-            $errors[] = 'En side kan højst indeholde ' . self::MAX_TOP_LEVEL_BLOCKS . ' sektioner.';
+            $errors[] = self::localizedError($translateError, 'pages.builder.error_max_sections',
+                ['max' => self::MAX_TOP_LEVEL_BLOCKS],
+                'En side kan højst indeholde ' . self::MAX_TOP_LEVEL_BLOCKS . ' sektioner.');
             $submitted = array_slice($submitted, 0, self::MAX_TOP_LEVEL_BLOCKS);
         }
 
@@ -231,13 +238,15 @@ class PageBlocks
             }
             $type = trim((string)($raw['type'] ?? ''));
             if (!isset($definitions[$type])) {
-                $errors[] = 'Sektion ' . ($position + 1) . ' har en ukendt type.';
+                $errors[] = self::localizedError($translateError, 'pages.builder.error_unknown_section',
+                    ['section' => $position + 1],
+                    'Sektion ' . ($position + 1) . ' har en ukendt type.');
                 continue;
             }
 
             $status = (($raw['status'] ?? 'active') === 'hidden') ? 'hidden' : 'active';
             $data = is_array($raw['data'] ?? null) ? $raw['data'] : [];
-            $clean = self::normalizeTopLevelData($type, $data, $position, $errors);
+            $clean = self::normalizeTopLevelData($type, $data, $position, $errors, $translateError);
             // Preserve valid IDs; repair missing/duplicate/invalid IDs on save.
             // Never regenerate IDs during frontend rendering.
             $clean['section_id'] = self::uniqueSectionId($data['section_id'] ?? null, $usedSectionIds);
@@ -270,19 +279,21 @@ class PageBlocks
         return $id;
     }
 
-    private static function normalizeTopLevelData(string $type, array $data, int $position, array &$errors): array
+    private static function normalizeTopLevelData(string $type, array $data, int $position, array &$errors, ?callable $translateError): array
     {
         // Only grid/section is accepted as a top-level type; legacy types are
         // rejected by normalizeSubmitted, not silently removed from saved data.
-        return $type === 'grid' ? self::normalizeGridData($data, $position, $errors) : [];
+        return $type === 'grid' ? self::normalizeGridData($data, $position, $errors, $translateError) : [];
     }
 
-    private static function normalizeGridData(array $data, int $position, array &$errors): array
+    private static function normalizeGridData(array $data, int $position, array &$errors, ?callable $translateError): array
     {
         $count = (int)($data['column_count'] ?? 2);
         $isV2 = ($data['layout_version'] ?? null) === 'v2';
         if ($isV2 && ($count < 1 || $count > self::MAX_GRID_COLUMNS)) {
-            $errors[] = 'Row ' . ($position + 1) . ' skal have mellem 1 og 6 kolonner.';
+            $errors[] = self::localizedError($translateError, 'pages.builder.error_invalid_column_count',
+                ['section' => $position + 1],
+                'Row ' . ($position + 1) . ' skal have mellem 1 og 6 kolonner.');
         }
         $count = max($isV2 ? 1 : 2, min(self::MAX_GRID_COLUMNS, $count));
 
@@ -307,7 +318,9 @@ class PageBlocks
         if ($isV2) {
             foreach ($columnsRaw as $idx => $column) {
                 if ((int)$idx >= $count && is_array($column) && !empty($column['blocks'])) {
-                    $errors[] = 'Row ' . ($position + 1) . ': flyt eller fjern blokke i overskydende kolonner før gemning.';
+                    $errors[] = self::localizedError($translateError, 'pages.builder.error_populated_columns',
+                        ['section' => $position + 1],
+                        'Row ' . ($position + 1) . ': flyt eller fjern blokke i overskydende kolonner før gemning.');
                     break;
                 }
             }
@@ -324,8 +337,11 @@ class PageBlocks
                 $children = [];
             }
             if (count($children) > self::MAX_GRID_CHILDREN_PER_COLUMN) {
-                $errors[] = 'Grid-sektion ' . ($position + 1) . ', kolonne ' . ($columnIndex + 1)
-                    . ' kan højst indeholde ' . self::MAX_GRID_CHILDREN_PER_COLUMN . ' indholdsblokke.';
+                $errors[] = self::localizedError($translateError, 'pages.builder.error_max_column_blocks',
+                    ['section' => $position + 1, 'column' => $columnIndex + 1,
+                        'max' => self::MAX_GRID_CHILDREN_PER_COLUMN],
+                    'Grid-sektion ' . ($position + 1) . ', kolonne ' . ($columnIndex + 1)
+                    . ' kan højst indeholde ' . self::MAX_GRID_CHILDREN_PER_COLUMN . ' indholdsblokke.');
                 $children = array_slice($children, 0, self::MAX_GRID_CHILDREN_PER_COLUMN);
             }
 
@@ -334,7 +350,7 @@ class PageBlocks
                 if (!is_array($rawChild)) {
                     continue;
                 }
-                $child = self::normalizeGridChild($rawChild, $position, $columnIndex, $childIndex, $errors);
+                $child = self::normalizeGridChild($rawChild, $position, $columnIndex, $childIndex, $errors, $translateError);
                 if ($child !== null) {
                     $cleanChildren[] = $child;
                 }
@@ -348,7 +364,8 @@ class PageBlocks
             // A forged or stale POST must never silently throw away old column content.
             foreach ($columnsRaw as $column) {
                 if (is_array($column) && !empty($column['blocks'])) {
-                    $errors[] = 'Hero-sektionen indeholder kolonneblokke. Bevar det eksisterende layout, før du ændrer typen.';
+                    $errors[] = self::localizedError($translateError, 'pages.builder.error_hero_has_columns', [],
+                        'Hero-sektionen indeholder kolonneblokke. Bevar det eksisterende layout, før du ændrer typen.');
                     break;
                 }
             }
@@ -398,13 +415,16 @@ class PageBlocks
         int $sectionPosition,
         int $columnIndex,
         int $childIndex,
-        array &$errors
+        array &$errors,
+        ?callable $translateError
     ): ?array {
         $definitions = self::gridChildDefinitions();
         $type = trim((string)($raw['type'] ?? ''));
         if (!isset($definitions[$type])) {
-            $errors[] = 'Grid-sektion ' . ($sectionPosition + 1) . ', kolonne ' . ($columnIndex + 1)
-                . ', blok ' . ($childIndex + 1) . ' har en ukendt type.';
+            $errors[] = self::localizedError($translateError, 'pages.builder.error_unknown_block',
+                ['section' => $sectionPosition + 1, 'column' => $columnIndex + 1, 'block' => $childIndex + 1],
+                'Grid-sektion ' . ($sectionPosition + 1) . ', kolonne ' . ($columnIndex + 1)
+                . ', blok ' . ($childIndex + 1) . ' har en ukendt type.');
             return null;
         }
         $status = (($raw['status'] ?? 'active') === 'hidden') ? 'hidden' : 'active';
@@ -453,8 +473,10 @@ class PageBlocks
             case 'component':
                 $component = self::normalComponent((string)($data['component'] ?? ''));
                 if ($component === '') {
-                    $errors[] = 'Grid-sektion ' . ($sectionPosition + 1) . ', kolonne ' . ($columnIndex + 1)
-                        . ', blok ' . ($childIndex + 1) . ' har en ugyldig dynamisk komponent.';
+                    $errors[] = self::localizedError($translateError, 'pages.builder.error_invalid_component',
+                        ['section' => $sectionPosition + 1, 'column' => $columnIndex + 1, 'block' => $childIndex + 1],
+                        'Grid-sektion ' . ($sectionPosition + 1) . ', kolonne ' . ($columnIndex + 1)
+                        . ', blok ' . ($childIndex + 1) . ' har en ugyldig dynamisk komponent.');
                 }
                 $clean = [
                     'kicker' => self::trimmed($data['kicker'] ?? '', 160),

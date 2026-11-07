@@ -70,7 +70,7 @@ ob_start();
             $data = is_array($block['data'] ?? null) ? $block['data'] : [];
             $type = (string)($block['block_type'] ?? '');
             $def = PageBlocks::definitions()[$type] ?? ['label' => $type];
-            $label = $type === 'grid' ? t('pages_detail.section_label') : (string)($def['label'] ?? $type);
+            $label = $type === 'grid' ? t('pages_detail.section_label') : t((string)($def['label'] ?? $type));
             $summary = admin_page_builder_summary($type, $data);
             if ($type === 'grid') {
                 $count = max(1, min(6, (int)($data['column_count'] ?? 1)));
@@ -79,7 +79,7 @@ ob_start();
                 if (($data['layout_version'] ?? '') !== 'v2') {
                     $presets = PageBlocks::gridPresets($count);
                     $presetLabel = $presets[(string)($data['preset'] ?? 'equal')] ?? $presets['equal'];
-                    $summary .= ' · ' . $presetLabel;
+                    $summary .= ' · ' . t($presetLabel);
                 }
             }
             $hidden = ($block['status'] ?? 'active') === 'hidden';

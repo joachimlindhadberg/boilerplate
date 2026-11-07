@@ -11135,5 +11135,145 @@
     "de": "Zu viele Versuche. Versuchen Sie es später erneut.",
     "sv": "För många försök. Försök igen senare.",
     "nb": "For mange forsøk. Prøv igjen senere."
+  },
+  "Tekst + billede": {
+    "en": "Text + image",
+    "da": "Tekst + billede",
+    "de": "Text + Bild",
+    "sv": "Text + bild",
+    "nb": "Tekst + bilde"
+  },
+  "CTA": {
+    "en": "CTA",
+    "da": "CTA",
+    "de": "CTA",
+    "sv": "CTA",
+    "nb": "CTA"
+  },
+  "Kompakt": {
+    "en": "Compact",
+    "da": "Kompakt",
+    "de": "Kompakt",
+    "sv": "Kompakt",
+    "nb": "Kompakt"
+  },
+  "Normal": {
+    "en": "Normal",
+    "da": "Normal",
+    "de": "Normal",
+    "sv": "Normal",
+    "nb": "Normal"
+  },
+  "Stor": {
+    "en": "Large",
+    "da": "Stor",
+    "de": "Groß",
+    "sv": "Stor",
+    "nb": "Stor"
+  },
+  "Lige brede kolonner": {
+    "en": "Equal columns",
+    "da": "Lige brede kolonner",
+    "de": "Gleich breite Spalten",
+    "sv": "Lika breda kolumner",
+    "nb": "Like brede kolonner"
+  },
+  "pages.builder.no_heading": {
+    "en": "No heading yet",
+    "da": "Ingen overskrift endnu",
+    "de": "Noch keine Überschrift",
+    "sv": "Ingen rubrik ännu",
+    "nb": "Ingen overskrift ennå"
+  },
+  "pages.builder.remove_columns_warning": {
+    "en": "The columns you are removing contain content. Remove the columns and their content?",
+    "da": "De kolonner, du fjerner, indeholder indhold. Vil du fjerne kolonnerne og deres indhold?",
+    "de": "Die zu entfernenden Spalten enthalten Inhalte. Spalten samt Inhalt entfernen?",
+    "sv": "Kolumnerna som tas bort innehåller innehåll. Ta bort kolumnerna och deras innehåll?",
+    "nb": "Kolonnene du fjerner, inneholder innhold. Fjerne kolonnene og innholdet?"
+  },
+  "pages.builder.remove_columns": {
+    "en": "Remove columns",
+    "da": "Fjern kolonner",
+    "de": "Spalten entfernen",
+    "sv": "Ta bort kolumner",
+    "nb": "Fjern kolonner"
+  },
+  "pages.builder.legacy_section_error": {
+    "en": "This page contains an older Page Builder section. Back up and migrate the page before editing.",
+    "da": "Denne side indeholder en ældre Page Builder-sektion. Tag backup og migrér siden før redigering.",
+    "de": "Diese Seite enthält einen älteren Page-Builder-Abschnitt. Sichern und migrieren Sie die Seite vor der Bearbeitung.",
+    "sv": "Sidan innehåller en äldre Page Builder-sektion. Säkerhetskopiera och migrera sidan innan du redigerar.",
+    "nb": "Denne siden inneholder en eldre Page Builder-seksjon. Ta sikkerhetskopi og migrer siden før redigering."
+  },
+  "pages.builder.error_max_sections": {
+    "en": "A page can contain at most {max} sections.",
+    "da": "En side kan højst indeholde {max} sektioner.",
+    "de": "Eine Seite darf höchstens {max} Abschnitte enthalten.",
+    "sv": "En sida får innehålla högst {max} sektioner.",
+    "nb": "En side kan inneholde maksimalt {max} seksjoner."
+  },
+  "pages.builder.error_unknown_section": {
+    "en": "Section {section} has an unknown type.",
+    "da": "Sektion {section} har en ukendt type.",
+    "de": "Abschnitt {section} hat einen unbekannten Typ.",
+    "sv": "Sektion {section} har en okänd typ.",
+    "nb": "Seksjon {section} har en ukjent type."
+  },
+  "pages.builder.error_invalid_column_count": {
+    "en": "Section {section} must have between 1 and 6 columns.",
+    "da": "Sektion {section} skal have mellem 1 og 6 kolonner.",
+    "de": "Abschnitt {section} muss zwischen 1 und 6 Spalten haben.",
+    "sv": "Sektion {section} måste ha mellan 1 och 6 kolumner.",
+    "nb": "Seksjon {section} må ha mellom 1 og 6 kolonner."
+  },
+  "pages.builder.error_populated_columns": {
+    "en": "Section {section}: move or remove blocks from extra columns before saving.",
+    "da": "Sektion {section}: Flyt eller fjern blokke fra overskydende kolonner før gemning.",
+    "de": "Abschnitt {section}: Verschieben oder entfernen Sie Blöcke aus zusätzlichen Spalten vor dem Speichern.",
+    "sv": "Sektion {section}: Flytta eller ta bort block från överflödiga kolumner innan du sparar.",
+    "nb": "Seksjon {section}: Flytt eller fjern blokker fra overflødige kolonner før lagring."
+  },
+  "pages.builder.error_max_column_blocks": {
+    "en": "Section {section}, column {column} can contain at most {max} content blocks.",
+    "da": "Sektion {section}, kolonne {column} kan højst indeholde {max} indholdsblokke.",
+    "de": "Abschnitt {section}, Spalte {column} darf höchstens {max} Inhaltsblöcke enthalten.",
+    "sv": "Sektion {section}, kolumn {column} får innehålla högst {max} innehållsblock.",
+    "nb": "Seksjon {section}, kolonne {column} kan inneholde maksimalt {max} innholdsblokker."
+  },
+  "pages.builder.error_hero_has_columns": {
+    "en": "The Hero section contains column blocks. Keep the existing layout before changing its type.",
+    "da": "Hero-sektionen indeholder kolonneblokke. Bevar det eksisterende layout, før du ændrer typen.",
+    "de": "Der Hero-Abschnitt enthält Spaltenblöcke. Behalten Sie das bestehende Layout bei, bevor Sie den Typ ändern.",
+    "sv": "Hero-sektionen innehåller kolumnblock. Behåll den befintliga layouten innan du ändrar typ.",
+    "nb": "Hero-seksjonen inneholder kolonneblokker. Behold det eksisterende oppsettet før du endrer type."
+  },
+  "pages.builder.error_unknown_block": {
+    "en": "Section {section}, column {column}, block {block} has an unknown type.",
+    "da": "Sektion {section}, kolonne {column}, blok {block} har en ukendt type.",
+    "de": "Abschnitt {section}, Spalte {column}, Block {block} hat einen unbekannten Typ.",
+    "sv": "Sektion {section}, kolumn {column}, block {block} har en okänd typ.",
+    "nb": "Seksjon {section}, kolonne {column}, blokk {block} har en ukjent type."
+  },
+  "pages.builder.error_invalid_component": {
+    "en": "Section {section}, column {column}, block {block} has an invalid dynamic component.",
+    "da": "Sektion {section}, kolonne {column}, blok {block} har en ugyldig dynamisk komponent.",
+    "de": "Abschnitt {section}, Spalte {column}, Block {block} enthält eine ungültige dynamische Komponente.",
+    "sv": "Sektion {section}, kolumn {column}, block {block} har en ogiltig dynamisk komponent.",
+    "nb": "Seksjon {section}, kolonne {column}, blokk {block} har en ugyldig dynamisk komponent."
+  },
+  "Sektion med 1–6 kolonner og indhold i hver kolonne.": {
+    "en": "Section with 1–6 columns and content in each column.",
+    "da": "Sektion med 1–6 kolonner og indhold i hver kolonne.",
+    "de": "Abschnitt mit 1–6 Spalten und Inhalten in jeder Spalte.",
+    "sv": "Sektion med 1–6 kolumner och innehåll i varje kolumn.",
+    "nb": "Seksjon med 1–6 kolonner og innhold i hver kolonne."
+  },
+  "Sektion": {
+    "en": "Section",
+    "da": "Sektion",
+    "de": "Abschnitt",
+    "sv": "Sektion",
+    "nb": "Seksjon"
   }
 }
