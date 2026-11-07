@@ -1747,6 +1747,34 @@
       }
     });
 
+    // Both CTA and Hero use the same small link picker. Delegated events also
+    // cover blocks cloned later from <template> and moved between columns.
+    const syncPageLinkField = (field) => {
+      const select = field?.querySelector('[data-page-link-select]');
+      const target = field?.querySelector('[data-page-link-url]');
+      const customField = field?.querySelector('[data-page-link-custom]');
+      const customInput = field?.querySelector('[data-page-link-custom-input]');
+      if (!select || !target || !customField || !customInput) return;
+      const custom = select.value === '__custom__';
+      customField.hidden = !custom;
+      customInput.disabled = !custom;
+      const nextValue = custom ? customInput.value : select.value;
+      if (target.value !== nextValue) {
+        target.value = nextValue;
+        target.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+    };
+    builderForm.addEventListener('change', (event) => {
+      if (event.target.matches('[data-page-link-select]')) {
+        syncPageLinkField(event.target.closest('[data-page-link-field]'));
+      }
+    });
+    builderForm.addEventListener('input', (event) => {
+      if (event.target.matches('[data-page-link-custom-input]')) {
+        syncPageLinkField(event.target.closest('[data-page-link-field]'));
+      }
+    });
+
     builderForm.addEventListener('input', (event) => {
       const child = event.target.closest('[data-grid-child]');
       if (child && event.target.matches('[data-grid-child-summary-source]')) updateGridChildSummary(child);

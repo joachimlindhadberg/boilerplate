@@ -11275,5 +11275,33 @@
     "de": "Abschnitt",
     "sv": "Sektion",
     "nb": "Seksjon"
+  },
+  "page_builder_v2.link_destination": {
+    "en": "Button link",
+    "da": "Knaplink",
+    "de": "Schaltflächenlink",
+    "sv": "Knapplänk",
+    "nb": "Knappelenke"
+  },
+  "page_builder_v2.link_none": {
+    "en": "No link",
+    "da": "Intet link",
+    "de": "Kein Link",
+    "sv": "Ingen länk",
+    "nb": "Ingen lenke"
+  },
+  "page_builder_v2.link_published": {
+    "en": "Published pages",
+    "da": "Publicerede sider",
+    "de": "Veröffentlichte Seiten",
+    "sv": "Publicerade sidor",
+    "nb": "Publiserte sider"
+  },
+  "page_builder_v2.link_custom": {
+    "en": "Custom URL",
+    "da": "Egen URL",
+    "de": "Eigene URL",
+    "sv": "Anpassad URL",
+    "nb": "Egendefinert URL"
   }
 }

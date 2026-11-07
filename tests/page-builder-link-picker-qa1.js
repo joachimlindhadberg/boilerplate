@@ -1,0 +1,55 @@
+'use strict';
+const fs = require('node:fs');
+const path = require('node:path');
+const vm = require('node:vm');
+const assert = require('node:assert/strict');
+const root = path.resolve(__dirname, '..');
+const code = fs.readFileSync(path.join(root,'public_html/admin/assets/js/admin.js'),'utf8');
+const start = code.indexOf('    // Both CTA and Hero use the same small link picker.');
+const end = code.indexOf("    builderForm.addEventListener('input', (event) => {\n      const child =", start);
+assert(start !== -1 && end > start, 'Isolated link picker handler located');
+const handlers = {};
+const builderForm = { addEventListener(type, handler) {handlers[type] = handler;} };
+class ChangeEvent {constructor(type, options) {this.type=type;this.bubbles=options.bubbles;}}
+vm.runInNewContext('(function(){'+code.slice(start,end)+'})()', {builderForm,Event:ChangeEvent});
+let count=0;
+function check(ok, name) {assert(ok,name);count++;}
+check(typeof handlers.change==='function' && typeof handlers.input==='function','Delegated listeners installed');
+const testField=(initial, initialMode)=>{
+  const hiddenEvents=[];
+  const url={value:initial,dispatchEvent(event){hiddenEvents.push(event);}};
+  const select={value:initialMode,matches(s){return s==='[data-page-link-select]';},closest(){return field;}};
+  const customGroup={hidden:initialMode!=='__custom__'};
+  const customInput={value:initialMode==='__custom__'?initial:'',disabled:initialMode!=='__custom__',matches(s){return s==='[data-page-link-custom-input]';},closest(){return field;}};
+  const elements={'[data-page-link-select]':select,'[data-page-link-url]':url,'[data-page-link-custom]':customGroup,'[data-page-link-custom-input]':customInput};
+  const field={querySelector(s){return elements[s]||null;}};
+  return {url,select,customGroup,customInput,hiddenEvents,choose(value){select.value=value;handlers.change({target:select});},type(value){customInput.value=value;handlers.input({target:customInput});}};
+};
+let f=testField('', '');
+f.choose('/kontakt');
+check(f.url.value==='/kontakt','Page selection writes original URL field');
+check(f.customGroup.hidden&&f.customInput.disabled,'Page selection hides custom input');
+check(f.hiddenEvents.length===1&&f.hiddenEvents[0].bubbles,'Change event notifies dirty form');
+f.choose('/kontakt/support');
+check(f.url.value==='/kontakt/support','Nested page can be selected');
+f.choose('__custom__');
+check(f.url.value===''&&!f.customGroup.hidden&&!f.customInput.disabled,'Custom selection reveals empty manual field');
+f.type('https://example.com/?a=1');
+check(f.url.value==='https://example.com/?a=1','Custom typing updates stored URL');
+f.choose('/kontakt');
+check(f.url.value==='/kontakt'&&f.customGroup.hidden,'Returning to page replaces stored URL');
+f.choose('__custom__');
+check(f.url.value==='https://example.com/?a=1','Previously typed custom URL retained for undo');
+f.choose('');
+check(f.url.value===''&&f.customGroup.hidden,'No link clears stored URL');
+let existing=testField('/kontakt','/kontakt');
+existing.choose('__custom__');
+check(existing.url.value==='','Switching existing page to custom does not leave old URL');
+let savedCustom=testField('mailto:hello@example.com','__custom__');
+savedCustom.type('https://example.com');
+check(savedCustom.url.value==='https://example.com','Existing custom URL editable');
+check(savedCustom.hiddenEvents.length===1,'Change events not duplicated');
+// The same delegated handlers cover freshly inserted CTA and Hero fields.
+const hero=testField('','');hero.choose('/');
+check(hero.url.value==='/','Hero uses shared event behavior including Home');
+console.log('Page Builder Link Picker JS QA1: '+count+' PASS / 0 FAIL (synthetic DOM events)');

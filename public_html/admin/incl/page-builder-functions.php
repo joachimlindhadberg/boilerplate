@@ -44,6 +44,75 @@ function admin_page_builder_media_field(string $prefix, array $data, string $lab
     <?php return ob_get_clean();
 }
 
+/** Public CTA choices: published pages only, including pages not shown in navigation.
+ * Resolve nested paths using the same PagePath logic as the frontend.
+ */
+function admin_page_builder_published_links(): array
+{
+    static $choices = null;
+    if ($choices !== null) return $choices;
+    $choices = [];
+    if (!class_exists(Pages::class) || !class_exists(PagePath::class)) return $choices;
+    try {
+        $rows = (new Pages())->allPublished();
+        $byId = [];
+        foreach ($rows as $page) {
+            $id = (int)($page['id'] ?? 0);
+            if ($id > 0 && ($page['page_status'] ?? '') === 'published') $byId[$id] = $page;
+        }
+        foreach ($byId as $page) {
+            // A published child under an inaccessible parent is not a public link.
+            $parentId = (int)($page['parent_id'] ?? 0);
+            $visited = [];
+            $valid = true;
+            while ($parentId > 0) {
+                if (isset($visited[$parentId]) || !isset($byId[$parentId])) {
+                    $valid = false;
+                    break;
+                }
+                $visited[$parentId] = true;
+                $parentId = (int)($byId[$parentId]['parent_id'] ?? 0);
+            }
+            if (!$valid) continue;
+            $url = PagePath::fromMap($page, $byId);
+            $title = trim((string)($page['page_title'] ?? ''));
+            if ($title !== '' && !isset($choices[$url])) $choices[$url] = $title;
+        }
+        natcasesort($choices);
+    } catch (Throwable $e) {
+        error_log('Page Builder published link choices unavailable: ' . $e->getMessage());
+    }
+    return $choices;
+}
+
+/** Native select for published pages, with an optional custom URL.
+ * The persisted POST field remains the existing single button_url string.
+ */
+function admin_page_builder_link_field(string $prefix, string $key, array $data): string
+{
+    $e = static fn(mixed $v): string => admin_e((string)$v);
+    $url = (string)($data[$key] ?? '');
+    $choices = admin_page_builder_published_links();
+    $mode = $url === '' ? '' : (array_key_exists($url, $choices) ? $url : '__custom__');
+    ob_start(); ?>
+    <div class="admin-field" data-page-link-field>
+      <label><?= $e(t('page_builder_v2.link_destination')); ?></label>
+      <select data-page-link-select aria-label="<?= $e(t('page_builder_v2.link_destination')); ?>">
+        <option value="" <?= $mode === '' ? 'selected' : ''; ?>><?= $e(t('page_builder_v2.link_none')); ?></option>
+        <?php if ($choices): ?><optgroup label="<?= $e(t('page_builder_v2.link_published')); ?>">
+          <?php foreach ($choices as $path=>$title): ?><option value="<?= $e($path); ?>" <?= $mode === $path ? 'selected' : ''; ?>><?= $e($title); ?> (<?= $e($path); ?>)</option><?php endforeach; ?>
+        </optgroup><?php endif; ?>
+        <option value="__custom__" <?= $mode === '__custom__' ? 'selected' : ''; ?>><?= $e(t('page_builder_v2.link_custom')); ?></option>
+      </select>
+      <input type="hidden" name="<?= $e($prefix); ?>[data][<?= $e($key); ?>]" value="<?= $e($url); ?>" data-page-link-url>
+      <div class="admin-field" data-page-link-custom <?= $mode === '__custom__' ? '' : 'hidden'; ?>>
+        <label><?= $e(t('page_builder_v2.link_custom')); ?></label>
+        <input type="text" data-page-link-custom-input maxlength="500" aria-label="<?= $e(t('page_builder_v2.link_custom')); ?>" value="<?= $mode === '__custom__' ? $e($url) : ''; ?>" placeholder="/kontakt or https://example.com" <?= $mode === '__custom__' ? '' : 'disabled'; ?>>
+      </div>
+    </div>
+    <?php return ob_get_clean();
+}
+
 /** Dedicated Hero fields live in the same section JSON; not in generic grid children. */
 function admin_page_builder_hero_content_editor(string $prefix, array $data): string
 {
@@ -86,9 +155,7 @@ function admin_page_builder_hero_content_editor(string $prefix, array $data): st
           <div class="admin-field"><label><?= $e(t('page_builder_v2.hero_button_label')); ?></label>
             <input name="<?= $e($prefix); ?>[data][hero_button_label]" maxlength="80" value="<?= $e($data['hero_button_label'] ?? ''); ?>">
           </div>
-          <div class="admin-field"><label><?= $e(t('page_builder_v2.hero_button_url')); ?></label>
-            <input name="<?= $e($prefix); ?>[data][hero_button_url]" maxlength="500" value="<?= $e($data['hero_button_url'] ?? ''); ?>" placeholder="/kontakt">
-          </div>
+          <?= admin_page_builder_link_field($prefix, 'hero_button_url', $data); ?>
         </div>
       </div>
     </div>
@@ -301,7 +368,7 @@ function admin_page_builder_grid_child_editor(array $block, string $prefix, bool
           <div class="admin-field"><label><?= admin_e(t('Overskrift')); ?></label><input data-grid-child-summary-source name="<?= $e($prefix); ?>[data][title]" value="<?= $e($value('title')); ?>"></div>
           <div class="admin-field"><label><?= admin_e(t('Kicker')); ?></label><input name="<?= $e($prefix); ?>[data][kicker]" value="<?= $e($value('kicker')); ?>"></div>
           <div class="admin-field"><label><?= admin_e(t('Kort tekst')); ?></label><textarea name="<?= $e($prefix); ?>[data][body]" rows="3"><?= $e($value('body')); ?></textarea></div>
-          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Knaptekst')); ?></label><input name="<?= $e($prefix); ?>[data][button_label]" value="<?= $e($value('button_label')); ?>"></div><div class="admin-field"><label><?= admin_e(t('Knap-URL')); ?></label><input name="<?= $e($prefix); ?>[data][button_url]" value="<?= $e($value('button_url')); ?>"></div></div>
+          <div class="admin-form-row"><div class="admin-field"><label><?= admin_e(t('Knaptekst')); ?></label><input name="<?= $e($prefix); ?>[data][button_label]" value="<?= $e($value('button_label')); ?>"></div><?= admin_page_builder_link_field($prefix, 'button_url', $data); ?></div>
         <?php elseif ($type === 'component'): ?>
           <div class="admin-field"><label><?= admin_e(t('Overskrift')); ?></label><input data-grid-child-summary-source name="<?= $e($prefix); ?>[data][title]" value="<?= $e($value('title')); ?>"></div>
           <div class="admin-field"><label><?= admin_e(t('Kicker')); ?></label><input name="<?= $e($prefix); ?>[data][kicker]" value="<?= $e($value('kicker')); ?>"></div>
