@@ -62,7 +62,8 @@
   const unpublish = form.querySelector('#schedule-unpublish');
   const publishField = form.querySelector('[data-page-schedule-field="publish"]');
   const unpublishField = form.querySelector('[data-page-schedule-field="unpublish"]');
-  if (!status || !publish || !unpublish || !publishField || !unpublishField) return;
+  const timezone = form.querySelector('[data-page-schedule-timezone]');
+  if (!status || !publish || !unpublish || !publishField || !unpublishField || !timezone) return;
 
   const show = (field, input, visible) => {
     field.hidden = !visible;
@@ -75,6 +76,7 @@
     // date is scheduled first. Protected pages have no scheduling controls.
     show(publishField, publish, draft);
     show(unpublishField, unpublish, published || (draft && publish.value.trim() !== ''));
+    timezone.hidden = publishField.hidden && unpublishField.hidden;
   };
 
   status.addEventListener('change', sync);

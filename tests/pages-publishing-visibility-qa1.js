@@ -19,12 +19,14 @@ function run(initialStatus, initialPublish, initialUnpublish) {
   const unpublish = Object.assign(makeControl(initialUnpublish), { id: 'schedule-unpublish' });
   const pubField = { hidden: false };
   const unpubField = { hidden: false };
+  const timezone = { hidden: false };
   const controls = {
     '#page-status': status,
     '#schedule-publish': publish,
     '#schedule-unpublish': unpublish,
     '[data-page-schedule-field="publish"]': pubField,
     '[data-page-schedule-field="unpublish"]': unpubField,
+    '[data-page-schedule-timezone]': timezone,
   };
   const form = {
     querySelector(selector) { return controls[selector] || null; },
@@ -34,10 +36,11 @@ function run(initialStatus, initialPublish, initialUnpublish) {
   const changeStatus = v => { status.value = v; handlers['page-status:change'](); };
   const changePublish = v => { publish.value = v; handlers['schedule-publish:input'](); };
   const submitted = () => ({ publish: publish.disabled ? null : publish.value, unpublish: unpublish.disabled ? null : unpublish.value });
-  return { status, publish, unpublish, pubField, unpubField, changeStatus, changePublish, submitted, handlers };
+  return { status, publish, unpublish, pubField, unpubField, timezone, changeStatus, changePublish, submitted, handlers };
 }
 let f = run('draft', '', '');
 check(!f.pubField.hidden && !f.publish.disabled, 'Draft: publish visible');
+check(!f.timezone.hidden, 'Draft: timezone visible alongside schedule');
 check(f.unpubField.hidden && f.unpublish.disabled, 'Draft without date: unpublish hidden and disabled');
 f.changePublish('2026-12-10T12:00');
 check(!f.unpubField.hidden && !f.unpublish.disabled, 'Draft with date: unpublish becomes visible');
@@ -51,12 +54,15 @@ check(!f.unpubField.hidden && f.unpublish.value === '2026-12-12T12:00', 'Re-ente
 f.changeStatus('published');
 check(f.pubField.hidden && f.publish.disabled, 'Published: publish hidden and disabled');
 check(!f.unpubField.hidden && !f.unpublish.disabled, 'Published: unpublish available');
+check(!f.timezone.hidden, 'Published: timezone visible alongside schedule');
 check(f.submitted().publish === null && f.submitted().unpublish === '2026-12-12T12:00', 'Published submits only unpublish');
 f.changeStatus('protected');
 check(f.pubField.hidden && f.unpubField.hidden && f.publish.disabled && f.unpublish.disabled, 'Protected: both controls disabled and hidden');
+check(f.timezone.hidden, 'Protected: timezone hidden alongside schedules');
 check(f.submitted().publish === null && f.submitted().unpublish === null, 'Protected submits neither date');
 f.changeStatus('draft');
 check(!f.pubField.hidden && !f.unpubField.hidden, 'Back to Draft restores both controls with prior publish date');
+check(!f.timezone.hidden, 'Returning from Protected restores timezone message');
 check(f.publish.value === '2026-12-10T12:00', 'Status toggle retains value until Save');
 check(typeof f.handlers['form:submit'] === 'function', 'Submit guard installed');
 f.changeStatus('protected'); f.handlers['form:submit']();
@@ -67,6 +73,7 @@ f = run('draft', '2026-12-10T12:00', '2026-12-12T12:00');
 check(!f.pubField.hidden && !f.unpubField.hidden, 'Existing Draft interval opens correctly');
 f = run('protected', '', '');
 check(f.pubField.hidden && f.unpubField.hidden, 'Existing Protected state opens correctly');
+check(f.timezone.hidden, 'Existing Protected hides timezone immediately');
 vm.runInNewContext(code, {document: { querySelector: () => null }});
 check(true, 'Graceful no-op on non-editor pages');
 console.log('Pages Publishing Visibility JS QA1: ' + assertions + ' PASS / 0 FAIL');

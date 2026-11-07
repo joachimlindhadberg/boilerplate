@@ -231,6 +231,8 @@ button, a, summary { -webkit-tap-highlight-color: transparent; }
 }
 .admin-login__back:hover { color: var(--admin-text); text-decoration: underline; }
 .admin-field__help { margin: 2px 0 0; color: var(--admin-muted); font-size: 12px; }
+.admin-page-access-fields:not([hidden]) { display: grid; align-content: start; gap: 12px; }
+.admin-page-access-fields > .admin-field__help { margin: 0; }
 .admin-password-logout { margin-top: 20px; }
 .admin-login__back--button { padding: 0; background: transparent; border: 0; cursor: pointer; }
 

@@ -56,5 +56,27 @@ foreach (['pages.access.gate_title','pages.access.gate_description','pages.acces
     $assert(isset($catalog[$key]) && count($catalog[$key]) === 5, 'Core translation for all languages: ' . $key);
 }
 
+
+// Protected-media scope must be explicit without adding Media Library settings.
+$note = $catalog['pages.access.password_note'] ?? null;
+$assert(is_array($note) && array_keys($note) === ['en', 'da', 'de', 'sv', 'nb'],
+    'Protected-media notice is translated into all five CMS languages');
+$controlStart = strpos($form, '<div data-page-access-controls');
+$controlEnd = $controlStart === false ? false : strpos($form, 'data-page-schedule-field="publish"', $controlStart);
+$assert($controlStart !== false && $controlEnd !== false
+    && substr_count(substr($form, $controlStart, $controlEnd - $controlStart), "t('pages.access.password_note')") === 1,
+    'Media disclosure stays inside contextual Protected controls');
+foreach ([
+    'en' => ['Images and files', 'direct URLs'],
+    'da' => ['Billeder og filer', 'direkte URL'],
+    'de' => ['Bilder und Dateien', 'direkten URLs'],
+    'sv' => ['Bilder och filer', 'direkta URL'],
+    'nb' => ['Bilder og filer', 'direkte URL'],
+] as $locale => $parts) {
+    $copy = is_array($note) ? (string)($note[$locale] ?? '') : '';
+    $assert(str_contains($copy, $parts[0]) && str_contains($copy, $parts[1]),
+        'Public media URLs explicitly disclosed: ' . $locale);
+}
+
 printf("Pages Access & Preview QA1: %d PASS / %d FAIL (read-only)\n", $pass, $fail);
 exit($fail ? 1 : 0);

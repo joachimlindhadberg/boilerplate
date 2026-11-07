@@ -23,6 +23,14 @@ $test(str_contains($view, 'id="schedule-publish" type="datetime-local" name="sch
 $test(str_contains($view, 'id="schedule-unpublish" type="datetime-local" name="schedule_unpublish"'), 'Unpublish input retains name');
 $test(str_contains($view, "t('Publicér automatisk')") && str_contains($view, "t('Afpublicér automatisk')"), 'Five-language keys unchanged');
 $test(str_contains($view, "t('pages.schedule_timezone'"), 'Timezone indicator unchanged');
+$test(str_contains($view, 'data-page-schedule-timezone'), 'Timezone message has scoped visibility control');
+$test(str_contains($view, "=== 'protected' ? ' hidden'"), 'Timezone hidden server-side for Protected on initial load');
+$test(!str_contains($view, "t('Menupunkter og rækkefølge administreres under')"), 'Redundant navigation help removed from publishing panel');
+$test(str_contains($view, 'class="admin-page-access-fields"'), 'Protected controls use compact Core spacing class');
+$css = (string)file_get_contents($root . '/public_html/admin/assets/css/admin.css');
+$test(str_contains($css, '.admin-page-access-fields:not([hidden])'), 'Protected controls remain hidden outside Protected status');
+$test(str_contains($js, 'timezone.hidden = publishField.hidden && unpublishField.hidden'), 'Timezone follows schedule controls');
+
 $test(str_contains($js, 'Pages Publishing Visibility QA1'), 'Script scoping marker');
 $test(str_contains($js, "document.querySelector('form[data-page-builder-form]')"), 'Only Pages editor is enhanced');
 $test(str_contains($js, "status.addEventListener('change', sync)"), 'Status changes update fields');
