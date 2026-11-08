@@ -15,6 +15,14 @@ $mode = strtolower(trim((string)($_GET['mode'] ?? '')));
 // Core-only actions such as login/logout must never intercept module modes.
 $moduleRoute = trim((string)($_GET['legacy_path'] ?? ''), '/');
 
+// F4c.2: the recovery gate permits the login URL, not the dashboard.
+// Authenticated administrators must reach the existing protected Updates page.
+if ($moduleRoute === '' && $mode === ''
+    && (new UpdateDurableRecoveryGate())->status() !== UpdateDurableRecoveryGate::CLEAR
+    && $auth->check()) {
+    admin_redirect('/admin/tools/update');
+}
+
 if ($moduleRoute === '' && $mode === 'logout') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && admin_verify_csrf($_POST['csrf_token'] ?? null)) {
         if ($auth->check()) {

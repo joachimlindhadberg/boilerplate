@@ -10303,6 +10303,13 @@
     "sv": "En annan åtgärd pågår. Försök igen.",
     "nb": "En annen handling pågår. Prøv igjen."
   },
+  "updates.recovery_manual_help": {
+    "en": "This update requires administrator recovery. Automatic database recovery is not available yet. The site will remain unavailable until it is resolved.",
+    "da": "Denne opdatering kræver gendannelse af en administrator. Automatisk databasegendannelse er endnu ikke tilgængelig. Hjemmesiden forbliver utilgængelig, indtil problemet er løst.",
+    "de": "Dieses Update erfordert eine Wiederherstellung durch einen Administrator. Die automatische Datenbankwiederherstellung ist noch nicht verfügbar. Die Website bleibt bis zur Behebung nicht erreichbar.",
+    "sv": "Den här uppdateringen kräver återställning av en administratör. Automatisk databasåterställning är ännu inte tillgänglig. Webbplatsen förblir otillgänglig tills problemet är löst.",
+    "nb": "Denne oppdateringen krever gjenoppretting av en administrator. Automatisk databasegjenoppretting er ennå ikke tilgjengelig. Nettstedet forblir utilgjengelig til problemet er løst."
+  },
   "updates.update_recovery_required": {
     "en": "The previous update needs recovery before continuing.",
     "da": "Den forrige opdatering kræver gendannelse, før du kan fortsætte.",

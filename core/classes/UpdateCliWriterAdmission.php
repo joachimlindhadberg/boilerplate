@@ -20,6 +20,17 @@ final class UpdateCliWriterAdmission
         if (!$gate->acquireReader()) {
             throw new RuntimeException('Maintenance admission busy.');
         }
+        try {
+            // A crashed updater releases flock; persistent recovery still
+            // blocks cooperative CLI writers until explicit recovery.
+            require_once __DIR__ . '/UpdateDurableRecoveryGate.php';
+            if ((new UpdateDurableRecoveryGate($root))->status() !== UpdateDurableRecoveryGate::CLEAR) {
+                throw new RuntimeException('CMS recovery admission blocked.');
+            }
+        } catch (Throwable $e) {
+            $gate->release();
+            throw $e;
+        }
         return $gate;
     }
 }

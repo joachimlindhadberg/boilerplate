@@ -16,7 +16,10 @@ if ($mode === null) {
 if ($mode === 'update') {
     $installedVersion = defined('BOILERPLATE_VERSION') ? (string)BOILERPLATE_VERSION : '';
     $choices = null;
-    $pendingRecovery = (new UpdateOneClickInstaller())->hasInterruptedUpdate();
+    $recoveryState = (new UpdateDurableRecoveryGate())->status();
+    $recoveryBlocked = $recoveryState !== UpdateDurableRecoveryGate::CLEAR;
+    $pendingRecovery = $recoveryState === UpdateDurableRecoveryGate::FILE
+        && (new UpdateOneClickInstaller())->hasInterruptedUpdate();
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'check_for_updates') {
         $csrfValid = admin_verify_csrf($_POST['csrf_token'] ?? null);
         $choices = $csrfValid
@@ -81,10 +84,16 @@ if ($mode === 'update') {
             if (!$gate->acquireExclusive()) {
                 $status = 'busy';
             } elseif ($action === 'restore_interrupted_update') {
-                $result = $install->restoreInterrupted();
+                // Recheck under the exclusive lock: DB recovery must never
+                // be mistaken for a file-only recovery operation.
+                $result = (new UpdateDurableRecoveryGate())->status() === UpdateDurableRecoveryGate::FILE
+                    ? $install->restoreInterrupted()
+                    : ['status' => 'recovery_required'];
                 $status = (string)($result['status'] ?? 'recovery_required');
             } else {
-                $result = $install->install((string)$prepared['version'], (string)$prepared['sha256'], $kind);
+                $result = (new UpdateDurableRecoveryGate())->status() === UpdateDurableRecoveryGate::CLEAR
+                    ? $install->install((string)$prepared['version'], (string)$prepared['sha256'], $kind)
+                    : ['status' => 'recovery_required'];
                 $status = (string)($result['status'] ?? 'recovery_required');
             }
         } catch (Throwable $e) {
@@ -115,6 +124,7 @@ if ($mode === 'update') {
     admin_render('tools/update', [
         'user' => $auth->user(), 'activeNav' => 'tools', 'report' => $report,
         'updateChoices' => $choices, 'pendingRecovery' => $pendingRecovery,
+        'recoveryBlocked' => $recoveryBlocked,
         'updateNotice' => admin_pull_notice(),
     ]);
     exit;

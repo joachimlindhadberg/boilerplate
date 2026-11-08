@@ -5,6 +5,7 @@ $installedVersion = trim((string)($report['version'] ?? ''));
 if (!UpdateReleaseVersion::valid($installedVersion)) $installedVersion = '—';
 $updateChoices = is_array($updateChoices ?? null) ? $updateChoices : null;
 $pendingRecovery = (bool)($pendingRecovery ?? false);
+$recoveryBlocked = (bool)($recoveryBlocked ?? false);
 $updateNotice = is_array($updateNotice ?? null) ? $updateNotice : null;
 $choicesStatus = (string)($updateChoices['status'] ?? 'not_checked');
 $releases = ($choicesStatus === 'available' && is_array($updateChoices['releases'] ?? null))
@@ -40,7 +41,8 @@ ob_start();
     </div>
   </div>
   <div class="admin-tools-body">
-    <div class="admin-tools-feature" data-core-update-page data-core-update-autoload="<?= $choicesStatus === 'not_checked' ? '1' : '0'; ?>" data-core-update-recovery="<?= $pendingRecovery ? '1' : '0'; ?>">
+    <div class="admin-tools-feature" data-core-update-page data-core-update-autoload="<?= !$recoveryBlocked && $choicesStatus === 'not_checked' ? '1' : '0'; ?>" data-core-update-recovery="<?= $pendingRecovery ? '1' : '0'; ?>">
+      <?php if (!$recoveryBlocked): ?>
       <div data-core-update-summary <?= $choicesStatus === 'not_checked' ? 'hidden' : ''; ?> role="status">
         <?php if ($releases): ?>
           <strong><?= admin_e(t('updates.choices_title')); ?></strong>
@@ -55,6 +57,7 @@ ob_start();
         <input type="hidden" name="action" value="check_for_updates">
         <button type="submit" class="admin-button admin-button--<?= $releases ? 'secondary' : 'primary'; ?>"><?= admin_icon('search', 'admin-button__icon'); ?><?= admin_e(t('updates.check')); ?></button>
       </form>
+      <?php endif; ?>
     </div>
     <?php if ($pendingRecovery): ?>
       <div class="admin-tools-feature" role="status">
@@ -64,6 +67,11 @@ ob_start();
           <input type="hidden" name="action" value="restore_interrupted_update">
           <button type="submit" class="admin-button admin-button--secondary"><?= admin_e(t('updates.restore_button')); ?></button>
         </form>
+      </div>
+    <?php elseif ($recoveryBlocked): ?>
+      <div class="admin-tools-feature" role="alert">
+        <div><strong><?= admin_e(t('updates.update_recovery_required')); ?></strong></div>
+        <p><?= admin_e(t('updates.recovery_manual_help')); ?></p>
       </div>
     <?php else: ?>
       <form method="post" action="/admin/tools/update" data-official-update-form <?= !$releases ? 'hidden' : ''; ?>>
