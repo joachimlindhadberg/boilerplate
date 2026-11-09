@@ -475,6 +475,15 @@ ALTER TABLE `user_dashboard_cards`
 ALTER TABLE `users`
   ADD CONSTRAINT `users_role_fk` FOREIGN KEY (`role_id`) REFERENCES `roles` (`id`);
 
+-- F4c.8: fresh-install equivalent of core:20261105_000_page_access.
+-- This table must exist BEFORE stamping its migration as applied.
+CREATE TABLE `page_access` (
+  `page_id` int NOT NULL PRIMARY KEY,
+  `password_hash` varchar(255) NOT NULL,
+  `updated_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  CONSTRAINT `page_access_page_fk` FOREIGN KEY (`page_id`) REFERENCES `pages` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `auth_sessions` (
   `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT,
   `user_id` int NOT NULL,

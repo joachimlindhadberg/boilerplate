@@ -159,7 +159,7 @@ final class FirstInstall
     {
         $files = glob($root . '/database/updates/*.php') ?: [];
         foreach (glob($root . '/modules/*/migrations/*.php') ?: [] as $file) $files[] = $file;
-        // The baseline is explicitly reconciled with THESE six migrations.
+        // The fresh baseline is explicitly reconciled with THESE eight migrations.
         // Any future migration MUST receive an updated baseline review; never
         // silently mark an unknown migration applied without running it.
         $expected = [
@@ -167,6 +167,7 @@ final class FirstInstall
             'core:20261013_010_media_reference_index',
             'core:20261016_000_pages_author_audit',
             'core:20261019_200_dashboard_cards',
+            'core:20261105_000_page_access',
             'module:forms:20261013_100_forms_schema',
             'module:gallery:20261013_100_gallery_schema',
             'module:gallery:20261019_100_gallery_lightbox',

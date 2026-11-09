@@ -49,8 +49,8 @@ $actualMigrations = array_merge(glob($root . '/database/updates/*.php') ?: [],
 $check(count($actualMigrations) === 8, 'Pinned Core tree exposes eight migration files');
 $firstInstall = file_get_contents($root . '/core/classes/FirstInstall.php');
 $check(is_string($firstInstall) && str_contains($firstInstall, "'core:20261019_200_dashboard_cards'")
-    && !str_contains($firstInstall, "'core:20261105_000_page_access'"),
-    'Known FirstInstall migration inventory blocker detected (must be fixed separately)');
+    && str_contains($firstInstall, "'core:20261105_000_page_access'"),
+    'FirstInstall migration inventory aligned with page_access in F4c.8');
 
 $tmp = realpath('/tmp');
 $check(is_string($tmp) && is_dir($tmp), 'System private QA parent available');
