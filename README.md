@@ -1,15 +1,16 @@
-# Boilerplate CMS 2.5.1-beta.9 — Preview release
+# Boilerplate CMS 2.5.1-beta.9 — Stable preparation
 
 Boilerplate CMS is an open-source PHP/MySQL CMS with a browser-based first-time installer, Page Builder, Forms, Gallery, and a minimalist administration interface.
 
-**Release status:** `2.5.1-beta.9` is a **Beta / Pre-release**, not an approved public Stable release. Local tests have passed, but real shared-hosting deployment and production recovery are not yet verified.
+**Release status:** This source tree remains `2.5.1-beta.9` (**Beta / Pre-release**). No public Stable release or final Stable version has been approved. The maintainer has reported a successful fresh installation on Simply.com; this does not certify all shared-hosting environments, a live-host One-Click Update or production database recovery.
 
 ## Getting started
 
 - **Fresh installation:** [Installation guide](docs/deployment/INSTALLATION.md)
 - **Hosting requirements:** [Hosting requirements](docs/deployment/HOSTING-REQUIREMENTS.md)
 - **Existing installation:** [Updates and rollback](docs/deployment/UPDATING.md). Do **not** run the first-time installer to upgrade an existing site.
-- **Historical 2.5.0 readiness assessment:** [V2.5.0 go-live gate](docs/deployment/V2.5.0-GO-LIVE-GATE.md). This is an archived assessment, not the current Beta 9 release status.
+- **Licensing and assets:** [License and asset-provenance review](docs/deployment/LICENSE-AND-ASSETS.md). Ownership of bundled assets and third-party notices require final maintainer sign-off before Stable.
+- **Historical readiness assessment:** [V2.5.0 go-live gate](docs/deployment/V2.5.0-GO-LIVE-GATE.md) (archived; not the current release status).
 
 ## Installation and security
 
@@ -27,8 +28,8 @@ An official GitHub release must contain a matching uploaded `Boilerplate-CMS-v<v
 
 ## QA scope and distribution
 
-The Beta 5 → Beta 6 file-only update was completed successfully in the local browser environment; Core QA showed 39 PASS / 0 FAIL, and three recovery bundles remained with no interrupted journal. The Legacy HTML role restriction also passed 25 isolated tests and three role-based browser checks. File-retirement and rollback behavior passed earlier isolated synthetic tests; **no actual file retirement was exercised in the Beta 6 browser update**. These results do not certify production hosting, live database-migration upgrades or disaster recovery on another host.
+Earlier local browser QA confirmed a Beta 5 → Beta 6 **file-only** update; subsequent private integration QA verified recovery blocking and re-admission using isolated MySQL and HTTP fixtures. These tests do **not** certify live-host database-migration upgrades or disaster recovery. The maintainer separately reported a successful **fresh installation** on Simply.com; this is not evidence that updates or restore were tested there.
 
 The distribution excludes local `.env` secrets, user uploads, private storage, logs, and development-only tests. Back up code, configuration, database and uploads as appropriate before upgrading.
 
-**License:** GNU GPL version 3. See `LICENSE`. Review third-party assets and their notices independently before a Stable release.
+**License:** The repository includes the GNU GPL version 3 text in [`LICENSE`](LICENSE). Review [LICENSE-AND-ASSETS.md](docs/deployment/LICENSE-AND-ASSETS.md) for the pending copyright, icon and brand-asset provenance checks; no unverified asset rights are claimed.

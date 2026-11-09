@@ -1,4 +1,4 @@
-# Gallery 1.0.6
+# Gallery — bundled module 1.0.17
 
 Genbrugelige billedgallerier til Boilerplate CMS.
 
@@ -16,11 +16,11 @@ Genbrugelige billedgallerier til Boilerplate CMS.
 
 ## Krav
 
-For denne V2.5.0-kandidat: Boilerplate CMS og PHP 8.3.0+ (ældre udgivelser havde andre runtimekrav).
+Det aktuelle `module.json` angiver Gallery `1.0.17`, Boilerplate CMS `2.2.1` eller nyere og PHP `8.3.0` eller nyere.
 
 Frontend-rendereren leverer kun semantisk `.gallery*` markup. Alt visuelt design ejes af sitets frontend-theme/style.scss.
 
-## 1.0.6 – fælles CMS UI/UX-kontrakt
+## Historical 1.0.6 – fælles CMS UI/UX-kontrakt
 
 - Bekræftelse ved fjernelse af elementer via CMS Core-modal.
 - Ingen ændringer af frontend-rendering eller database.

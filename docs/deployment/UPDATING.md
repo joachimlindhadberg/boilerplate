@@ -1,6 +1,6 @@
-# Updates and rollback — Boilerplate CMS 2.5.1-beta.6
+# Updates and rollback — Boilerplate CMS (pre-Stable candidate)
 
-**Current status:** One-Click Update has been tested locally for **file-only** Beta releases. This is not a public production-compatibility or disaster-recovery certification. Updates that require new database migrations are **blocked**, not applied automatically.
+**Current status:** The tracked source remains `2.5.1-beta.9`, not an approved Stable release. One-Click Update has been tested locally for **file-only** releases. A release containing new or changed database migrations is **refused** by this flow. Full live-host update, database restore and production disaster-recovery certification are not yet complete.
 
 ## User workflow
 
@@ -16,20 +16,12 @@ The publisher-controlled GitHub release and asset are checked, but a separate cr
 
 - **File-only updates:** The CMS validates the release ZIP, version and migration history. New/changed unapplied migrations block installation. It does not run SQL migrations through the One-Click flow.
 - **Recovery:** Before changing application files, the updater creates and verifies a private recovery snapshot. A fourth recovery bundle may be held temporarily during an update; after a successful commit, the oldest eligible verified backup can be retired to return to three. An interrupted update must prevent that cleanup.
-- **Retired CMS files:** An official release may explicitly list old CMS PHP files for removal by path and old-content SHA-256. Modified, unknown, upload or user-managed files are not eligible for automatic deletion. A failure during the operation must remain recoverable. **Beta 6 retires no files** (`core/update-retired-files.json` has an empty list).
+- **Retired CMS files:** An official release may explicitly list old CMS PHP files for removal by path and old-content SHA-256. Modified, unknown, upload or user-managed files are not eligible for automatic deletion. A failure during the operation must remain recoverable. An earlier Beta 6 example retired no files; this does **not** promise that every future release has an empty retirement plan.
 - **No manual ZIP overwrite:** A fresh distribution archive is not a safe replacement strategy for an installed site. Do not extract the ZIP over the active installation or use the first-time `/install.php` as an updater.
 
-## Publisher workflow for immutable GitHub releases
+## For maintainers publishing releases
 
-The official GitHub repository has **release immutability enabled for future releases** (repository setting confirmed by its maintainer on 1 November 2026). Already published releases are **not retroactively immutable**. For every *new* Beta or Stable version:
-
-1. Complete source, runtime ZIP, version, migration and local QA checks. Ensure `main` is pushed and the ZIP matches the exact intended source revision; do not package unpublished or unreviewed files.
-2. Create a GitHub **Draft release** targeting that revision. Upload **one** asset with the exact versioned filename `Boilerplate-CMS-v<version>.zip`. Keep Beta/RC releases marked as prereleases.
-3. While still a draft, check the asset's exact name, size, `uploaded` state and GitHub `sha256:` digest against the **locally computed** SHA-256. Check the tag's target commit, archive integrity and required runtime files. **Do not publish if anything differs.**
-4. Only after those checks, publish the draft. Publication makes the asset and tag immutable. Do not attempt to overwrite a published immutable asset or reuse its tag: issue a **new version and tag** for a correction.
-5. Verify the published release with GitHub's release attestation and local asset verification (GitHub CLI `gh release verify` / `gh release verify-asset` if supported), and recheck it is not a draft. Record the digest in release notes or internal QA records.
-
-This improves publisher-side integrity but **does not add an independently pinned publisher-signature check in the CMS**. The CMS continues to trust the official repository's HTTPS metadata and SHA-256 and to refuse unsafe packages. The release publishing workflow is described with commands in [PUBLISHING-RELEASES.md](PUBLISHING-RELEASES.md); it is **not** an installation procedure for end users.
+GitHub release creation, immutable asset checks and attestations are **publisher-only tasks**, not steps for website administrators. See the [maintainer publishing checklist](PUBLISHING-RELEASES.md). A published GitHub digest is not an independently pinned publisher signature checked by the installed CMS.
 
 ## Backups and restore limitations
 

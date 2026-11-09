@@ -1,8 +1,8 @@
-# Forms 1.2.6
+# Forms — bundled module 1.3.12
 
 Forms is an optional Boilerplate module for reusable frontend forms.
 
-## Included in 1.2
+## Included functionality
 
 - Row/column form builder
   - 100% row = 1 column
@@ -38,9 +38,9 @@ Forms is an optional Boilerplate module for reusable frontend forms.
 - Webhooks / CRM / newsletter integrations
 - CSV export or bulk submission actions
 
-The module requires Boilerplate 1.6.3 or newer. The module supplies functionality and semantic markup only; frontend presentation is defined in the site theme.
+The bundled `module.json` declares Forms `1.3.12`, Boilerplate CMS `2.2.1` or newer, and PHP `8.3.0` or newer. The module supplies functionality and semantic markup only; frontend presentation is defined in the site theme.
 
-## 1.2.6 – fælles CMS UI/UX-kontrakt
+## Historical 1.2.6 – fælles CMS UI/UX-kontrakt
 
 - Bekræftelse ved fjernelse af elementer via CMS Core-modal.
 - Ingen ændringer af frontend-rendering eller database.
