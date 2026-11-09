@@ -1,6 +1,6 @@
-# Fresh installation — Boilerplate CMS (pre-Stable candidate)
+# Fresh installation — Boilerplate CMS 2.5.1 (unpublished candidate)
 
-**Use only on a NEW site with a dedicated empty database. Do not point the wizard at an existing database or active website.** The source remains a pre-Stable candidate; no public Stable release has been approved.
+**Use only on a NEW isolated site with a dedicated empty database. Do not point the wizard at an existing database or active website.** Version `2.5.1` is an unpublished Stable candidate pending final acceptance; this package is not yet approved for public production use.
 
 ## 1. Prepare a compatible webhost
 

@@ -4,7 +4,7 @@
 
 ## Mandatory order
 
-1. **Prepare code and ZIP.** Complete the intended Git commit and push to `main`. Build an installable ZIP rooted at `boilerplate/`, named exactly `Boilerplate-CMS-v<VERSION>.zip`. Verify PHP syntax, QA tests, manifest and migrations; make sure the version in `public_html/incl/init.php` matches the release tag. Exclude `.env`, `storage/`, tests and uploads. The public ZIP must match the reviewed source files byte-for-byte, except expected packaging-only metadata if explicitly documented. Do not use a GitHub-generated *Source code (zip)* as the installable asset.
+1. **Prepare code and ZIP.** Complete reviewed source QA on `stable-prep` first. **Only after S4/S5 approval**, select and push the exact approved release commit to the intended publication branch (for example `main`); do not publish directly from an unapproved worktree. Build an installable ZIP rooted at `boilerplate/`, named exactly `Boilerplate-CMS-v<VERSION>.zip`. Verify PHP syntax, QA tests, manifest and migrations; make sure the version in `public_html/incl/init.php` matches the release tag. Exclude `.env`, `storage/`, tests and uploads. The public ZIP must match the reviewed source files byte-for-byte, except expected packaging-only metadata if explicitly documented. Do not use a GitHub-generated *Source code (zip)* as the installable asset.
 2. **Create a Draft on GitHub.** Select the exact intended source commit, set Beta/RC as **Pre-release**, upload exactly one distribution ZIP and keep the release as a **Draft**. The official CMS update lookup must not see a draft.
 3. **Verify before publishing.** Check the tag and commit; the Draft flag; prerelease classification; exactly one asset with the correct name, uploaded state, file size and GitHub `sha256:` digest matching the local ZIP. If the checks fail, correct the *draft*, not a published release.
 4. **Publish once.** Only after all checks pass, publish the Draft. New releases then have an immutable tag and immutable asset. A replacement package needs a **new version/tag/release**, never an overwritten published asset.
@@ -12,27 +12,27 @@
 
 ## GitHub CLI reference — for a **future** release only
 
-**Never run this against Beta 6.** Prepare a reviewed new release, set the new `TAG` and `ZIP`, and run inside the clean Git repository **after pushing `main`**. The commands are split into three stages intentionally; none of the first two stages publishes a release.
+**Never run this against an existing published release or the current unpublished S3b candidate.** This CLI template is for an *approved Stable* release only: for a future Beta/RC, set the preview tag/asset, add `--prerelease` to Stage A and expect `PRE=true` in Stage B. Prepare the reviewed source in the clean publication repository **only after S4/S5 release authorization**. The commands are split into three stages intentionally; none of the first two stages publishes a release.
 
 **Stage A — create an unpublished Draft with the complete asset:**
 
 ```bash
 set -e
 PROJECT="joachimlindhadberg/boilerplate"
-TAG="vX.Y.Z-beta.N"                # Replace with the approved new tag
-ZIP="/absolute/path/Boilerplate-CMS-vX.Y.Z-beta.N.zip"
+TAG="vX.Y.Z"                       # Stable example; only after S5 approval
+ZIP="/absolute/path/Boilerplate-CMS-vX.Y.Z.zip"
 COMMIT="$(git rev-parse HEAD)"
 
 # Check local release basics before contacting GitHub.
 test -z "$(git status --porcelain)"
-test "$(git rev-parse origin/main)" = "$COMMIT"
+test "$(git rev-parse origin/main)" = "$COMMIT"  # Only after explicit publication-branch approval
 test -f "$ZIP"
 test "$(basename "$ZIP")" = "Boilerplate-CMS-$TAG.zip"
 unzip -tqq "$ZIP"
 
 gh release create "$TAG" "$ZIP" --repo "$PROJECT" \
   --target "$COMMIT" --title "Boilerplate CMS $TAG" \
-  --notes "Approved release notes go here." --prerelease --draft
+  --notes "Approved release notes go here." --draft
 ```
 
 **Stage B — verify the Draft; stop if anything differs:**
@@ -48,10 +48,12 @@ NAME="$(gh api "repos/$PROJECT/releases/tags/$TAG" --jq '.assets[0].name')"
 STATE="$(gh api "repos/$PROJECT/releases/tags/$TAG" --jq '.assets[0].state')"
 REMOTE_SIZE="$(gh api "repos/$PROJECT/releases/tags/$TAG" --jq '.assets[0].size')"
 DIGEST="$(gh api "repos/$PROJECT/releases/tags/$TAG" --jq '.assets[0].digest')"
-TAG_COMMIT="$(git ls-remote origin "refs/tags/$TAG" | awk '{print $1}')"
+TAG_RAW="$(git ls-remote origin "refs/tags/$TAG" | awk '{print $1}')"
+TAG_PEELED="$(git ls-remote origin "refs/tags/$TAG^{}" | awk '{print $1}')"
+TAG_COMMIT="${TAG_PEELED:-$TAG_RAW}"  # Works for annotated and lightweight tags
 
 test "$DRAFT" = true
-test "$PRE" = true
+test "$PRE" = false  # Stable must not be prerelease
 [ "$COUNT" -eq 1 ]
 test "$NAME" = "$(basename "$ZIP")"
 test "$STATE" = uploaded

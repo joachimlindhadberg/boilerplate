@@ -1,8 +1,8 @@
-# Boilerplate CMS 2.5.1-beta.9 — Stable preparation
+# Boilerplate CMS 2.5.1 — Unpublished Stable candidate
 
 Boilerplate CMS is an open-source PHP/MySQL CMS with a browser-based first-time installer, Page Builder, Forms, Gallery, and a minimalist administration interface.
 
-**Release status:** This source tree remains `2.5.1-beta.9` (**Beta / Pre-release**). No public Stable release or final Stable version has been approved. The maintainer has reported a successful fresh installation on Simply.com; this does not certify all shared-hosting environments, a live-host One-Click Update or production database recovery.
+**Release status:** Source version `2.5.1` is an **unpublished Stable release candidate**, not an approved public Stable release. This candidate is for isolated fresh-installation and acceptance QA only. The maintainer reported a successful earlier fresh installation on Simply.com; it does not certify this exact candidate, live-host One-Click Update or production recovery.
 
 ## Getting started
 
@@ -19,6 +19,8 @@ The web server's document root must point to `public_html/`. Keep `core/`, `modu
 The first-run installer is **keyless**. On an uninstalled public site, an unauthorized first visitor could create the administrator account. Restrict access to the new site until initial setup is complete. Use HTTPS and a dedicated empty MySQL database for public installation.
 
 ## Updates
+
+**Existing Beta 9 sites:** Do not use One-Click Update or manually extract this `2.5.1` candidate over `2.5.1-beta.9`. The source contains migration `20261105_000_page_access.php`, absent from the published Beta 9 source, and the first-install SQL baseline changed. The present updater intentionally refuses migration-bearing upgrades. An isolated, separately approved upgrade/restore procedure is required.
 
 Under **Tools → Updates**, click **Check for updates**. If newer official releases are available, select the desired version from the release list and choose **Update selected version**. There is no persistent update-channel setting on this page. A Beta / RC release is identified as a preview.
 

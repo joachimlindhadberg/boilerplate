@@ -1,6 +1,10 @@
-# Updates and rollback — Boilerplate CMS (pre-Stable candidate)
+# Updates and rollback — Boilerplate CMS 2.5.1 (unpublished candidate)
 
-**Current status:** The tracked source remains `2.5.1-beta.9`, not an approved Stable release. One-Click Update has been tested locally for **file-only** releases. A release containing new or changed database migrations is **refused** by this flow. Full live-host update, database restore and production disaster-recovery certification are not yet complete.
+**Current status:** Source `2.5.1` is an **unpublished Stable candidate**, not an approved production release. One-Click Update has been tested locally for **file-only** releases. A release containing new or changed database migrations is **refused** by this flow. Live-host update, database restore and disaster-recovery certification for this candidate are not complete.
+
+## Known upgrade limitation: Beta 9 to Stable 2.5.1
+
+The official `v2.5.1-beta.9` source does **not** contain `database/updates/20261105_000_page_access.php`, which is required by the `2.5.1` source. The first-install baseline `database/install/empty-schema.sql` has also changed. The current One-Click Update does not execute database migrations, and therefore **must refuse** this transition. Do not bypass the refusal or overwrite an installed Beta 9 site with a fresh-install distribution ZIP. Only a separate, isolated, tested migration and full restore procedure could authorize an existing-site upgrade.
 
 ## User workflow
 

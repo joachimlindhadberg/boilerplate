@@ -1,6 +1,6 @@
-# Hosting requirements — Boilerplate CMS (pre-Stable candidate)
+# Hosting requirements — Boilerplate CMS 2.5.1 (unpublished candidate)
 
-**Status:** narrowly scoped pre-Stable hosting profile. The maintainer reported a successful fresh installation on Simply.com; this is an installation smoke test, not a certification of every hosting feature, live updates, production restores or all supported version combinations.
+**Status:** proposed profile for the **unpublished 2.5.1 Stable candidate**. A previously reported fresh installation on Simply.com is an installation smoke test of an earlier build, not a certification of this exact ZIP, live updates, production restores or all supported version combinations.
 
 ## Required for the first supported hosting profile
 
