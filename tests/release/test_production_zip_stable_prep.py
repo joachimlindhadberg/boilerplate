@@ -41,6 +41,32 @@ def main() -> None:
         'core/classes/UpdateAdminNotification.php',
     }
     verify(required <= production.REQUIRED, 'New migration and runtime dependencies are required')
+    s1_qa_classes = {
+        'UpdateBrowserMigrationRehearsal',
+        'UpdateBrowserRecoveryAuthorizationQa',
+        'UpdateDatabaseCutoverRehearsal',
+        'UpdateDatabaseIsolatedRestore',
+        'UpdateNativeMigrationRehearsal',
+    }
+    s1_qa_docs = {
+        'docs/deployment/F4C3-DATABASE-CUTOVER-QA1.md',
+        'docs/deployment/F4C4-BROWSER-MIGRATION-QA1.md',
+        'docs/deployment/F4C5-NATIVE-MYSQL-MIGRATION-QA1.md',
+        'docs/deployment/F4C6-BROWSER-RECOVERY-AUTHORIZATION-QA1.md',
+        'docs/deployment/F4C7-REAL-CMS-AUTH-RECOVERY-QA1.md',
+        'docs/deployment/F4C8-FIRST-INSTALL-BASELINE-QA1.md',
+        'docs/deployment/F4C9-INSTALL-UPDATE-INTEGRATION-QA1.md',
+        'docs/deployment/F4C10-RECOVERY-COMPLETION-QA1.md',
+        'docs/deployment/STABLE-S1-PRODUCTION-ZIP-CLEANUP-QA1.md',
+    }
+    verify(s1_qa_classes <= production.DEV_ONLY_UPDATE_CLASSES,
+           'S1 QA-only classes included in exclusion policy')
+    verify(s1_qa_docs <= production.DEV_ONLY_DEPLOYMENT_DOCS,
+           'S1 internal QA documents included in exclusion policy')
+    verify(all((root / p).is_file() for p in s1_qa_docs),
+           'S1 QA documents exist in development checkout')
+    verify(all((root / 'core/classes' / (name + '.php')).is_file() for name in s1_qa_classes),
+           'S1 QA classes exist in development checkout')
     with tempfile.TemporaryDirectory(prefix='bp-stable-prep-release-qa-') as temp:
         artifact = Path(temp) / 'candidate.zip'
         production.build(artifact)
@@ -57,6 +83,24 @@ def main() -> None:
             verify(not any(x.startswith('public_html/uploads/') and x != 'public_html/uploads/.htaccess' for x in files),
                    'Upload directory contains only security policy')
             verify('public_html/uploads/' in dirs, 'Runtime uploads directory included')
+            for name in sorted(s1_qa_classes):
+                path = 'core/classes/' + name + '.php'
+                verify(path not in files, 'S1 excluded private QA class: ' + name)
+                verify(production.omitted(path), 'S1 omission predicate: ' + name)
+            for path in sorted(s1_qa_docs):
+                verify(path not in files, 'S1 excluded development QA documentation: ' + path)
+            verify('core/classes/UpdateOneClickInstaller.php' in files,
+                   'Production code-only updater preserved')
+            verify('core/classes/UpdateDurableRecoveryGate.php' in files,
+                   'Production fail-closed recovery gate preserved')
+            verify('core/classes/UpdateMaintenanceGate.php' in files,
+                   'Production maintenance admission preserved')
+            rejects(lambda: production.assert_consistency(
+                files | {'core/classes/UpdateBrowserMigrationRehearsal.php'}, dirs),
+                'Development-only content leaked')
+            rejects(lambda: production.assert_consistency(
+                files | {'docs/deployment/F4C10-RECOVERY-COMPLETION-QA1.md'}, dirs),
+                'Development-only content leaked')
             verify(not any(x.startswith('public_html/assets/uploads/') for x in entries),
                    'Legacy uploads excluded')
             for rel in required:

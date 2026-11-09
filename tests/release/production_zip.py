@@ -36,11 +36,27 @@ DEV_CLI = {
 OMIT_PREFIXES = ('tests/', 'module-starter/', 'docs/releases/', 'docs/audits/')
 # Historical manual-upload review UI is no longer reachable. Keep the source
 # during QA migration, but never distribute the orphan admin view.
+DEV_ONLY_DEPLOYMENT_DOCS = {
+    'docs/deployment/F4C3-DATABASE-CUTOVER-QA1.md',
+    'docs/deployment/F4C4-BROWSER-MIGRATION-QA1.md',
+    'docs/deployment/F4C5-NATIVE-MYSQL-MIGRATION-QA1.md',
+    'docs/deployment/F4C6-BROWSER-RECOVERY-AUTHORIZATION-QA1.md',
+    'docs/deployment/F4C7-REAL-CMS-AUTH-RECOVERY-QA1.md',
+    'docs/deployment/F4C8-FIRST-INSTALL-BASELINE-QA1.md',
+    'docs/deployment/F4C9-INSTALL-UPDATE-INTEGRATION-QA1.md',
+    'docs/deployment/F4C10-RECOVERY-COMPLETION-QA1.md',
+    'docs/deployment/STABLE-S1-PRODUCTION-ZIP-CLEANUP-QA1.md',
+}
 OBSOLETE_ADMIN_VIEWS = {'public_html/admin/views/tools/partials/update-package-review.php'}
 # F3 review/rehearsal components have no web or operational-CLI callers.
 # Retain all in the DEV tree for QA, but keep the public release ZIP minimal.
 # Recheck this allowlist when connecting a real updater in a later release.
 DEV_ONLY_UPDATE_CLASSES = {
+    'UpdateBrowserMigrationRehearsal',
+    'UpdateBrowserRecoveryAuthorizationQa',
+    'UpdateDatabaseCutoverRehearsal',
+    'UpdateDatabaseIsolatedRestore',
+    'UpdateNativeMigrationRehearsal',
     'UpdateCrashJournalRehearsal',
     'UpdateDatabaseMigrationPreflight',
     'UpdateDatabaseRestoreRehearsal',
@@ -106,6 +122,8 @@ def omitted(rel: str) -> bool:
     if not rel:
         return False
     if any(rel == prefix[:-1] or rel.startswith(prefix) for prefix in OMIT_PREFIXES):
+        return True
+    if rel in DEV_ONLY_DEPLOYMENT_DOCS:
         return True
     if rel in OBSOLETE_ADMIN_VIEWS:
         return True
