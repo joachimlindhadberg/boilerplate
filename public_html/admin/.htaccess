@@ -1,3 +1,8 @@
+# Deny hidden admin files even when the host has no global dotfile rule.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
 DirectoryIndex index.php
 <IfModule mod_rewrite.c>
 RewriteEngine On
