@@ -45,4 +45,4 @@ A database restore can discard writes made after the snapshot. A code-only succe
 - [Hosting requirements](HOSTING-REQUIREMENTS.md)
 - [Immutable release publishing checklist](PUBLISHING-RELEASES.md) — maintainer-only draft, ZIP validation and attestation checks.
 - [Safe Update Workflow](SAFE-UPDATE-WORKFLOW.md) — internal package review and historical design details; it is not an instruction to manually upload ZIP files.
-- [V2.5.0 go-live gate](V2.5.0-GO-LIVE-GATE.md) — historical 2.5.0 QA assessment, not the current release status.
+- Historical 2.5.0 readiness notes remain in the development repository only; they do not authorize this 2.5.1 release.

@@ -25,4 +25,4 @@ Image variants use available GD/Imagick capabilities and may behave differently 
 - Do not assume a different hosting plan, PHP/MySQL runtime or document-root setup is supported merely because one fresh installation succeeded. Verify the target environment independently.
 - Optional MariaDB support, MySQL 8.4, and additional server profiles may be added *after runtime verification*. Unsupported does not necessarily mean incompatible; it means **unverified**.
 
-For deployment steps see [INSTALLATION.md](INSTALLATION.md). The [V2.5.0 go-live gate](V2.5.0-GO-LIVE-GATE.md) is a **historical**, not current, readiness assessment.
+For deployment steps see [INSTALLATION.md](INSTALLATION.md). Historical 2.5.0 release-readiness notes remain available in the development repository only; they are not part of this candidate ZIP.

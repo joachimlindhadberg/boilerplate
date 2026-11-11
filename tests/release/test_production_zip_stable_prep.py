@@ -78,6 +78,10 @@ def main() -> None:
             dirs = {x for x in entries if x.endswith('/')}
             verify(required <= files, 'New migration and required PHP classes included in candidate')
             verify(not any(x.startswith('tests/') for x in entries), 'Development tests excluded')
+            verify('docs/deployment/V2.5.0-GO-LIVE-GATE.md' not in files,
+                   'Historical 2.5.0 readiness doc excluded from release ZIP')
+            verify(production.omitted('docs/deployment/V2.5.0-GO-LIVE-GATE.md'),
+                   'Historical 2.5.0 doc retained in source but excluded from ZIP')
             verify(not any(x.startswith('.git/') or '/.git/' in x for x in entries), 'Git internals excluded')
             verify(not any(x.endswith('.env') or '.env.' in x for x in entries), 'Known environment-secret names excluded')
             verify(not any(x.startswith('public_html/uploads/') and x != 'public_html/uploads/.htaccess' for x in files),

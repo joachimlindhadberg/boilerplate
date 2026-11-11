@@ -530,6 +530,8 @@ foreach ($hashGroups as $paths) {
         ['public_html/assets/install.css', 'public_html/assets/scss/install.scss'],
         // Same protective rules intentionally apply at both upload entry points.
         ['public_html/assets/uploads/.htaccess', 'public_html/uploads/.htaccess'],
+        // Approved Boilerplate branding: the frontend and admin ship the same favicon.
+        ['public_html/admin/assets/brand/boilerplate-cms-favicon.svg', 'public_html/assets/images/favicon.svg'],
     ];
     if (!in_array($paths, $approvedCopies, true)) {
         $duplicates[] = implode(' == ', $paths);

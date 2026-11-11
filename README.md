@@ -10,7 +10,7 @@ Boilerplate CMS is an open-source PHP/MySQL CMS with a browser-based first-time 
 - **Hosting requirements:** [Hosting requirements](docs/deployment/HOSTING-REQUIREMENTS.md)
 - **Existing installation:** [Updates and rollback](docs/deployment/UPDATING.md). Do **not** run the first-time installer to upgrade an existing site.
 - **Licensing and assets:** [License and asset-provenance review](docs/deployment/LICENSE-AND-ASSETS.md). Ownership of bundled assets and third-party notices require final maintainer sign-off before Stable.
-- **Historical readiness assessment:** [V2.5.0 go-live gate](docs/deployment/V2.5.0-GO-LIVE-GATE.md) (archived; not the current release status).
+- **Archived QA:** The 2.5.0 readiness assessment remains in the development repository only; it does not determine the status of this 2.5.1 candidate.
 
 ## Installation and security
 

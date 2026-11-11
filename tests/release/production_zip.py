@@ -46,6 +46,7 @@ DEV_ONLY_DEPLOYMENT_DOCS = {
     'docs/deployment/F4C9-INSTALL-UPDATE-INTEGRATION-QA1.md',
     'docs/deployment/F4C10-RECOVERY-COMPLETION-QA1.md',
     'docs/deployment/STABLE-S1-PRODUCTION-ZIP-CLEANUP-QA1.md',
+    'docs/deployment/V2.5.0-GO-LIVE-GATE.md',
 }
 OBSOLETE_ADMIN_VIEWS = {'public_html/admin/views/tools/partials/update-package-review.php'}
 # F3 review/rehearsal components have no web or operational-CLI callers.
@@ -102,7 +103,6 @@ REQUIRED = {
     'core/classes/UpdateRecoveryCodeSnapshot.php',
     'core/classes/UpdateRecoveryDataArchive.php',
     'modules/forms/module.json', 'modules/gallery/module.json',
-    'docs/deployment/V2.5.0-GO-LIVE-GATE.md',
     'README.md',
     'LICENSE',
     'docs/deployment/INSTALLATION.md',

@@ -27,7 +27,7 @@ The former technical admin view has been replaced by **Tools → Updates**. The 
 4. Rehearse code deployment, migrations, user workflows, and restoring all backup parts **on staging**. Document removal of obsolete files and owner/permission differences.
 5. Only after this process and an explicit production release decision should an updater capable of writing be considered.
 
-See [UPDATING.md](UPDATING.md) and [V2.5.0-GO-LIVE-GATE.md](V2.5.0-GO-LIVE-GATE.md).
+See [UPDATING.md](UPDATING.md) for current update and recovery boundaries. Historical 2.5.0 readiness notes remain in the development repository.
 
 ## V2.5.0 QA1 — Updates admin UI redesign (26 October 2026)
 

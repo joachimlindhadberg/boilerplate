@@ -1,6 +1,6 @@
 # 4A.6.9d1 — Hosting Requirements & Installer Preflight
 
-**Status:** historical preflight technical detail retained. Current locally approved cumulative base is **4A.6.9i3**. For up-to-date release requirements see [HOSTING-REQUIREMENTS.md](HOSTING-REQUIREMENTS.md), [INSTALLATION.md](INSTALLATION.md), and [V2.5.0-GO-LIVE-GATE.md](V2.5.0-GO-LIVE-GATE.md). MySQL 8.4/MariaDB runtime verification remains outstanding.
+**Status:** historical preflight technical detail retained. Current locally approved cumulative base is **4A.6.9i3**. For up-to-date release requirements see [HOSTING-REQUIREMENTS.md](HOSTING-REQUIREMENTS.md), [INSTALLATION.md](INSTALLATION.md), and [UPDATING.md](UPDATING.md). MySQL 8.4/MariaDB runtime verification remains outstanding.
 
 ## Supported deployment target (not yet externally certified)
 
