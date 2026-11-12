@@ -87,18 +87,28 @@ final class UpdateDatabaseReleasePreflight
                 }
             }
             $add('historical_php_migrations', 'good');
+            // Protected SQL migration history must be byte-for-byte intact.
+            // The fresh-install baseline is not executed during upgrades.
+            $new = array_diff_key($targetPhp, $installedPhp);
+            $baseline = 'database/install/empty-schema.sql';
+            if (!isset($installedSql[$baseline], $targetSql[$baseline])) {
+                return self::blocked($report, $add, 'historical_sql_sources');
+            }
             foreach ($installedSql as $path => $digest) {
+                if ($path === $baseline) continue;
                 if (!isset($targetSql[$path]) || !hash_equals($digest, $targetSql[$path])) {
                     return self::blocked($report, $add, 'historical_sql_sources');
                 }
             }
             if (count($targetSql) !== count($installedSql)) {
-                // Even a newly added historical SQL script is NOT a PHP migration.
                 return self::blocked($report, $add, 'historical_sql_sources');
             }
+            $baselineChanged = !hash_equals($installedSql[$baseline], $targetSql[$baseline]);
+            if ($baselineChanged && !$new) {
+                return self::blocked($report, $add, 'baseline_without_migration');
+            }
             $add('historical_sql_sources', 'good');
-
-            $new = array_diff_key($targetPhp, $installedPhp);
+            $add('fresh_install_baseline', $baselineChanged ? 'review' : 'good');
             if (count($new) > 64) {
                 return self::blocked($report, $add, 'migration_count');
             }
