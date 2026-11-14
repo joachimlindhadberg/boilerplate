@@ -225,15 +225,27 @@ final class UpdatePackageReview
                 }
                 $releaseSql[$name] = hash('sha256', $content);
             }
-            $changedSql = 0;
+            // The install baseline is NOT an upgrade script. It may evolve
+            // only alongside at least one new PHP migration; this permits
+            // official review/staging, never database-aware installation.
+            $baseline = 'database/install/empty-schema.sql';
+            $hasBaseline = isset($installedSql[$baseline], $releaseSql[$baseline]);
+            $baselineChanged = $hasBaseline
+                && !hash_equals($installedSql[$baseline], $releaseSql[$baseline]);
+            $historicalChanged = 0;
             foreach ($installedSql as $name => $digest) {
+                if ($name === $baseline) continue;
                 if (!isset($releaseSql[$name]) || !hash_equals($digest, $releaseSql[$name])) {
-                    $changedSql++;
+                    ++$historicalChanged;
                 }
             }
             $addedSql = count(array_diff_key($releaseSql, $installedSql));
-            $add('Database SQL sources', ($changedSql || $addedSql) ? 'blocked' : 'good',
-                $changedSql . ' missing/changed installed source(s); ' . $addedSql . ' new SQL source(s).');
+            $sourceBlocked = !$hasBaseline || $historicalChanged > 0 || $addedSql > 0
+                || ($baselineChanged && $new === 0);
+            $add('Database SQL sources', $sourceBlocked ? 'blocked' : ($baselineChanged ? 'review' : 'good'),
+                $historicalChanged . ' missing/changed historical SQL source(s); '
+                . $addedSql . ' unexpected new source(s); fresh-install baseline '
+                . ($hasBaseline ? ($baselineChanged ? 'changed with migration' : 'unchanged') : 'missing') . '.');
             // A well-formed ZIP is not proof of authentic/untampered software.
             $add('Publisher authenticity', 'review', 'No trusted signature or authenticated release manifest is verified.');
             $add('Backup and rollback', 'review', 'No full backup, staging upgrade or rollback has been verified.');

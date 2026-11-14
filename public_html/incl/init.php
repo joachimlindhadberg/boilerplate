@@ -19,7 +19,7 @@ define('PUBLICPATH', dirname(__DIR__));
 define('ROOTPATH', dirname(PUBLICPATH));
 define('COREPATH', ROOTPATH . '/core');
 define('INCLPATH', PUBLICPATH . '/incl');
-define('BOILERPLATE_VERSION', '2.5.1-beta.9');
+define('BOILERPLATE_VERSION', '2.5.1-rc.1');
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +54,8 @@ if (PHP_SAPI !== 'cli' && !FirstInstall::configured(ROOTPATH)) {
 // No maintenance toggle or automatic update is activated by this bootstrap.
 if (PHP_SAPI !== 'cli') {
     UpdateMaintenanceGate::guardHttp(ROOTPATH);
+    // F4c.2: persistent recovery journals outlive the updater's PHP process.
+    UpdateDurableRecoveryGate::guardHttp(ROOTPATH);
 }
 
 /*

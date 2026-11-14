@@ -40,7 +40,7 @@ final class UpdateOneClickInstaller
      * @return array{status:string,version:string}
      * Must be called under the exclusive maintenance gate.
      */
-    public function install(string $expectedVersion, string $expectedSha, string $channel = 'stable'): array
+    public function install(string $expectedVersion, string $expectedSha, string $channel = 'stable', ?string $recoverySecret = null): array
     {
         if ($this->hasInterruptedUpdate()) return ['status' => 'recovery_required', 'version' => ''];
         $stage = (new UpdateOfficialReleasePackage($this->root))->preparedStatus($channel);
@@ -59,9 +59,21 @@ final class UpdateOneClickInstaller
         $review = (new UpdatePackageReview($this->root))->inspect($archive, $size);
         if (($review['status'] ?? '') !== 'review'
             || ($review['target_version'] ?? '') !== $expectedVersion
-            || ($review['new_migrations'] ?? -1) !== 0
             || ($review['files'] ?? 0) !== $stage['files']) {
             return ['status' => 'unsupported_release', 'version' => ''];
+        }
+        if (($review['new_migrations'] ?? -1) !== 0) {
+            // Preserve file-only behavior. Database update requires the
+            // authenticated HTTPS session's preissued recovery capability.
+            $count = $review['new_migrations'] ?? null;
+            if (!is_int($count) || $count < 1 || $count > 64
+                || !is_string($recoverySecret)
+                || !preg_match('/\A[a-f0-9]{64}\z/D', $recoverySecret)
+                || (new UpdateDurableRecoveryGate($this->root))->status() !== UpdateDurableRecoveryGate::CLEAR) {
+                return ['status' => 'unsupported_release', 'version' => ''];
+            }
+            return (new UpdateOneClickDatabaseCutover($this->root))
+                ->install($archive, $expectedVersion, $expectedSha, $count, $recoverySecret);
         }
         // A file-only update must not leave previously pending/changed CMS
         // migrations unapplied. This reads the live registry without any writes.
@@ -175,6 +187,7 @@ final class UpdateOneClickInstaller
                     if (is_link($dest) || !is_file($dest) || !unlink($dest)) {
                         throw new RuntimeException('Cannot safely retire code file.');
                     }
+                    UpdateRuntimeCacheGuard::afterMutation($dest);
                 } else {
                     $this->replace($this->workPath($work, 'new', $file['path']), $dest, $file['new']);
                 }
@@ -281,6 +294,7 @@ final class UpdateOneClickInstaller
             if ($current !== $file['new']) throw new RuntimeException('Externally modified file; manual recovery required.');
             if ($file['old'] === null) {
                 if (!unlink($dest)) throw new RuntimeException('Cannot delete new file during rollback.');
+                UpdateRuntimeCacheGuard::afterMutation($dest);
             } else {
                 $old = $this->workPath($work, 'old', $file['path']);
                 if (!is_file($old) || is_link($old)
@@ -368,6 +382,7 @@ final class UpdateOneClickInstaller
                 throw new RuntimeException('Temporary destination checksum mismatch.');
             }
             if (!rename($tmp, $target)) throw new RuntimeException('Cannot atomically replace target.');
+            UpdateRuntimeCacheGuard::afterMutation($target);
         } finally {
             if (is_file($tmp)) @unlink($tmp);
         }

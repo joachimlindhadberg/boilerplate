@@ -16,11 +16,29 @@ if ($mode === null) {
 if ($mode === 'update') {
     $installedVersion = defined('BOILERPLATE_VERSION') ? (string)BOILERPLATE_VERSION : '';
     $choices = null;
-    $pendingRecovery = (new UpdateOneClickInstaller())->hasInterruptedUpdate();
+    $recoveryState = (new UpdateDurableRecoveryGate())->status();
+    $recoveryBlocked = $recoveryState !== UpdateDurableRecoveryGate::CLEAR;
+    $pendingRecovery = $recoveryState === UpdateDurableRecoveryGate::FILE
+        && (new UpdateOneClickInstaller())->hasInterruptedUpdate();
+    // Issue a recovery capability on a PREVIOUS authenticated HTTPS GET.
+    // The browser has stored this secure cookie before Update now begins;
+    // a PHP crash during MySQL DDL cannot deprive the admin of the ticket.
+    if ($_SERVER['REQUEST_METHOD'] === 'GET' && !$recoveryBlocked
+        && AppConfig::requestIsHttps() && session_status() === PHP_SESSION_ACTIVE) {
+        $claim = bin2hex(random_bytes(32));
+        $_SESSION['bp_s52_recovery_claim_sha256'] = hash('sha256', $claim);
+        $_SESSION['bp_s52_recovery_claim_expires'] = time() + 3600;
+        setcookie(UpdateOneClickDatabaseRecoveryAuthorization::COOKIE, $claim, [
+            'expires' => time()+3600, 'path' => '/', 'secure' => true,
+            'httponly' => true, 'samesite' => 'Strict',
+        ]);
+    }
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'check_for_updates') {
-        $choices = !admin_verify_csrf($_POST['csrf_token'] ?? null)
-            ? ['status' => 'csrf', 'releases' => []]
-            : (new UpdateReleaseChoices())->find($installedVersion);
+        $csrfValid = admin_verify_csrf($_POST['csrf_token'] ?? null);
+        $choices = $csrfValid
+            ? (new UpdateReleaseChoices())->find($installedVersion)
+            : ['status' => 'csrf', 'releases' => []];
+        if ($csrfValid) UpdateAdminNotification::rememberChoices($installedVersion, $_SESSION, $choices);
     } elseif ($_SERVER['REQUEST_METHOD'] === 'POST' && in_array(($_POST['action'] ?? ''),
         ['install_official_update', 'restore_interrupted_update'], true)) {
         // Bootstrap already requires login + tools.manage. All actions are CSRF protected.
@@ -79,10 +97,24 @@ if ($mode === 'update') {
             if (!$gate->acquireExclusive()) {
                 $status = 'busy';
             } elseif ($action === 'restore_interrupted_update') {
-                $result = $install->restoreInterrupted();
+                // Recheck under the exclusive lock: DB recovery must never
+                // be mistaken for a file-only recovery operation.
+                $result = (new UpdateDurableRecoveryGate())->status() === UpdateDurableRecoveryGate::FILE
+                    ? $install->restoreInterrupted()
+                    : ['status' => 'recovery_required'];
                 $status = (string)($result['status'] ?? 'recovery_required');
             } else {
-                $result = $install->install((string)$prepared['version'], (string)$prepared['sha256'], $kind);
+                $claim = (string)($_COOKIE[UpdateOneClickDatabaseRecoveryAuthorization::COOKIE] ?? '');
+                $savedClaim = (string)($_SESSION['bp_s52_recovery_claim_sha256'] ?? '');
+                $claimOk = preg_match('/\A[a-f0-9]{64}\z/D', $claim) === 1
+                    && preg_match('/\A[a-f0-9]{64}\z/D', $savedClaim) === 1
+                    && hash_equals($savedClaim, hash('sha256', $claim))
+                    && (int)($_SESSION['bp_s52_recovery_claim_expires'] ?? 0) > time()
+                    && AppConfig::requestIsHttps();
+                $result = (new UpdateDurableRecoveryGate())->status() === UpdateDurableRecoveryGate::CLEAR
+                    ? $install->install((string)$prepared['version'], (string)$prepared['sha256'],
+                        $kind, $claimOk ? $claim : null)
+                    : ['status' => 'recovery_required'];
                 $status = (string)($result['status'] ?? 'recovery_required');
             }
         } catch (Throwable $e) {
@@ -90,6 +122,13 @@ if ($mode === 'update') {
             $status = 'failed_before_changes';
         } finally {
             $gate->release();
+        }
+        // Do not attempt database-backed notification after a partial DDL
+        // failure. The independent recovery endpoint does not bootstrap Auth.
+        if ($status === 'recovery_required'
+            && (new UpdateDurableRecoveryGate())->status() === UpdateDurableRecoveryGate::DATABASE) {
+            header('Location: /admin/database-recovery.php', true, 303);
+            exit;
         }
         $notice = match ($status) {
             'updated' => 'updates.update_success',
@@ -113,6 +152,7 @@ if ($mode === 'update') {
     admin_render('tools/update', [
         'user' => $auth->user(), 'activeNav' => 'tools', 'report' => $report,
         'updateChoices' => $choices, 'pendingRecovery' => $pendingRecovery,
+        'recoveryBlocked' => $recoveryBlocked,
         'updateNotice' => admin_pull_notice(),
     ]);
     exit;
