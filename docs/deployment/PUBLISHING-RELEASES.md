@@ -1,8 +1,11 @@
 # Publishing immutable releases — Maintainer checklist
 
-**Audience:** Boilerplate CMS maintainers, not ordinary website administrators. **Status:** release immutability enabled on the official GitHub repository on 1 November 2026; applies to **newly published releases only**. Do not republish, rename, or change the already published `v2.5.1-beta.6` asset. This workflow adds no new CMS code, database migration or update UI.
+**Audience:** Boilerplate CMS maintainers, not ordinary website administrators. **Status:** release immutability applies to newly published official GitHub releases. Do not change any existing published asset. This workflow is maintainer-only; it does not enable any new CMS migration or create a public release by itself.
 
 ## Mandatory order
+
+**Version 2.5.1 ordering:** First prepare and verify the preview `v2.5.1-rc.1` migration-free bridge, built from the authentic published Beta 9 runtime plus reviewed updated updater files. Publish that bridge **only after separate approval**, check it from an isolated installed Beta 9 site through Tools → Updates, and confirm PHP-FPM/OPcache serves the bridge code. Only then approve and publish the Stable `v2.5.1` ZIP. The Stable archive must be built from the **exact reviewed publication commit**, including committed documentation updates; never tag the earlier source commit while shipping uncommitted documentation changes. Both releases require an uploaded archive named `Boilerplate-CMS-v<version>.zip`, and the RC must be marked prerelease.
+
 
 1. **Prepare code and ZIP.** Complete reviewed source QA on `stable-prep` first. **Only after S4/S5 approval**, select and push the exact approved release commit to the intended publication branch (for example `main`); do not publish directly from an unapproved worktree. Build an installable ZIP rooted at `boilerplate/`, named exactly `Boilerplate-CMS-v<VERSION>.zip`. Verify PHP syntax, QA tests, manifest and migrations; make sure the version in `public_html/incl/init.php` matches the release tag. Exclude `.env`, `storage/`, tests and uploads. The public ZIP must match the reviewed source files byte-for-byte, except expected packaging-only metadata if explicitly documented. Do not use a GitHub-generated *Source code (zip)* as the installable asset.
 2. **Create a Draft on GitHub.** Select the exact intended source commit, set Beta/RC as **Pre-release**, upload exactly one distribution ZIP and keep the release as a **Draft**. The official CMS update lookup must not see a draft.
@@ -82,7 +85,7 @@ gh release verify-asset "$TAG" "$ZIP" --repo "$PROJECT"
 ## Scope and limits
 
 - GitHub's immutable release attestation binds published assets, tag and commit; it does not prove the committed code is safe, that the GitHub account was never compromised, or that the installed CMS cryptographically validates that attestation.
-- Installed Boilerplate versions still validate trusted GitHub metadata, SHA-256, ZIP format, version and migrations. **One-Click Update still refuses new or changed DB migration sources.**
+- Installed Boilerplate versions still validate trusted GitHub metadata, SHA-256, ZIP format, version and migrations. **One-Click Update permits only the pinned `page_access` forward-only migration for the approved RC bridge → Stable 2.5.1 route.** Other new or altered migrations remain blocked. The preview bridge is file-only; recovery never authorizes blanket SQL restore over newer external writes.
 - Immutability does **not** retroactively protect `v2.5.1-beta.6` or earlier releases.
 - Never upload a new ZIP to an already published immutable release. For a mistake, cut a new version after fixing the problem and performing QA again.
 - This document must remain developer/publisher-facing; ordinary CMS users should use **Tools → Updates** and should not need Terminal, GitHub credentials or manual ZIP uploads.

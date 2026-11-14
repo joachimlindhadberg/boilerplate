@@ -1,10 +1,12 @@
 # Updates and rollback — Boilerplate CMS 2.5.1 (unpublished candidate)
 
-**Current status:** Source `2.5.1` is an **unpublished Stable candidate**, not an approved production release. One-Click Update has been tested locally for **file-only** releases. A release containing new or changed database migrations is **refused** by this flow. Live-host update, database restore and disaster-recovery certification for this candidate are not complete.
+**Current status (14 November 2026):** `2.5.1` is an **unpublished Stable candidate**. Its narrowly scoped, forward-only `page_access` upgrade has passed an isolated native MySQL/browser recovery test. A fresh `2.5.1` installation also passed local Apache/PHP-FPM browser checks. These results do not certify the unpublished release assets, live-host HTTPS updates or recovery on all hosting environments.
 
-## Known upgrade limitation: Beta 9 to Stable 2.5.1
+## Supported upgrade path: Beta 9 to Stable 2.5.1
 
-The official `v2.5.1-beta.9` source does **not** contain `database/updates/20261105_000_page_access.php`, which is required by the `2.5.1` source. The first-install baseline `database/install/empty-schema.sql` has also changed. The current One-Click Update does not execute database migrations, and therefore **must refuse** this transition. Do not bypass the refusal or overwrite an installed Beta 9 site with a fresh-install distribution ZIP. Only a separate, isolated, tested migration and full restore procedure could authorize an existing-site upgrade.
+The published `v2.5.1-beta.9` source lacks `database/updates/20261105_000_page_access.php`. **Do not upgrade directly from Beta 9 to Stable.** The reviewed two-step path is **`2.5.1-beta.9` → `2.5.1-rc.1` (migration-free bridge) → `2.5.1` (one pinned migration)**. The bridge must first be published and confirmed usable through Tools → Updates. It keeps the original Beta 9 migration files and first-install SQL source unchanged. After installing the bridge, PHP-FPM/OPcache must serve the newly installed updater; if the host still serves stale PHP opcodes, stop and resolve that before attempting Stable. Do not disable safeguards or perform a manual ZIP overwrite.
+
+The final upgrade permits only the exact, checksummed `core:20261105_000_page_access` migration (source SHA-256 `51f597fdff8540d29adc9ba1350297ebc78bf35d0df55fcaebe0075a2b8ef31a`). A durable forward-only journal is used; if interrupted, an authorized recovery flow checks the committed schema and can resume safely. It **does not** blindly restore a pre-upgrade SQL backup. Unknown migrations and unexpected schemas are blocked for manual investigation.
 
 ## User workflow
 
@@ -18,8 +20,9 @@ The publisher-controlled GitHub release and asset are checked, but a separate cr
 
 ## Supported update behavior and safety controls
 
-- **File-only updates:** The CMS validates the release ZIP, version and migration history. New/changed unapplied migrations block installation. It does not run SQL migrations through the One-Click flow.
-- **Recovery:** Before changing application files, the updater creates and verifies a private recovery snapshot. A fourth recovery bundle may be held temporarily during an update; after a successful commit, the oldest eligible verified backup can be retired to return to three. An interrupted update must prevent that cleanup.
+- **File-only updates:** The CMS validates official release metadata, ZIP, version, file plan and migration history. File-only updates remain supported.
+- **Exact Stable 2.5.1 exception:** Only the approved `page_access` forward-only migration from the prepared bridge may execute automatically; arbitrary new/modified SQL/PHP migrations are blocked. Code files are activated only after this migration and its journal postflight succeed.
+- **Recovery:** The normal file-updater makes protected snapshots. If `page_access` DDL commits but a later step fails, the durable recovery journal remains blocked until authorized, non-destructive reconciliation. A database snapshot must **not** be restored automatically over writes made after the snapshot. An interrupted update must not retire its backups.
 - **Retired CMS files:** An official release may explicitly list old CMS PHP files for removal by path and old-content SHA-256. Modified, unknown, upload or user-managed files are not eligible for automatic deletion. A failure during the operation must remain recoverable. An earlier Beta 6 example retired no files; this does **not** promise that every future release has an empty retirement plan.
 - **No manual ZIP overwrite:** A fresh distribution archive is not a safe replacement strategy for an installed site. Do not extract the ZIP over the active installation or use the first-time `/install.php` as an updater.
 

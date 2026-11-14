@@ -1,8 +1,8 @@
-# Boilerplate CMS 2.5.1 — Unpublished Stable candidate
+# Boilerplate CMS 2.5.1 — Stable release candidate
 
 Boilerplate CMS is an open-source PHP/MySQL CMS with a browser-based first-time installer, Page Builder, Forms, Gallery, and a minimalist administration interface.
 
-**Release status:** Source version `2.5.1` is an **unpublished Stable release candidate**, not an approved public Stable release. This candidate is for isolated fresh-installation and acceptance QA only. The maintainer reported a successful earlier fresh installation on Simply.com; it does not certify this exact candidate, live-host One-Click Update or production recovery.
+**Release status (14 November 2026):** Source version `2.5.1` is an **unpublished Stable release candidate**. Isolated Beta 9 → RC bridge → Stable 2.5.1 upgrade/recovery tests and a local Apache/PHP-FPM/MySQL browser test have passed. A public release, its HTTPS delivery, and live-host update/recovery are not yet approved. An earlier fresh installation on Simply.com covered a previous version only.
 
 ## Getting started
 
@@ -20,17 +20,17 @@ The first-run installer is **keyless**. On an uninstalled public site, an unauth
 
 ## Updates
 
-**Existing Beta 9 sites:** Do not use One-Click Update or manually extract this `2.5.1` candidate over `2.5.1-beta.9`. The source contains migration `20261105_000_page_access.php`, absent from the published Beta 9 source, and the first-install SQL baseline changed. The present updater intentionally refuses migration-bearing upgrades. An isolated, separately approved upgrade/restore procedure is required.
+**Existing Beta 9 sites:** A direct Beta 9 → Stable 2.5.1 upgrade is **not supported**. The approved two-step design is `2.5.1-beta.9` → migration-free preview bridge `2.5.1-rc.1` → `2.5.1`. The bridge must be published and separately verified before the Stable release. It preserves Beta 9 database migration history; the final step permits only the pinned forward-only `page_access` migration. Do not manually overwrite files or use the first-time installer to upgrade.
 
 Under **Tools → Updates**, click **Check for updates**. If newer official releases are available, select the desired version from the release list and choose **Update selected version**. There is no persistent update-channel setting on this page. A Beta / RC release is identified as a preview.
 
-The current One-Click Update is limited to **file-only releases without new database migrations**. It uses a private recovery snapshot and protected installation flow. Releases containing new migrations are refused. A release can explicitly retire a known old CMS file only if its expected SHA-256 matches; arbitrary files and user uploads are not automatically deleted.
+One-Click Update supports **file-only releases** and one explicit, narrow exception: the pinned `core:20261105_000_page_access` migration in Stable `2.5.1` when upgrading from the prepared RC bridge. This migration is forward-only, uses durable recovery state and must not restore an older SQL snapshot over newer writes. Unsupported new or modified migrations remain blocked. An old CMS file can be retired only when the approved file plan and expected checksum match; user data/uploads are protected.
 
 An official GitHub release must contain a matching uploaded `Boilerplate-CMS-v<version>.zip` asset. Do not extract a new distribution ZIP over an existing website manually. See the [update policy](docs/deployment/UPDATING.md) for limitations and recovery guidance. **Publishers:** use the [immutable GitHub release checklist](docs/deployment/PUBLISHING-RELEASES.md): draft, verify the exact asset and digest, then publish.
 
 ## QA scope and distribution
 
-Earlier local browser QA confirmed a Beta 5 → Beta 6 **file-only** update; subsequent private integration QA verified recovery blocking and re-admission using isolated MySQL and HTTP fixtures. These tests do **not** certify live-host database-migration upgrades or disaster recovery. The maintainer separately reported a successful **fresh installation** on Simply.com; this is not evidence that updates or restore were tested there.
+Private end-to-end QA confirmed official Beta 9 source → migration-free RC bridge → Stable 2.5.1, including a committed MySQL DDL interruption, independent external writes and browser recovery without blanket SQL restore. Local Apache 2.4/PHP-FPM 8.5/OPcache/MySQL 9.5 browser QA confirmed login, sessions, admin, frontend and update UI. These do **not** certify live-host HTTPS delivery or disaster recovery on arbitrary hosting; the reported Simply.com smoke test concerned an earlier build.
 
 The distribution excludes local `.env` secrets, user uploads, private storage, logs, and development-only tests. Back up code, configuration, database and uploads as appropriate before upgrading.
 
