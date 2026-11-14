@@ -1,0 +1,10 @@
+{
+  "format": "boilerplate-update-recovery-objects",
+  "version": 1,
+  "migrations": {
+    "core:20261105_000_page_access": {
+      "tables": ["page_access"],
+      "triggers": []
+    }
+  }
+}
