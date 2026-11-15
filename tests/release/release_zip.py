@@ -25,7 +25,7 @@ TOP = 'boilerplate/'
 FILE_MODE = stat.S_IFREG | 0o644
 DIR_MODE = stat.S_IFDIR | 0o755
 EXCLUDED_DIRS = {'.git', '__MACOSX', '__pycache__', '.pytest_cache', 'node_modules', 'vendor', 'uploads', 'storage', 'cache', 'tmp', 'temp'}
-EXCLUDED_FILES = {'.env', '.DS_Store', 'Thumbs.db'}
+EXCLUDED_FILES = {'.env', '.gitignore', '.DS_Store', 'Thumbs.db'}
 # New installs ship a single media directory and its policy. Legacy storage
 # is excluded completely, even if a local development tree contains old files.
 EMPTY_RUNTIME_DIRS = ('public_html/uploads',)
